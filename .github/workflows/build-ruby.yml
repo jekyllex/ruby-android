@@ -84,14 +84,14 @@ jobs:
         with:
           path: ./
 
-      - name: prepare bootstrap to upload to gh-pages
+      - name: Prepare bootstraps to upload
         if: always()
         run: |
           mkdir -p bootstraps
-          for f in bootstrap-*; do mv "$f" "${f//bootstrap/ruby}".zip; done
+          for f in bootstrap-*; do cd "$f" && mv "$f".zip ../"${f//bootstrap/ruby}".zip && cd ..; done
           mv ruby-*.zip bootstraps
 
-      - name: Push bootstraps to gh-pages
+      - name: Upload bootstraps
         if: always()
         uses: JamesIves/github-pages-deploy-action@v4.3.0
         with:
