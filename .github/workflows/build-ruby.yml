@@ -1,4 +1,4 @@
-name: Packages
+name: Build ruby
 
 on:
   - workflow_dispatch
