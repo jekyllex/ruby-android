@@ -60,14 +60,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: debs-${{ matrix.target_arch }}
+          name: debs-${{ matrix.target_arch }}.tar
           path: debs/deb-${{ matrix.target_arch }}.tar
 
       - name: Store bootstraps
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: bootstrap-${{ matrix.target_arch }}
+          name: bootstrap-${{ matrix.target_arch }}.zip
           path: "*.zip"
 
   upload:
@@ -75,6 +75,9 @@ jobs:
     needs: build
 
     steps:
+
+      - name: Clone repository
+        uses: actions/checkout@v2
 
       - name: Get all artifacts from build action
         uses: actions/download-artifact@v2
