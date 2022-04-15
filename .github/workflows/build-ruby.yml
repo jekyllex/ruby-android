@@ -19,68 +19,79 @@ jobs:
 
     steps:
 
-    - name: Clone repository
-      uses: actions/checkout@v2
-      with:
-        fetch-depth: 1
+      - name: Clone repository
+        uses: actions/checkout@v2
+        with:
+          fetch-depth: 1
 
-    - name: Get packages from termux-packages
-      uses: actions/checkout@v3
-      with:
-        repository: termux/termux-packages
-        path: termux-packages
+      - name: Get packages from termux-packages
+        uses: actions/checkout@v3
+        with:
+          repository: termux/termux-packages
+          path: termux-packages
 
-    - name: Setup environment
-      run: |
-        # Use custom packaging properties for JekyllEx
-        rm termux-packages/scripts/properties.sh termux-packages/scripts/build-bootstraps.sh
-        mv termux-packages/* .
-        rm -rf termux-packages
-        mv properties.sh build-bootstraps.sh scripts/
+      - name: Setup environment
+        run: |
+          # Use custom packaging properties for JekyllEx
+          rm termux-packages/scripts/properties.sh termux-packages/scripts/build-bootstraps.sh
+          mv termux-packages/* .
+          rm -rf termux-packages
+          mv properties.sh build-bootstraps.sh scripts/
 
-    - name: Build Ruby
-      run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} ruby
+      - name: Build Ruby
+        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} ruby
 
-    - name: Checksums for built *.deb files
-      if: always()
-      run: find output -type f -name "*.deb" -exec sha256sum "{}" \; | sort -k2
+      - name: Checksums for built *.deb files
+        if: always()
+        run: find output -type f -name "*.deb" -exec sha256sum "{}" \; | sort -k2
 
-    - name: Make debs archive
-      run: |
-        mkdir -p debs
-        tar cf debs/deb-${{ matrix.target_arch }}.tar output/*.deb
+      - name: Make debs archive
+        run: |
+          mkdir -p debs
+          tar cf debs/deb-${{ matrix.target_arch }}.tar output/*.deb
 
-    - name: Create bootstrap archive
-      if: always()
-      run: |
-        ./scripts/run-docker.sh ./clean.sh
-        ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }} --android10
+      - name: Create bootstrap archive
+        if: always()
+        run: |
+          ./scripts/run-docker.sh ./clean.sh
+          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }} --android10
 
-    - name: Store debs
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: debs-${{ matrix.target_arch }}
-        path: debs/deb-${{ matrix.target_arch }}.tar
+      - name: Store debs
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: debs-${{ matrix.target_arch }}
+          path: debs/deb-${{ matrix.target_arch }}.tar
 
-    - name: Store bootstraps
-      if: always()
-      uses: actions/upload-artifact@v3
-      with:
-        name: bootstrap-${{ matrix.target_arch }}
-        path: "*.zip"
+      - name: Store bootstraps
+        if: always()
+        uses: actions/upload-artifact@v3
+        with:
+          name: bootstrap-${{ matrix.target_arch }}
+          path: "*.zip"
 
-    - name: prepare bootstrap to upload to gh-pages
-      if: always()
-      run: |
-        mkdir -p bootstrap
-        mv bootstrap-${{ matrix.target_arch }}.zip ruby-${{ matrix.target_arch }}.zip
-        mv ruby-${{ matrix.target_arch }}.zip bootstrap
+  upload:
+    runs-on: ubuntu-latest
+    needs: build
 
-    - name: Push bootstrap to hosting
-      if: always()
-      uses: JamesIves/github-pages-deploy-action@v4.3.0
-      with:
-        folder: bootstrap
-        branch: gh-pages
-        clean: false
+    steps:
+
+      - name: Get all artifacts from build action
+        uses: actions/download-artifact@v2
+        with:
+          path: ./
+
+      - name: prepare bootstrap to upload to gh-pages
+        if: always()
+        run: |
+          mkdir -p bootstraps
+          for f in bootstrap-*.zip; do mv -i -- "$f" "${f//bootstrap/ruby}"; done
+          mv ruby-*.zip bootstraps
+
+      - name: Push bootstraps to gh-pages
+        if: always()
+        uses: JamesIves/github-pages-deploy-action@v4.3.0
+        with:
+          folder: bootstraps
+          branch: gh-pages
+          clean: false
