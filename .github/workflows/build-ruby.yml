@@ -60,14 +60,14 @@ jobs:
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: debs-${{ matrix.target_arch }}.tar
+          name: debs-${{ matrix.target_arch }}
           path: debs/deb-${{ matrix.target_arch }}.tar
 
       - name: Store bootstraps
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: bootstrap-${{ matrix.target_arch }}.zip
+          name: bootstrap-${{ matrix.target_arch }}
           path: "*.zip"
 
   upload:
@@ -88,8 +88,8 @@ jobs:
         if: always()
         run: |
           mkdir -p bootstraps
-          for f in bootstrap-*.zip; do mv "$f" "${f//bootstrap/ruby}"; done
-          mv ruby-*.zip bootstraps
+          for f in bootstrap-*; do mv "$f" "${f//bootstrap/ruby}"; done
+          mv ruby-* bootstraps
 
       - name: Push bootstraps to gh-pages
         if: always()
