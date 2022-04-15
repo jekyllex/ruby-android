@@ -88,7 +88,7 @@ jobs:
         if: always()
         run: |
           mkdir -p bootstraps
-          for f in bootstrap-*.zip; do mv -i -- "$f" "${f//bootstrap/ruby}"; done
+          for f in bootstrap-*.zip; do mv "$f" "${f//bootstrap/ruby}"; done
           mv ruby-*.zip bootstraps
 
       - name: Push bootstraps to gh-pages
