@@ -82,6 +82,5 @@ jobs:
       uses: JamesIves/github-pages-deploy-action@v4.3.0
       with:
         folder: bootstrap
-        message: "Update bootstrap"
         branch: gh-pages
         clean: false
