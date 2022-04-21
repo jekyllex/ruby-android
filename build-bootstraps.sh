@@ -1,8 +1,6 @@
 #!/usr/bin/env bash
 # shellcheck disable=SC2039,SC2059
 
-# Override Termux's default build-bootstraps.sh
-
 # Title:         build-bootstrap.sh
 # Description:   A script to build bootstrap archives for the termux-app
 #                from local package sources instead of debs published in
@@ -56,6 +54,41 @@ for cmd in ar awk curl grep gzip find sed tar xargs xz zip; do
 		exit 1
 	fi
 done
+
+# Build deb files for package and its dependencies deb from source for arch
+build_package() {
+	
+	local return_value
+
+	local package_arch="$1"
+	local package_name="$2"
+
+	local build_output
+
+	# Build package from source
+	# stderr will be redirected to stdout and both will be captured into variable and printed on screen
+	cd "$TERMUX_PACKAGES_DIRECTORY"
+	echo $'\n\n\n'"[*] Building '$package_name'..."
+	exec 99>&1
+	build_output="$("$TERMUX_PACKAGES_DIRECTORY"/build-package.sh "${BUILD_PACKAGE_OPTIONS[@]}" -a "$package_arch" "$package_name" 2>&1 | tee >(cat - >&99); exit ${PIPESTATUS[0]})";
+	return_value=$?
+	echo "[*] Building '$package_name' exited with exit code $return_value"
+	exec 99>&-
+	if [ $return_value -ne 0 ]; then
+		echo "Failed to build package '$package_name' for arch '$package_arch'" 1>&2
+
+		# Dependency packages may not have a build.sh, so we ignore the error.
+		# A better way should be implemented to validate if its actually a dependency
+		# and not a required package itself, by removing dependencies from PACKAGES array.
+		if [[ $IGNORE_BUILD_SCRIPT_NOT_FOUND_ERROR == "1" ]] && [[ "$build_output" == *"No build.sh script at package dir"* ]]; then
+			echo "Ignoring error 'No build.sh script at package dir'" 1>&2
+			return 0
+		fi
+	fi
+
+	return $return_value
+
+}
 
 # Extract *.deb files to the bootstrap root.
 extract_debs() {
@@ -358,8 +391,24 @@ main() {
 		PACKAGES=()
 		EXTRACTED_PACKAGES=()
 
-		# We need only ruby for JekyllEx
-		PACKAGES+=("ruby")
+		# Core utilities.
+		PACKAGES+=("dash")
+		PACKAGES+=("dpkg")
+
+		# Handle additional packages.
+		for add_pkg in "${ADDITIONAL_PACKAGES[@]}"; do
+			if [[ " ${PACKAGES[*]} " != *" $add_pkg "* ]]; then
+				PACKAGES+=("$add_pkg")
+			fi
+		done
+		unset add_pkg
+
+		# Build packages.
+		for package_name in "${PACKAGES[@]}"; do
+			set +e
+			build_package "$package_arch" "$package_name" || return $?
+			set -e
+		done
 
 		# Extract all debs.
 		extract_debs || return $?
