@@ -1,4 +1,4 @@
-name: Build ruby
+name: Build bootstraps
 
 on:
   - workflow_dispatch
@@ -15,7 +15,6 @@ jobs:
     strategy:
       matrix:
         target_arch: [aarch64, arm, i686, x86_64]
-      fail-fast: false
 
     steps:
 
@@ -38,24 +37,18 @@ jobs:
           rm -rf termux-packages
           mv properties.sh build-bootstraps.sh scripts/
 
-      - name: Build ruby and needed dependencies
-        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} ruby
-
-      - name: Checksums for built *.deb files
+      - name: Create bootstrap archive
         if: always()
-        run: find output -type f -name "*.deb" -exec sha256sum "{}" \; | sort -k2
-
-      - name: Make debs archive
         run: |
-          mkdir -p debs
-          tar cf debs/deb-${{ matrix.target_arch }}.tar output/*.deb
+          ./scripts/run-docker.sh ./clean.sh
+          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }}
 
-      - name: Store debs
+      - name: Store bootstrap
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: debs-${{ matrix.target_arch }}
-          path: debs/deb-${{ matrix.target_arch }}.tar
+          name: bootstrap-${{ matrix.target_arch }}
+          path: "*.zip"
 
   upload:
     runs-on: ubuntu-latest
@@ -74,15 +67,13 @@ jobs:
       - name: Prepare bootstraps to upload
         if: always()
         run: |
-          sudo apt-get install unzip
-          unzip debs-*.zip
-          mkdir -p ruby/ruby
-          for f in debs-*.tar; do mv "$f".tar ruby/ruby"${f//debs-/}".tar; done
+          mkdir -p bootstraps/bootstraps
+          for f in bootstrap-*; do cd "$f" && mv "$f".zip ../bootstraps/bootstraps/"${f//bootstrap-/}".zip && cd ..; done
 
       - name: Upload bootstraps
         if: always()
         uses: JamesIves/github-pages-deploy-action@v4.3.0
         with:
-          folder: ruby
+          folder: bootstraps
           branch: gh-pages
           clean: false

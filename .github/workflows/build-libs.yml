@@ -1,4 +1,4 @@
-name: Build ruby
+name: Build libraries
 
 on:
   - workflow_dispatch
@@ -39,7 +39,7 @@ jobs:
           mv properties.sh build-bootstraps.sh scripts/
 
       - name: Build ruby and needed dependencies
-        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} ruby
+        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} make pkg-config binutils libllvm
 
       - name: Checksums for built *.deb files
         if: always()
@@ -76,13 +76,13 @@ jobs:
         run: |
           sudo apt-get install unzip
           unzip debs-*.zip
-          mkdir -p ruby/ruby
-          for f in debs-*.tar; do mv "$f".tar ruby/ruby"${f//debs-/}".tar; done
+          mkdir -p tools/tools
+          for f in debs-*.tar; do mv "$f".tar tools/tools"${f//debs-/}".tar; done
 
       - name: Upload bootstraps
         if: always()
         uses: JamesIves/github-pages-deploy-action@v4.3.0
         with:
-          folder: ruby
+          folder: tools
           branch: gh-pages
           clean: false
