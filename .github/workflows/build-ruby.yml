@@ -39,7 +39,7 @@ jobs:
           mv properties.sh build-bootstraps.sh scripts/
 
       - name: Build ruby and needed dependencies
-        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} libllvm glib make ndk-sysroot pkg-config binutils ruby
+        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} binutils ruby
 
       - name: Checksums for built *.deb files
         if: always()
