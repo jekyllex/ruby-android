@@ -392,7 +392,6 @@ main() {
 		EXTRACTED_PACKAGES=()
 
 		# Core utilities.
-		PACKAGES+=("dash")
 		PACKAGES+=("dpkg")
 
 		# Handle additional packages.
