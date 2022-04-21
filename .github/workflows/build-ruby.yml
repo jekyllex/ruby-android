@@ -54,7 +54,7 @@ jobs:
         if: always()
         run: |
           ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }} --android10
+          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }}
 
       - name: Store debs
         if: always()
