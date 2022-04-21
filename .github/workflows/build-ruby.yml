@@ -38,8 +38,8 @@ jobs:
           rm -rf termux-packages
           mv properties.sh build-bootstraps.sh scripts/
 
-      - name: Build Ruby
-        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} ruby
+      - name: Build ruby and needed dependencies
+        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} clang glib libcompiler-rt libllvm libxml2 lld llvm make ndk-sysroot pkg-config binutils ruby
 
       - name: Checksums for built *.deb files
         if: always()
