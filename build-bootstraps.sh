@@ -393,6 +393,12 @@ main() {
 
 		# Core utilities.
 		PACKAGES+=("dpkg")
+		PACKAGES+=("coreutils")
+		PACKAGES+=("termux-exec")
+		PACKAGES+=("termux-keyring")
+		PACKAGES+=("termux-tools")
+		PACKAGES+=("util-linux")
+		PACKAGES+=("xz-utils")
 
 		# Handle additional packages.
 		for add_pkg in "${ADDITIONAL_PACKAGES[@]}"; do

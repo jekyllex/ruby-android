@@ -19,7 +19,7 @@ else
 fi
 
 # package configuration.
-TERMUX_APP_PACKAGE="com.github.gouravkhunger.jekyllex"
+TERMUX_APP_PACKAGE="xyz.jekyllex"
 TERMUX_BASE_DIR="/data/data/${TERMUX_APP_PACKAGE}/files"
 TERMUX_CACHE_DIR="/data/data/${TERMUX_APP_PACKAGE}/cache"
 TERMUX_ANDROID_HOME="${TERMUX_BASE_DIR}/home"
