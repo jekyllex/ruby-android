@@ -40,7 +40,6 @@ jobs:
       - name: Create bootstrap archive
         if: always()
         run: |
-          ./clean.sh
           ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
