@@ -19,7 +19,7 @@ jobs:
     steps:
 
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -28,6 +28,7 @@ jobs:
         with:
           repository: termux/termux-packages
           path: termux-packages
+          fetch-depth: 1
 
       - name: Setup environment
         run: |
@@ -40,7 +41,9 @@ jobs:
       - name: Create bootstrap archive
         if: always()
         run: |
-          ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }}
+          ./scripts/run-docker.sh ./scripts/setup-android-sdk.sh
+          ./scripts/run-docker.sh ./clean.sh
+          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
         if: always()
