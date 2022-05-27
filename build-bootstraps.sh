@@ -394,7 +394,7 @@ main() {
 		# Core utilities.
 		PACKAGES+=("dpkg")
 		# PACKAGES+=("termux-exec")
-		PACKAGES+=("util-linux")
+		# PACKAGES+=("util-linux")
 
 		# Handle additional packages.
 		for add_pkg in "${ADDITIONAL_PACKAGES[@]}"; do
