@@ -41,7 +41,7 @@ jobs:
       - name: Create bootstrap archive
         if: always()
         run: |
-          ./scripts/run-docker.sh ./scripts/setup-android-sdk.sh
+          ./scripts/setup-android-sdk.sh
           ./scripts/run-docker.sh ./clean.sh
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }}
 
