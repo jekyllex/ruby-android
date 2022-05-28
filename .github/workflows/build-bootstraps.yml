@@ -51,30 +51,30 @@ jobs:
           name: bootstrap-${{ matrix.target_arch }}
           path: "*.zip"
 
-  # upload:
-  #   runs-on: ubuntu-latest
-  #   needs: build
+  upload:
+    runs-on: ubuntu-latest
+    needs: build
 
-  #   steps:
+    steps:
 
-  #     - name: Clone repository
-  #       uses: actions/checkout@v2
+      - name: Clone repository
+        uses: actions/checkout@v2
 
-  #     - name: Get all artifacts from build action
-  #       uses: actions/download-artifact@v2
-  #       with:
-  #         path: ./
+      - name: Get all artifacts from build action
+        uses: actions/download-artifact@v2
+        with:
+          path: ./
 
-  #     - name: Prepare bootstraps to upload
-  #       if: always()
-  #       run: |
-  #         mkdir -p bootstraps/bootstraps
-  #         for f in bootstrap-*; do cd "$f" && mv "$f".zip ../bootstraps/bootstraps/"${f//bootstrap-/}".zip && cd ..; done
+      - name: Prepare bootstraps to upload
+        if: always()
+        run: |
+          mkdir -p bootstraps/bootstraps
+          for f in bootstrap-*; do cd "$f" && mv "$f".zip ../bootstraps/bootstraps/"${f//bootstrap-/}".zip && cd ..; done
 
-  #     - name: Upload bootstraps
-  #       if: always()
-  #       uses: JamesIves/github-pages-deploy-action@v4.3.0
-  #       with:
-  #         folder: bootstraps
-  #         branch: gh-pages
-  #         clean: false
+      - name: Upload bootstraps
+        if: always()
+        uses: JamesIves/github-pages-deploy-action@v4.3.0
+        with:
+          folder: bootstraps
+          branch: gh-pages
+          clean: false
