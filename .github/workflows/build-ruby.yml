@@ -47,15 +47,15 @@ jobs:
 
       - name: Make debs archive
         run: |
-          mkdir -p debs
-          tar cf debs/deb-${{ matrix.target_arch }}.tar output/*.deb
+          mv output debs
+          tar cf debs-${{ matrix.target_arch }}.tar debs/*.deb
 
       - name: Store debs
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: debs-${{ matrix.target_arch }}
-          path: debs/deb-${{ matrix.target_arch }}.tar
+          path: debs-${{ matrix.target_arch }}.tar
 
   upload:
     runs-on: ubuntu-latest
@@ -74,10 +74,8 @@ jobs:
       - name: Prepare bootstraps to upload
         if: always()
         run: |
-          sudo apt-get install unzip
-          unzip debs-*.zip
           mkdir -p ruby/ruby
-          for f in debs-*.tar; do mv "$f".tar ruby/ruby"${f//debs-/}".tar; done
+          for f in debs-*; do cd "$f" && mv "$f".tar ../ruby/ruby/"${f//debs-/}".tar; done
 
       - name: Upload bootstraps
         if: always()
