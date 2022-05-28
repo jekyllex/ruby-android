@@ -47,15 +47,15 @@ jobs:
 
       - name: Make debs archive
         run: |
-          mkdir -p debs
-          tar cf debs/deb-${{ matrix.target_arch }}.tar output/*.deb
+          mv output tools
+          tar cf tools-${{ matrix.target_arch }}.tar tools/*.deb
 
       - name: Store debs
         if: always()
         uses: actions/upload-artifact@v3
         with:
-          name: debs-${{ matrix.target_arch }}
-          path: debs/deb-${{ matrix.target_arch }}.tar
+          name: tools-${{ matrix.target_arch }}
+          path: "*.tar"
 
   upload:
     runs-on: ubuntu-latest
@@ -68,21 +68,17 @@ jobs:
 
       - name: Get all artifacts from build action
         uses: actions/download-artifact@v2
-        with:
-          path: ./
 
       - name: Prepare bootstraps to upload
         if: always()
         run: |
-          sudo apt-get install unzip
-          unzip debs-*.zip
-          mkdir -p tools/tools
-          for f in debs-*.tar; do mv "$f".tar tools/tools"${f//debs-/}".tar; done
+          mkdir -p deps/deps
+          for f in tools-*; do cd "$f" && mv "$f".tar ../deps/deps/"${f//tools-/}".tar && cd ..; done
 
       - name: Upload bootstraps
         if: always()
         uses: JamesIves/github-pages-deploy-action@v4.3.0
         with:
-          folder: tools
+          folder: deps
           branch: gh-pages
           clean: false

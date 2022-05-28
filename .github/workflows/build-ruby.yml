@@ -55,7 +55,7 @@ jobs:
         uses: actions/upload-artifact@v3
         with:
           name: debs-${{ matrix.target_arch }}
-          path: debs-${{ matrix.target_arch }}.tar
+          path: "*.tar"
 
   upload:
     runs-on: ubuntu-latest
@@ -68,14 +68,12 @@ jobs:
 
       - name: Get all artifacts from build action
         uses: actions/download-artifact@v2
-        with:
-          path: ./
 
       - name: Prepare bootstraps to upload
         if: always()
         run: |
           mkdir -p ruby/ruby
-          for f in debs-*; do cd "$f" && mv "$f".tar ../ruby/ruby/"${f//debs-/}".tar; done
+          for f in debs-*; do cd "$f" && mv "$f".tar ../ruby/ruby/"${f//debs-/}".tar && cd ..; done
 
       - name: Upload bootstraps
         if: always()

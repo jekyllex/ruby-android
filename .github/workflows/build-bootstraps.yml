@@ -62,8 +62,6 @@ jobs:
 
       - name: Get all artifacts from build action
         uses: actions/download-artifact@v2
-        with:
-          path: ./
 
       - name: Prepare bootstraps to upload
         if: always()
