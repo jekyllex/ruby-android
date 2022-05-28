@@ -392,7 +392,7 @@ main() {
 		EXTRACTED_PACKAGES=()
 
 		# Core utilities.
-		PACKAGES+=("dpkg")
+		PACKAGES+=("binutils")
 		# PACKAGES+=("termux-exec")
 		# PACKAGES+=("util-linux")
 
