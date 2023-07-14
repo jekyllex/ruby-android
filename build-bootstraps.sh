@@ -8,6 +8,8 @@
 #                bootstrap archives to be easily built for (forked) termux
 #                apps without having to publish an apt repo first.
 # Usage:         run "build-bootstrap.sh --help"
+#
+# Adapted from: https://github.com/termux/termux-packages/blob/master/scripts/build-bootstraps.sh
 version=0.1.0
 
 set -e
@@ -391,8 +393,17 @@ main() {
 		PACKAGES=()
 		EXTRACTED_PACKAGES=()
 
-		# Core utilities.
-		PACKAGES+=("dpkg")
+		# Core JekyllEx utilities.
+		PACKAGES+=("git")
+    PACKAGES+=("tar")
+		PACKAGES+=("dash")
+		PACKAGES+=("make")
+		PACKAGES+=("ruby")
+    PACKAGES+=("libxslt")
+		PACKAGES+=("libllvm")
+		PACKAGES+=("coreutils")
+		PACKAGES+=("pkg-config")
+		PACKAGES+=("binutils-libs")
 
 		# Handle additional packages.
 		for add_pkg in "${ADDITIONAL_PACKAGES[@]}"; do

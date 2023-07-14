@@ -4,7 +4,6 @@ on:
   - workflow_dispatch
 
 jobs:
-
   build:
     runs-on: ubuntu-latest
 
@@ -17,9 +16,8 @@ jobs:
         target_arch: [aarch64, arm, i686, x86_64]
 
     steps:
-
       - name: Clone repository
-        uses: actions/checkout@v2
+        uses: actions/checkout@v3
         with:
           fetch-depth: 1
 
@@ -28,6 +26,7 @@ jobs:
         with:
           repository: termux/termux-packages
           path: termux-packages
+          fetch-depth: 1
 
       - name: Setup environment
         run: |
@@ -41,7 +40,7 @@ jobs:
         if: always()
         run: |
           ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }}
+          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
         if: always()
@@ -49,31 +48,3 @@ jobs:
         with:
           name: bootstrap-${{ matrix.target_arch }}
           path: "*.zip"
-
-  upload:
-    runs-on: ubuntu-latest
-    needs: build
-
-    steps:
-
-      - name: Clone repository
-        uses: actions/checkout@v2
-
-      - name: Get all artifacts from build action
-        uses: actions/download-artifact@v2
-        with:
-          path: ./
-
-      - name: Prepare bootstraps to upload
-        if: always()
-        run: |
-          mkdir -p bootstraps/bootstraps
-          for f in bootstrap-*; do cd "$f" && mv "$f".zip ../bootstraps/bootstraps/"${f//bootstrap-/}".zip && cd ..; done
-
-      - name: Upload bootstraps
-        if: always()
-        uses: JamesIves/github-pages-deploy-action@v4.3.0
-        with:
-          folder: bootstraps
-          branch: gh-pages
-          clean: false
