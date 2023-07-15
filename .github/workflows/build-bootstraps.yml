@@ -23,7 +23,7 @@ jobs:
           remove-codeql: 'true'
           remove-haskell: 'true'
           temp-reserve-mb: '13000'
-          root-reserve-mb: '35000'
+          root-reserve-mb: '30000'
 
       - name: Clone repository
         uses: actions/checkout@v3
