@@ -19,11 +19,10 @@ jobs:
       - name: Maximize build space
         uses: easimon/maximize-build-space@master
         with:
-          swap-size-mb: 1024
-          root-reserve-mb: 512
           remove-dotnet: 'true'
           remove-codeql: 'true'
           remove-haskell: 'true'
+          root-reserve-mb: 82500
 
       - name: Clone repository
         uses: actions/checkout@v3
