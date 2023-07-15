@@ -24,7 +24,7 @@ jobs:
           remove-haskell: 'true'
           remove-android: 'true'
           temp-reserve-mb: '13000'
-          root-reserve-mb: '50000'
+          root-reserve-mb: '40000'
           remove-docker-images: 'true'
 
       - name: Clone repository
