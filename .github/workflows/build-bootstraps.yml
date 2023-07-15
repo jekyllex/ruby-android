@@ -22,6 +22,7 @@ jobs:
           remove-dotnet: 'true'
           remove-codeql: 'true'
           remove-haskell: 'true'
+          temp-reserve-mb: '13000'
 
       - name: Clone repository
         uses: actions/checkout@v3
