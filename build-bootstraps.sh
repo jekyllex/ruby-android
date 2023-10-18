@@ -20,7 +20,7 @@ BOOTSTRAP_TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/bootstrap-tmp.XXXXXXXX")
 
 # By default, bootstrap archives are compatible with Android >=7.0
 # and <10.
-BOOTSTRAP_ANDROID10_COMPATIBLE=false
+BOOTSTRAP_ANDROID10_COMPATIBLE=true
 
 # By default, bootstrap archives will be built for all architectures
 # supported by Termux application.
