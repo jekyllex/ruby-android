@@ -395,11 +395,11 @@ main() {
 
 		# Core JekyllEx utilities.
 		PACKAGES+=("git")
-    		PACKAGES+=("tar")
+		PACKAGES+=("tar")
 		PACKAGES+=("dash")
 		PACKAGES+=("make")
 		PACKAGES+=("ruby")
-    		PACKAGES+=("libxslt")
+		PACKAGES+=("libxslt")
 		PACKAGES+=("libllvm")
 		PACKAGES+=("coreutils")
 		PACKAGES+=("pkg-config")
