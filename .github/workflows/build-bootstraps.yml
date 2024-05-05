@@ -35,7 +35,8 @@ jobs:
       - name: Get packages from termux-packages
         uses: actions/checkout@v3
         with:
-          repository: termux/termux-packages
+          repository: gouravkhunger/termux-packages
+          ref: 20027/fix-perl
           path: termux-packages
           fetch-depth: 1
 
