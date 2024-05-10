@@ -34,8 +34,7 @@ jobs:
       - name: Get packages from termux-packages
         uses: actions/checkout@v3
         with:
-          repository: gouravkhunger/termux-packages
-          ref: 20027/fix-perl
+          repository: termux/termux-packages
           path: termux-packages
           fetch-depth: 1
 
@@ -46,6 +45,9 @@ jobs:
           mv termux-packages/* .
           rm -rf termux-packages
           mv properties.sh build-bootstraps.sh scripts/
+          for package in patches/*; do
+            cp -r $package packages;
+          done
 
       - name: Create bootstrap archive
         if: always()
