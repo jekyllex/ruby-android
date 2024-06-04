@@ -14,6 +14,7 @@ version=0.1.0
 
 set -e
 
+TERMUX_SCRIPTDIR=$(realpath "$(dirname "$0")/../")
 . $(dirname "$(realpath "$0")")/properties.sh
 
 BOOTSTRAP_TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/bootstrap-tmp.XXXXXXXX")
@@ -394,16 +395,10 @@ main() {
 		EXTRACTED_PACKAGES=()
 
 		# Core JekyllEx utilities.
-		PACKAGES+=("git")
-    		PACKAGES+=("tar")
 		PACKAGES+=("dash")
-		PACKAGES+=("make")
-		PACKAGES+=("ruby")
-    		PACKAGES+=("libxslt")
-		PACKAGES+=("libllvm")
-		PACKAGES+=("coreutils")
+		PACKAGES+=("wget")
+		PACKAGES+=("dpkg")
 		PACKAGES+=("pkg-config")
-		PACKAGES+=("binutils-libs")
 
 		# Handle additional packages.
 		for add_pkg in "${ADDITIONAL_PACKAGES[@]}"; do
