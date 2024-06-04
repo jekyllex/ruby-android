@@ -53,7 +53,7 @@ jobs:
         if: always()
         run: |
           ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
+          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
         if: always()

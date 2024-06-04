@@ -30,6 +30,8 @@ TERMUX_PREFIX="${TERMUX_PREFIX_CLASSICAL}"
 # Path to CGCT tools
 export CGCT_DIR="/data/data/${TERMUX_APP_PACKAGE}/cgct"
 
+export TERMUX_PACKAGES_DIRECTORIES=$(jq --raw-output 'del(.pkg_format) | keys | .[]' ${TERMUX_SCRIPTDIR}/repo.json)
+
 # Allow to override setup.
 for f in "${HOME}/.config/termux/termuxrc.sh" "${HOME}/.termux/termuxrc.sh" "${HOME}/.termuxrc"; do
 	if [ -f "$f" ]; then
