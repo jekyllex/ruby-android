@@ -1,7 +1,13 @@
 name: Build packages
 
 on:
-  - workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      packages:
+        type: string
+        required: true
+        description: 'Packages to build'
+        default: 'git tar make ruby libxslt libllvm coreutils binutils-libs'
 
 jobs:
 
@@ -39,11 +45,15 @@ jobs:
           mv properties.sh build-bootstraps.sh scripts/
 
       - name: Build packages
-        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} git tar make ruby libxslt libllvm coreutils binutils-libs
+        run: ./scripts/run-docker.sh ./build-package.sh -a ${{ matrix.target_arch }} ${{ inputs.packages }}
+
+      - name: Zip debs
+        run: |
+          zip -r output.zip output
 
       - name: Store debs
         if: always()
         uses: actions/upload-artifact@v3
         with:
           name: debs-${{ matrix.target_arch }}
-          path: output
+          path: output.zip
