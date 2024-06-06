@@ -45,6 +45,9 @@ jobs:
           mv termux-packages/* .
           rm -rf termux-packages
           mv properties.sh build-bootstraps.sh scripts/
+          for package in patches/*; do
+            cp -r $package packages;
+          done
 
       - name: Create bootstrap archive
         run: |
