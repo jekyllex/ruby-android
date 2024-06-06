@@ -395,10 +395,7 @@ main() {
 		EXTRACTED_PACKAGES=()
 
 		# Core JekyllEx utilities.
-		PACKAGES+=("dash")
-		PACKAGES+=("wget")
-		PACKAGES+=("dpkg")
-		PACKAGES+=("pkg-config")
+		PACKAGES+=("ruby")
 
 		# Handle additional packages.
 		for add_pkg in "${ADDITIONAL_PACKAGES[@]}"; do
