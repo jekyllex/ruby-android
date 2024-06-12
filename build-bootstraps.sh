@@ -404,7 +404,6 @@ main() {
     PACKAGES+=("libllvm")
     PACKAGES+=("coreutils")
     PACKAGES+=("pkg-config")
-    PACKAGES+=("termux-exec")
     PACKAGES+=("binutils-libs")
 
 		# Handle additional packages.
