@@ -1,9 +1,56 @@
 diff --git a/gems/bundled_gems b/gems/bundled_gems
-index ae0a1ac..8ebc2fa 100644
+index ae0a1ac..b88ab67 100644
 --- a/gems/bundled_gems
 +++ b/gems/bundled_gems
-@@ -21,3 +21,4 @@ rbs             3.4.0   https://github.com/ruby/rbs
- typeprof        0.21.9  https://github.com/ruby/typeprof
- debug           1.9.1   https://github.com/ruby/debug
- racc            1.7.3   https://github.com/ruby/racc
-+jekyll          4.3.3   https://github.com/jekyll/jekyll
+@@ -5,19 +5,35 @@
+ # - repository-url: URL from where clone for test
+ # - revision: revision in repository-url to test
+ #   if `revision` is not given, "v"+`version` or `version` will be used.
+-minitest        5.20.0  https://github.com/minitest/minitest
+-power_assert    2.0.3   https://github.com/ruby/power_assert
+-rake            13.1.0  https://github.com/ruby/rake
+-test-unit       3.6.1   https://github.com/test-unit/test-unit
+-rexml           3.2.6   https://github.com/ruby/rexml
+-rss             0.3.0   https://github.com/ruby/rss
+-net-ftp         0.3.4   https://github.com/ruby/net-ftp
+-net-imap        0.4.9.1   https://github.com/ruby/net-imap
+-net-pop         0.1.2   https://github.com/ruby/net-pop
+-net-smtp        0.4.0.1   https://github.com/ruby/net-smtp
+-matrix          0.4.2   https://github.com/ruby/matrix
+-prime           0.1.2   https://github.com/ruby/prime
+-rbs             3.4.0   https://github.com/ruby/rbs
+-typeprof        0.21.9  https://github.com/ruby/typeprof
+-debug           1.9.1   https://github.com/ruby/debug
+-racc            1.7.3   https://github.com/ruby/racc
++minitest                  5.20.0      https://github.com/minitest/minitest
++power_assert              2.0.3       https://github.com/ruby/power_assert
++rake                      13.1.0      https://github.com/ruby/rake
++test-unit                 3.6.1       https://github.com/test-unit/test-unit
++rexml                     3.2.6       https://github.com/ruby/rexml
++rss                       0.3.0       https://github.com/ruby/rss
++net-ftp                   0.3.4       https://github.com/ruby/net-ftp
++net-imap                  0.4.9.1     https://github.com/ruby/net-imap
++net-pop                   0.1.2       https://github.com/ruby/net-pop
++net-smtp                  0.4.0.1     https://github.com/ruby/net-smtp
++matrix                    0.4.2       https://github.com/ruby/matrix
++prime                     0.1.2       https://github.com/ruby/prime
++rbs                       3.4.0       https://github.com/ruby/rbs
++typeprof                  0.21.9      https://github.com/ruby/typeprof
++debug                     1.9.1       https://github.com/ruby/debug
++racc                      1.7.3       https://github.com/ruby/racc
++jekyll                    4.3.3       https://github.com/jekyll/jekyll
++addressable               2.8.6       https://github.com/sporkmonger/addressable
++colorator                 1.1.0       https://github.com/octopress/colorator
++em-websocket              0.5.3       https://github.com/igrigorik/em-websocket
++i18n                      1.14.5      https://github.com/ruby-i18n/i18n
++jekyll-sass-converter     3.0.0       https://github.com/jekyll/jekyll-sass-converter
++jekyll-watch              2.2.1       https://github.com/jekyll/jekyll-watch
++kramdown                  2.4.0       https://github.com/gettalong/kramdown
++kramdown-parser-gfm       1.1.0       https://github.com/kramdown/parser-gfm
++liquid                    5.5.0       https://github.com/Shopify/liquid
++mercenary                 0.4.0       https://github.com/jekyll/mercenary
++pathutil                  0.16.2      https://github.com/envygeeks/pathutil
++rouge                     4.3.0       https://github.com/rouge-ruby/rouge
++safe_yaml                 1.0.5       https://github.com/dtao/safe_yaml
++terminal-table            3.0.2       https://github.com/tj/terminal-table
++webrick                   1.8.1       https://github.com/ruby/webrick
