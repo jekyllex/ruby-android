@@ -1,0 +1,13 @@
+diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
+index 97fe1ea..72b96bd 100755
+--- a/tool/rbinstall.rb
++++ b/tool/rbinstall.rb
+@@ -1109,6 +1109,8 @@ def install_default_gem(dir, srcdir, bindir)
+       next
+     end
+     spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
++    puts "Patching gems\n"
++    FileUtils.cp_r("#{ENV['TERMUX_SCRIPTDIR']}/patches/gems/", "#{srcdir}/.bundle/gems/")
+     package = RbInstall::DirPackage.new spec
+     ins = RbInstall::UnpackedInstaller.new(package, options)
+     puts "#{INDENT}#{spec.name} #{spec.version}"
