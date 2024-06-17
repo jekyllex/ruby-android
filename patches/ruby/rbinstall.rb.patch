@@ -7,7 +7,7 @@ index 97fe1ea..72b96bd 100755
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
 +    puts "Patching gems\n"
-+    FileUtils.cp_r("#{ENV['TERMUX_SCRIPTDIR']}/patches/gems/", "#{srcdir}/.bundle/gems/")
++    FileUtils.cp_r("/home/builder/termux-packages/patches/gems/", "#{srcdir}/.bundle/gems/")
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
