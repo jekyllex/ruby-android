@@ -1,13 +1,32 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..72b96bd 100755
+index 97fe1ea..ec0e41a 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,8 @@ def install_default_gem(dir, srcdir, bindir)
-       next
-     end
-     spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
-+    puts "Patching gems\n"
-+    FileUtils.cp_r("/home/builder/termux-packages/patches/gems/", "#{srcdir}/.bundle/gems/")
+@@ -1084,6 +1084,12 @@ def install_default_gem(dir, srcdir, bindir)
+   # the newly installed ruby.
+   ENV.delete('RUBYOPT')
+ 
++  puts "Patching gems"
++  puts Dir.glob("/home/builder/termux-packages/patches/gems/**/*")
++  puts "\n\n\n\n"
++  puts Dir.glob("/home/builder/termux-packages/patches/gems/**/*/")
++  FileUtils.cp_r("/home/builder/termux-packages/patches/gems/", "#{srcdir}/.bundle/gems/")
++
+   File.foreach("#{srcdir}/gems/bundled_gems") do |name|
+     next if /^\s*(?:#|$)/ =~ name
+     next unless /^(\S+)\s+(\S+).*/ =~ name
+@@ -1112,6 +1118,14 @@ def install_default_gem(dir, srcdir, bindir)
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
++    unless spec.name == "eventmachine"
++      puts File.read("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/project.h")
++      puts File.read("/home/builder/termux-packages/patches/gems/eventmachine-1.2.7/ext/project.h")
++
++      puts "replace files"
++      File.write("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/project.h", File.read("/home/builder/termux-packages/patches/gems/eventmachine-1.2.7/ext/project.h"))
++      puts File.read("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/project.h")
++    end
+     ins.install
+     install_recursive("#{build_dir}/#{gem_name}", "#{extensions_dir}/#{gem_name}") do |src, dest|
+       # puts "#{INDENT}    #{dest[extensions_dir.size+gem_name.size+2..-1]}"
