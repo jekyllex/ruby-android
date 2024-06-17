@@ -1,8 +1,8 @@
 diff --git a/gems/bundled_gems b/gems/bundled_gems
-index ae0a1ac..8349f44 100644
+index ae0a1ac..10eb213 100644
 --- a/gems/bundled_gems
 +++ b/gems/bundled_gems
-@@ -21,3 +21,37 @@ rbs             3.4.0   https://github.com/ruby/rbs
+@@ -21,3 +21,40 @@ rbs             3.4.0   https://github.com/ruby/rbs
  typeprof        0.21.9  https://github.com/ruby/typeprof
  debug           1.9.1   https://github.com/ruby/debug
  racc            1.7.3   https://github.com/ruby/racc
@@ -40,3 +40,6 @@ index ae0a1ac..8349f44 100644
 +unicode-display_width 2.5.0 https://github.com/janlelis/unicode-display_width
 +webrick 1.8.1 https://github.com/ruby/webrick
 +ffi 1.17.0 https://github.com/ffi/ffi
++mini_portile2 2.8.7 https://github.com/flavorjones/mini_portile
++jekyll-feed 0.17.0 https://github.com/jekyll/jekyll-feed
++jekyll-seo-tag 2.8.0 https://github.com/jekyll/jekyll-seo-tag
