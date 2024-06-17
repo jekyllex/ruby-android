@@ -72,6 +72,12 @@ termux_step_make_install() {
 	perl -p -i -e 's/^.*CONFIG\["MKDIR_P"\].*$/  CONFIG["MKDIR_P"] = "mkdir -p"/' $RBCONFIG
 	perl -p -i -e 's/^.*CONFIG\["EGREP"\].*$/  CONFIG["EGREP"] = "grep -E"/' $RBCONFIG
 	perl -p -i -e 's/^.*CONFIG\["GREP"\].*$/  CONFIG["GREP"] = "grep"/' $RBCONFIG
+
+  echo "Patching gems"
+
+  for gem in patches/gem/*; do
+    cp -r $TERMUX_SCRIPTDIR/gems/* /home/builder/.termux-build/ruby/src/.bundle/gems
+  done
 }
 
 termux_step_post_massage() {
@@ -79,11 +85,4 @@ termux_step_post_massage() {
 	if [ ! -d ./lib/ruby/gems/${_RUBY_API_VERSION}/extensions/${_RUBYGEMS_ARCH} ]; then
 		termux_error_exit "Extensions for bundled gems were not installed."
 	fi
-}
-
-termux_step_post_make_install() {
-  echo "Patching gems"
-  for gem in patches/gem/*; do
-    cp -r $TERMUX_SCRIPTDIR/gems/* /home/builder/.termux-build/ruby/src/.bundle/gems
-  done
 }
