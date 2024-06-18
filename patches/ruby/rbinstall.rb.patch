@@ -1,31 +1,22 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..ec0e41a 100755
+index 97fe1ea..550efcc 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1084,6 +1084,12 @@ def install_default_gem(dir, srcdir, bindir)
-   # the newly installed ruby.
-   ENV.delete('RUBYOPT')
- 
-+  puts "Patching gems"
-+  puts Dir.glob("/home/builder/termux-packages/patches/gems/**/*")
-+  puts "\n\n\n\n"
-+  puts Dir.glob("/home/builder/termux-packages/patches/gems/**/*/")
-+  FileUtils.cp_r("/home/builder/termux-packages/patches/gems/", "#{srcdir}/.bundle/gems/")
-+
-   File.foreach("#{srcdir}/gems/bundled_gems") do |name|
-     next if /^\s*(?:#|$)/ =~ name
-     next unless /^(\S+)\s+(\S+).*/ =~ name
-@@ -1112,6 +1118,14 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1112,6 +1112,18 @@ def install_default_gem(dir, srcdir, bindir)
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
-+    unless spec.name == "eventmachine"
++    patch_files = Dir.glob("/home/builder/termux-packages/patches/gems/#{gem_name}/**/*")
++    patch_files.each do |patch_file|
++      target = patch_file.sub("/home/builder/termux-packages/patches/gems/#{gem_name}/", "#{srcdir}/.bundle/gems/#{gem_name}/")
++      if File.file?(patch_file) and File.file?(target)
++        puts "#{INDENT}patching #{patch_file}"
++        File.write(target, File.read(patch_file))
++      end
++    end
++    if spec.name == "eventmachine"
 +      puts File.read("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/extconf.rb")
-+      puts File.read("/home/builder/termux-packages/patches/gems/eventmachine-1.2.7/ext/extconf.rb")
-+
-+      puts "replace files"
-+      File.write("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/extconf.rb", File.read("/home/builder/termux-packages/patches/gems/eventmachine-1.2.7/ext/extconf.rb"))
-+      puts File.read("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/extconf.rb")
++      puts File.read("/home/builder/.termux-build/ruby/src/.bundle/gems/eventmachine-1.2.7/ext/ed.cpp")
 +    end
      ins.install
      install_recursive("#{build_dir}/#{gem_name}", "#{extensions_dir}/#{gem_name}") do |src, dest|

@@ -88,21 +88,21 @@ if ENV['CROSS_COMPILING']
   end
 elsif dir_config_wrapper('OpenSSL', 'ssl')
   # If the user has provided a --with-ssl-dir argument, we must respect it or fail.
-  add_define 'WITH_SSL' if (check_libs(SSL_LIBS) || check_libs(SSL_LIBS_WIN)) && check_heads(SSL_HEADS)
+  add_define "WITH_SSL" if (check_libs(SSL_LIBS) || check_libs(SSL_LIBS_WIN)) && check_heads(SSL_HEADS)
 elsif pkg_config_wrapper('OpenSSL', 'openssl')
   # If we can detect OpenSSL by pkg-config, use it as the next-best option
-  add_define 'WITH_SSL' if (check_libs(SSL_LIBS) || check_libs(SSL_LIBS_WIN)) && check_heads(SSL_HEADS)
+  add_define "WITH_SSL" if (check_libs(SSL_LIBS) || check_libs(SSL_LIBS_WIN)) && check_heads(SSL_HEADS)
 elsif (check_libs(SSL_LIBS) || check_libs(SSL_LIBS_WIN)) && check_heads(SSL_HEADS)
   # If we don't even need any options to find a usable OpenSSL, go with it
-  add_define 'WITH_SSL'
+  add_define "WITH_SSL"
 elsif dir_config_search('OpenSSL', 'ssl', ['/usr/local', '/opt/local', '/usr/local/opt/openssl']) do
     (check_libs(SSL_LIBS) || check_libs(SSL_LIBS_WIN)) && check_heads(SSL_HEADS)
   end
   # Finally, look for OpenSSL in alternate locations including MacPorts and HomeBrew
-  add_define 'WITH_SSL'
+  add_define "WITH_SSL"
 end
 
-add_define 'BUILD_FOR_RUBY'
+add_define "BUILD_FOR_RUBY"
 
 # Ruby features:
 
@@ -133,7 +133,7 @@ if RUBY_PLATFORM =~ /(mswin|mingw|bccwin)/
 else
   GNU_CHAIN = true
   OS_UNIX = true
-  add_define 'OS_UNIX'
+  add_define "OS_UNIX"
 
   add_define "HAVE_KQUEUE" if have_header("sys/event.h") && have_header("sys/queue.h")
 end
@@ -163,10 +163,10 @@ when /mswin32/, /mingw32/, /bccwin32/
 
   # Newer versions of Ruby already define _WIN32_WINNT, which is needed
   # to get access to newer POSIX networking functions (e.g. getaddrinfo)
-  add_define '_WIN32_WINNT=0x0501' unless have_func('getaddrinfo')
+  add_define "_WIN32_WINNT=0x0501" unless have_func('getaddrinfo')
 
 when /solaris/
-  add_define 'OS_SOLARIS8'
+  add_define "OS_SOLARIS8"
   check_libs(%w[nsl socket], true)
 
   # If Ruby was compiled for 32-bits, then select() can only handle 1024 fds
@@ -178,7 +178,7 @@ when /solaris/
      `cc -V 2>&1` =~ /Sun/        # detect Solaris Studio compiler
     )
     # SUN CHAIN
-    add_define 'CC_SUNWspro'
+    add_define "CC_SUNWspro"
     $preload = ["\nCXX = CC"] # hack a CXX= line into the makefile
     $CFLAGS = CONFIG['CFLAGS'] = "-KPIC"
     CONFIG['CCDLFLAGS'] = "-KPIC"
@@ -198,14 +198,14 @@ when /openbsd/
   CONFIG['LDSHAREDXX'] = "$(CXX) -shared -lstdc++ -fPIC"
 
 when /darwin/
-  add_define 'OS_DARWIN'
+  add_define "OS_DARWIN"
 
   # on Unix we need a g++ link, not gcc.
   # Ff line contributed by Daniel Harple.
   CONFIG['LDSHARED'] = "$(CXX) " + CONFIG['LDSHARED'].split[1..-1].join(' ')
 
 when /linux/
-  add_define 'HAVE_EPOLL' if have_func('epoll_create', 'sys/epoll.h')
+  add_define "HAVE_EPOLL" if have_func('epoll_create', 'sys/epoll.h')
 
   # on Unix we need a g++ link, not gcc.
   CONFIG['LDSHARED'] = "$(CXX) -shared"
@@ -260,7 +260,7 @@ end
 puts "CXXFLAGS=#{CONFIG['CXXFLAGS']}"
 
 # Solaris C++ compiler doesn't have make_pair()
-add_define 'HAVE_MAKE_PAIR' if try_link(<<SRC, '-lstdc++')
+add_define "HAVE_MAKE_PAIR" if try_link(<<SRC, '-lstdc++')
   #include <utility>
   using namespace std;
   int main(){ pair<const int,int> tuple = make_pair(1,2); }
