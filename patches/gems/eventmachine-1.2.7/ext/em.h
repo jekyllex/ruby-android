@@ -69,6 +69,8 @@ See the file COPYING for complete licensing information.
   #define EmSelect select
 #endif
 
+#include <ruby/internal/intern/select/largesize.h>
+
 /*
 #if !defined(HAVE_TYPE_RB_FDSET_T)
 #define fd_check(n) (((n) < FD_SETSIZE) ? 1 : 0*fprintf(stderr, "fd %d too large for select\n", (n)))
