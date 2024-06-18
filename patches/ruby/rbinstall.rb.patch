@@ -20,12 +20,12 @@ index 97fe1ea..ec0e41a 100755
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
 +    unless spec.name == "eventmachine"
-+      puts File.read("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/project.h")
-+      puts File.read("/home/builder/termux-packages/patches/gems/eventmachine-1.2.7/ext/project.h")
++      puts File.read("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/extconf.rb")
++      puts File.read("/home/builder/termux-packages/patches/gems/eventmachine-1.2.7/ext/extconf.rb")
 +
 +      puts "replace files"
-+      File.write("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/project.h", File.read("/home/builder/termux-packages/patches/gems/eventmachine-1.2.7/ext/project.h"))
-+      puts File.read("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/project.h")
++      File.write("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/extconf.rb", File.read("/home/builder/termux-packages/patches/gems/eventmachine-1.2.7/ext/extconf.rb"))
++      puts File.read("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/extconf.rb")
 +    end
      ins.install
      install_recursive("#{build_dir}/#{gem_name}", "#{extensions_dir}/#{gem_name}") do |src, dest|
