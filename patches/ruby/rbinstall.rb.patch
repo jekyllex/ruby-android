@@ -1,23 +1,18 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..faf2a6b 100755
+index 97fe1ea..3dba0a5 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1112,6 +1112,19 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1112,6 +1112,14 @@ def install_default_gem(dir, srcdir, bindir)
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
 +    patch_files = Dir.glob("/home/builder/termux-packages/patches/gems/#{gem_name}/**/*")
-+    puts "rbinstall.rb: patching!!"
-+    puts patch_files
 +    patch_files.each do |patch_file|
 +      target = patch_file.sub("/home/builder/termux-packages/patches/gems/#{gem_name}/", "#{srcdir}/.bundle/gems/#{gem_name}/")
 +      if File.file?(patch_file) and File.file?(target)
 +        puts "#{INDENT}patching #{patch_file}"
 +        File.write(target, File.read(patch_file))
 +      end
-+    end
-+    if spec.name == "eventmachine"
-+      puts File.read("#{srcdir}/.bundle/gems/eventmachine-1.2.7/ext/extconf.rb")
 +    end
      ins.install
      install_recursive("#{build_dir}/#{gem_name}", "#{extensions_dir}/#{gem_name}") do |src, dest|

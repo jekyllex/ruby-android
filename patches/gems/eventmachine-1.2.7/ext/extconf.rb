@@ -267,13 +267,6 @@ add_define 'HAVE_MAKE_PAIR' if try_link(<<SRC, '-lstdc++')
 SRC
 TRY_LINK.sub!('$(CXX)', '$(CC)')
 
-# put all relevant compiler flags
-puts "EXTCONFIG VALUES FOR EVENTMACHINE"
-puts $defs
-puts CONFIG
-puts "Ruby platform: #{RUBY_PLATFORM}"
-puts "—————————————————————————————————"
-
 $defs.each do |flag|
   $CPPFLAGS += " #{flag}"
 end
