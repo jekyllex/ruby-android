@@ -428,7 +428,7 @@ end
 def process_recipe(name, version, static_p, cross_p, cacheable_p = true)
   require "rubygems"
   # gem("mini_portile2", REQUIRED_MINI_PORTILE_VERSION) # gemspec is not respected at install time
-  require "mini_portile2"
+  require "/home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0/gems/mini_portile2-2.8.7/lib/mini_portile2.rb"
   message("Using mini_portile version #{MiniPortile::VERSION}\n")
 
   unless ["libxml2", "libxslt"].include?(name)
