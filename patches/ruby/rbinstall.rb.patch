@@ -1,19 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..c5efa95 100755
+index 97fe1ea..1a24629 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1084,6 +1084,10 @@ def install_default_gem(dir, srcdir, bindir)
-   # the newly installed ruby.
-   ENV.delete('RUBYOPT')
- 
-+  Gem.paths = { 
-+    'GEM_PATH' => "/home/builder/.local/share/gem/ruby/3.3.0:/home/builder/.termux-build/ruby/build/ruby/gems/3.3.0:/home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0"
-+  }
-+
-   File.foreach("#{srcdir}/gems/bundled_gems") do |name|
-     next if /^\s*(?:#|$)/ =~ name
-     next unless /^(\S+)\s+(\S+).*/ =~ name
-@@ -1112,6 +1116,17 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1112,6 +1112,17 @@ def install_default_gem(dir, srcdir, bindir)
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
