@@ -63,7 +63,7 @@ termux_step_make_install() {
 	make uninstall # remove possible remains to get fresh timestamps
 
   # Fix absolute paths to executables (primarily for mini_portile2)
-  export GEM_PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/lib/ruby/gems/3.3.0:$GEM_PATH
+  export GEM_PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/lib/ruby/gems/3.3.0
 
 	make install
 
