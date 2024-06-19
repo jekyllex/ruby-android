@@ -1,7 +1,25 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..1a24629 100755
+index 694d16a..771c545 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
+@@ -1003,7 +1003,7 @@ def load_gemspec(file, base = nil)
+ end
+ 
+ def install_default_gem(dir, srcdir, bindir)
+-  gem_dir = Gem.default_dir
++  gem_dir = "@TERMUX_PREFIX@/lib/ruby/gems/@RUBY_API_VERSION@"
+   install_dir = with_destdir(gem_dir)
+   prepare "default gems from #{dir}", gem_dir
+   RbInstall.no_write do
+@@ -1052,7 +1052,7 @@ def install_default_gem(dir, srcdir, bindir)
+ end
+ 
+ install?(:ext, :comm, :gem, :'bundled-gems') do
+-  gem_dir = "/home/builder/.termux-build/ruby/build/ruby/gems/3.3.0"
++  gem_dir = "@TERMUX_PREFIX@/lib/ruby/gems/@RUBY_API_VERSION@"
+   install_dir = with_destdir(gem_dir)
+   prepare "bundled gems", gem_dir
+   RbInstall.no_write do
 @@ -1112,6 +1112,17 @@ def install_default_gem(dir, srcdir, bindir)
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
