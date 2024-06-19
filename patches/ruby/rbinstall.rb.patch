@@ -1,8 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..14ab1ae 100755
+index 97fe1ea..1021272 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1112,6 +1112,20 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1112,6 +1112,24 @@ def install_default_gem(dir, srcdir, bindir)
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
@@ -19,6 +19,10 @@ index 97fe1ea..14ab1ae 100755
 +      puts Dir.glob("/home/builder/.local/share/gem/ruby/3.3.0/**/*")
 +      puts "Gems dir: /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0"
 +      puts Dir.glob("/home/builder/.termux-build/ruby/build/ruby/gems/3.3.0/**/*")
++      puts "Gems dir: /home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0"
++      puts Dir.glob("/home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0/**/*")
++      ENV["GEM_PATH"] += ":/home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0"
++      # ENV["NOKOGIRI_USE_SYSTEM_LIBRARIES"] = true
 +    end
      ins.install
      install_recursive("#{build_dir}/#{gem_name}", "#{extensions_dir}/#{gem_name}") do |src, dest|
