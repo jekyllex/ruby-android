@@ -44,7 +44,6 @@ jobs:
           mv termux-packages/* .
           rm -rf termux-packages
           mv properties.sh build-bootstraps.sh scripts/
-          rm packages/ruby/tool-rbinstall.rb.diff
           for package in patches/*; do
             cp -r $package packages;
           done

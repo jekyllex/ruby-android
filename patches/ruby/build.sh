@@ -22,8 +22,9 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" rb_cv_type_deprecated=x"
 # getresuid(2) does not work on ChromeOS - https://github.com/termux/termux-app/issues/147:
 # TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_func_getresuid=no"
 TERMUX_PKG_HOSTBUILD=true
+TERMUX_PKG_HOSTBUILD_DIR=$TERMUX_TOPDIR/$TERMUX_PKG_NAME/build
 TERMUX_PKG_EXTRA_HOSTBUILD_CONFIGURE_ARGS="
---prefix=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host
+--prefix=$TERMUX_PKG_HOSTBUILD_DIR/ruby
 --disable-install-doc
 --disable-install-rdoc
 --disable-install-capi
@@ -38,6 +39,12 @@ termux_step_host_build() {
 termux_step_pre_configure() {
 	_RUBY_API_VERSION=$(echo $TERMUX_PKG_VERSION | cut -d . -f 1-2).0
 	test ${_RUBY_ABI_VERSION:=} && _RUBY_API_VERSION+=+${_RUBY_ABI_VERSION}
+
+	echo "Applying tool-rbinstall.rb.diff"
+	sed -e "s|@TERMUX_PREFIX@|${TERMUX_PREFIX}|g" \
+		-e "s|@RUBY_API_VERSION@|${_RUBY_API_VERSION}|g" \
+		$TERMUX_PKG_BUILDER_DIR/tool-rbinstall.rb.diff \
+		| patch --silent -p1
 
 	autoreconf -fi
 
