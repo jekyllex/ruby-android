@@ -1,8 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..733e3ff 100755
+index 97fe1ea..1a24629 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1112,6 +1112,18 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1112,6 +1112,17 @@ def install_default_gem(dir, srcdir, bindir)
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
@@ -15,7 +15,6 @@ index 97fe1ea..733e3ff 100755
 +      end
 +    end
 +    if spec.name == "nokogiri"
-+      $LOAD_PATH << "/home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0"
 +      # ENV["NOKOGIRI_USE_SYSTEM_LIBRARIES"] = true
 +    end
      ins.install
