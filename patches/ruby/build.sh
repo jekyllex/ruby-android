@@ -22,8 +22,9 @@ TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" rb_cv_type_deprecated=x"
 # getresuid(2) does not work on ChromeOS - https://github.com/termux/termux-app/issues/147:
 # TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" ac_cv_func_getresuid=no"
 TERMUX_PKG_HOSTBUILD=true
+TERMUX_PKG_HOSTBUILD_DIR=$TERMUX_TOPDIR/$TERMUX_PKG_NAME/build
 TERMUX_PKG_EXTRA_HOSTBUILD_CONFIGURE_ARGS="
---prefix=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host
+--prefix=$TERMUX_PKG_HOSTBUILD_DIR/ruby
 --disable-install-doc
 --disable-install-rdoc
 --disable-install-capi
@@ -61,16 +62,6 @@ termux_step_pre_configure() {
 termux_step_make_install() {
 	make install
 	make uninstall # remove possible remains to get fresh timestamps
-
-  # Fix absolute paths to executables (primarily for mini_portile2)
-  export PATH=$PATH:$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/lib/ruby/gems/3.3.0
-  export GEM_PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/lib/ruby/gems/3.3.0:
-  echo "ENV vars:\n"
-  echo "PATH: $PATH\n"
-  echo "GEM_PATH: $GEM_PATH\n"
-  echo "TERMUX_PREFIX: $TERMUX_PREFIX\n"
-  echo "TERMUX_PKG_HOSTBUILD_DIR: $TERMUX_PKG_HOSTBUILD_DIR\n"
-
 	make install
 
 	local RBCONFIG=$TERMUX_PREFIX/lib/ruby/${_RUBY_API_VERSION}/${TERMUX_HOST_PLATFORM}/rbconfig.rb
