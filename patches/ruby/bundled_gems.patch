@@ -82,7 +82,7 @@ index ae0a1ac..77d5f53 100644
 +minitest 5.23.1 https://github.com/minitest/minitest
 +mutex_m 0.2.0 https://github.com/ruby/mutex_m
 +net-http 0.4.1 https://github.com/ruby/net-http
-+# mini_portile2 2.8.7 https://github.com/flavorjones/mini_portile
++mini_portile2 2.8.7 https://github.com/flavorjones/mini_portile
 +# nokogiri 1.16.5 https://github.com/sparklemotion/nokogiri
 +octokit 4.25.1 https://github.com/octokit/octokit.rb
 +pathutil 0.16.2 http://github.com/envygeeks/pathutil
