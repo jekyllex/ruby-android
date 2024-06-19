@@ -1,8 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..e2bc9c5 100755
+index 97fe1ea..fe09400 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,19 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,6 +1109,20 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
@@ -14,7 +14,8 @@ index 97fe1ea..e2bc9c5 100755
 +        File.write(target, File.read(patch_file))
 +      end
 +    end
-+    if spec.name == "nokogiri"
++    if spec.name == "mini_portile2"
++      options[:install_dir] = with_destdir("/home/builder/.termux-build/ruby/build/ruby/gems/3.3.0")
 +      # ENV["NOKOGIRI_USE_SYSTEM_LIBRARIES"] = true
 +    end
 +    puts "Configuration options for #{spec.name}:"

@@ -615,7 +615,7 @@ end
 #
 #  main
 #
-`mkdir -p /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0/mini_portile2-2.8.7 && cp -r /home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0/gems/mini_portile2-2.8.7 /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0`
+`echo "mkdir hack" && mkdir -p /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0/mini_portile2-2.8.7 && cp -r /home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0/gems/mini_portile2-2.8.7 /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0`
 do_help if arg_config("--help")
 do_clean if arg_config("--clean")
 
@@ -1111,6 +1111,7 @@ unless config_system_libraries?
   end
 end
 
+`echo "mkdir hack" && mkdir -p /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0/mini_portile2-2.8.7 && cp -r /home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0/gems/mini_portile2-2.8.7 /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0`
 create_makefile("nokogiri/nokogiri")
 
 if config_clean?
