@@ -1,8 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..6f1fc0e 100755
+index 97fe1ea..90a3789 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,19 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,6 +1109,14 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
@@ -14,11 +14,6 @@ index 97fe1ea..6f1fc0e 100755
 +        File.write(target, File.read(patch_file))
 +      end
 +    end
-+    if spec.name == "mini_portile2"
-+      # ENV["NOKOGIRI_USE_SYSTEM_LIBRARIES"] = true
-+    end
-+    puts "Configuration options for #{spec.name}:"
-+    puts options
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
