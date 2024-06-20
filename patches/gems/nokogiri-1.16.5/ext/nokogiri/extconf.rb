@@ -426,8 +426,9 @@ def iconv_configure_flags
 end
 
 def process_recipe(name, version, static_p, cross_p, cacheable_p = true)
+  $LOAD_PATH.unshift("/home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0/gems/mini_portile2-2.8.7/lib")
   require "rubygems"
-  gem("mini_portile2", REQUIRED_MINI_PORTILE_VERSION) # gemspec is not respected at install time
+  # gem("mini_portile2", REQUIRED_MINI_PORTILE_VERSION) # gemspec is not respected at install time
   require "mini_portile2"
   message("Using mini_portile version #{MiniPortile::VERSION}\n")
 
@@ -615,7 +616,6 @@ end
 #
 #  main
 #
-`echo "mkdir hack" && mkdir -p /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0/mini_portile2-2.8.7 && cp -r /home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0/gems/mini_portile2-2.8.7 /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0`
 do_help if arg_config("--help")
 do_clean if arg_config("--clean")
 
@@ -1111,7 +1111,6 @@ unless config_system_libraries?
   end
 end
 
-`echo "mkdir hack" && mkdir -p /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0/mini_portile2-2.8.7 && cp -r /home/builder/.termux-build/ruby/host-build/ruby-host/lib/ruby/gems/3.3.0/gems/mini_portile2-2.8.7 /home/builder/.termux-build/ruby/build/ruby/gems/3.3.0`
 create_makefile("nokogiri/nokogiri")
 
 if config_clean?
