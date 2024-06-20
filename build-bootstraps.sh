@@ -395,9 +395,9 @@ main() {
 		EXTRACTED_PACKAGES=()
 
 		# Core JekyllEx utilities.
-    # PACKAGES+=("git")
-    PACKAGES+=("ruby")
-    PACKAGES+=("coreutils")
+		PACKAGES+=("git")
+		PACKAGES+=("ruby")
+		PACKAGES+=("coreutils")
 
 		# Handle additional packages.
 		for add_pkg in "${ADDITIONAL_PACKAGES[@]}"; do
