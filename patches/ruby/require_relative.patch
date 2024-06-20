@@ -1,0 +1,13 @@
+diff --git a/vm_eval.c b/vm_eval.c
+index 937f058..4e3f5fe 100644
+--- a/vm_eval.c
++++ b/vm_eval.c
+@@ -2531,7 +2531,7 @@ rb_current_realfilepath(void)
+     rb_control_frame_t *cfp = ec->cfp;
+     cfp = vm_get_ruby_level_caller_cfp(ec, RUBY_VM_PREVIOUS_CONTROL_FRAME(cfp));
+     if (cfp != NULL) {
+-        VALUE path = rb_iseq_realpath(cfp->iseq);
++        VALUE path = rb_iseq_path(cfp->iseq);
+         if (RTEST(path)) return path;
+         // eval context
+         path = rb_iseq_path(cfp->iseq);

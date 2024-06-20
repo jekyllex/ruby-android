@@ -4,7 +4,7 @@ on:
   - workflow_dispatch
 
 jobs:
-  build:
+  bootstraps:
     runs-on: ubuntu-latest
 
     env:
@@ -17,22 +17,21 @@ jobs:
 
     steps:
       - name: Maximize build space
-        uses: easimon/maximize-build-space@master
+        uses: easimon/maximize-build-space@v10
         with:
           remove-dotnet: 'true'
           remove-codeql: 'true'
           remove-haskell: 'true'
-          remove-android: 'true'
-          root-reserve-mb: '32768'
+          root-reserve-mb: '30000'
           remove-docker-images: 'true'
 
       - name: Clone repository
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           fetch-depth: 1
 
       - name: Get packages from termux-packages
-        uses: actions/checkout@v3
+        uses: actions/checkout@v4
         with:
           repository: termux/termux-packages
           path: termux-packages
@@ -45,14 +44,17 @@ jobs:
           mv termux-packages/* .
           rm -rf termux-packages
           mv properties.sh build-bootstraps.sh scripts/
+          for package in patches/*; do
+            cp -r $package packages;
+          done
 
       - name: Create bootstrap archive
         run: |
           ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --architectures ${{ matrix.target_arch }}
+          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
-        uses: actions/upload-artifact@v3
+        uses: actions/upload-artifact@v4
         with:
           name: bootstrap-${{ matrix.target_arch }}
           path: "*.zip"
