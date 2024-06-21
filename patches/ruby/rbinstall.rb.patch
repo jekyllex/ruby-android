@@ -1,8 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..52eac99 100755
+index 97fe1ea..e05e9f7 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,22 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,6 +1109,37 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
@@ -15,12 +15,27 @@ index 97fe1ea..52eac99 100755
 +      end
 +    end
 +    if spec.name == "nokogiri"
-+      dir_flags = %w[zlib libiconv libxml2 libxslt].map do |package|
-+        "--with-#{package.sub(/^lib/, '')}-dir=/home/builder/.termux-build/#{package}/build"
-+      end
-+      options[:build_args] = ["--use-system-libraries"].append(dir_flags).flatten
++      # dir_flags = %w[zlib libiconv libxml2 libxslt].map do |package|
++      #   "--with-#{package.sub(/^lib/, '')}-dir=/home/builder/.termux-build/#{package}/build"
++      #   "--with-#{package.sub(/^lib/, '')}-dir=/home/builder/.termux-build/#{package}/build"
++      # end
++      options[:build_args] = [
++        "--use-system-libraries",
++        "--with-opt-lib=/data/data/sh.gourav.jekyllex/files/usr/lib",
++        "--with-opt-include=/data/data/sh.gourav.jekyllex/files/usr/include"
++      ] # .append(dir_flags).flatten
 +    else
 +      options[:build_args] = []
++      files = Dir.glob('/home/builder/.termux-build/ruby/build/.bundle/gems/nokogiri-1.16.5/ext/**/*').select { |e| File.file? e }
++      files.each do |file_path|
++        begin
++          puts "Contents of #{file_path}:"
++          puts File.read(file_path)
++          puts "-" * 50
++        rescue StandardError => e
++          puts "Error reading #{file_path}: #{e.message}"
++        end
++      end
 +    end
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
