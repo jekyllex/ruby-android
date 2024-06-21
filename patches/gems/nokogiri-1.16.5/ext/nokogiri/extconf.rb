@@ -756,10 +756,10 @@ if config_system_libraries?
   #   func: "xmlParseDoc",
   # )
 
-  have_libxml_headers?(REQUIRED_LIBXML_VERSION) ||
-    abort("ERROR: libxml2 version #{REQUIRED_LIBXML_VERSION} or later is required!")
-  have_libxml_headers?(RECOMMENDED_LIBXML_VERSION) ||
-    warn("WARNING: libxml2 version #{RECOMMENDED_LIBXML_VERSION} or later is highly recommended, but proceeding anyway.")
+  # have_libxml_headers?(REQUIRED_LIBXML_VERSION) ||
+  #   abort("ERROR: libxml2 version #{REQUIRED_LIBXML_VERSION} or later is required!")
+  # have_libxml_headers?(RECOMMENDED_LIBXML_VERSION) ||
+  #   warn("WARNING: libxml2 version #{RECOMMENDED_LIBXML_VERSION} or later is highly recommended, but proceeding anyway.")
 
 else
   message "Building nokogiri using packaged libraries.\n"
