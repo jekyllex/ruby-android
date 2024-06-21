@@ -735,6 +735,7 @@ if config_system_libraries?
     opt: "xslt",
     # pc: "libxslt",
     lib: "xslt",
+    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxslt",
     headers: "libxslt/xslt.h",
     func: "xsltParseStylesheetDoc",
   )
@@ -742,6 +743,7 @@ if config_system_libraries?
     opt: "exslt",
     # pc: "libexslt",
     lib: "exslt",
+    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libexslt",
     headers: "libexslt/exslt.h",
     func: "exsltFuncRegister",
   )
