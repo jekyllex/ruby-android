@@ -724,37 +724,37 @@ if config_system_libraries?
   puts("LIB_DIRECTORY:")
   puts(Dir.entries("/data/data/sh.gourav.jekyllex/files/usr/lib"))
 
-  ensure_package_configuration(
-    opt: "zlib",
-    # pc: "zlib",
-    lib: "z",
-    headers: "zlib.h",
-    func: "gzdopen",
-  )
-  ensure_package_configuration(
-    opt: "xslt",
-    # pc: "libxslt",
-    lib: "xslt",
-    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxslt",
-    headers: "libxslt/xslt.h",
-    func: "xsltParseStylesheetDoc",
-  )
-  ensure_package_configuration(
-    opt: "exslt",
-    # pc: "libexslt",
-    lib: "exslt",
-    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libexslt",
-    headers: "libexslt/exslt.h",
-    func: "exsltFuncRegister",
-  )
-  ensure_package_configuration(
-    opt: "xml2",
-    # pc: "libxml-2.0",
-    lib: "xml2",
-    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxml2",
-    headers: "libxml/parser.h",
-    func: "xmlParseDoc",
-  )
+  # ensure_package_configuration(
+  #   opt: "zlib",
+  #   # pc: "zlib",
+  #   lib: "z",
+  #   headers: "zlib.h",
+  #   func: "gzdopen",
+  # )
+  # ensure_package_configuration(
+  #   opt: "xslt",
+  #   # pc: "libxslt",
+  #   lib: "xslt",
+  #   prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxslt",
+  #   headers: "libxslt/xslt.h",
+  #   func: "xsltParseStylesheetDoc",
+  # )
+  # ensure_package_configuration(
+  #   opt: "exslt",
+  #   # pc: "libexslt",
+  #   lib: "exslt",
+  #   prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libexslt",
+  #   headers: "libexslt/exslt.h",
+  #   func: "exsltFuncRegister",
+  # )
+  # ensure_package_configuration(
+  #   opt: "xml2",
+  #   # pc: "libxml-2.0",
+  #   lib: "xml2",
+  #   prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxml2",
+  #   headers: "libxml/parser.h",
+  #   func: "xmlParseDoc",
+  # )
 
   have_libxml_headers?(REQUIRED_LIBXML_VERSION) ||
     abort("ERROR: libxml2 version #{REQUIRED_LIBXML_VERSION} or later is required!")
