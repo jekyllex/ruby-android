@@ -274,10 +274,10 @@ end
 
 # set up mkmf to link against the library if we can find it
 # def have_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
-def have_package_configuration(opt: nil, prefix: "/data/data/sh.gourav.jekyllex/files/usr", lib:, func:, headers:)
+def have_package_configuration(opt: nil, idefault: "/data/data/sh.gourav.jekyllex/files/usr/include", ldefault: "/data/data/sh.gourav.jekyllex/files/usr/lib", lib:, func:, headers:)
   if opt
-    dir_config(opt, prefix)
-    dir_config("opt", "/data/data/sh.gourav.jekyllex/files/usr/include", "/data/data/sh.gourav.jekyllex/files/usr/lib")
+    dir_config(opt, idefault, ldefault)
+    dir_config("opt", idefault, ldefault)
   end
 
   # see if we have enough path info to do this without trying any harder
@@ -292,9 +292,9 @@ def have_package_configuration(opt: nil, prefix: "/data/data/sh.gourav.jekyllex/
 end
 
 # def ensure_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
-def ensure_package_configuration(opt: nil, prefix: nil, lib:, func:, headers:)
+def ensure_package_configuration(opt: nil, idefault: nil, ldefault: nil, lib:, func:, headers:)
   #  have_package_configuration(opt: opt, pc: pc, lib: lib, func: func, headers: headers) ||
-  have_package_configuration(opt: opt, prefix: prefix, lib: lib, func: func, headers: headers) ||
+  have_package_configuration(opt: opt, idefault: idefault, ldefault: ldefault, lib: lib, func: func, headers: headers) ||
     abort_could_not_find_library(lib)
 end
 
@@ -725,7 +725,8 @@ if config_system_libraries?
     opt: "xml2",
     # pc: "libxml-2.0",
     lib: "xml2",
-    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxml2",
+    idefault: "/data/data/sh.gourav.jekyllex/files/usr/include/libxml2",
+    ldefault: "/data/data/sh.gourav.jekyllex/files/usr/lib",
     headers: "libxml/parser.h",
     func: "xmlParseDoc",
   )
@@ -733,7 +734,8 @@ if config_system_libraries?
     opt: "xslt",
     # pc: "libxslt",
     lib: "xslt",
-    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxslt",
+    idefault: "/data/data/sh.gourav.jekyllex/files/usr/include",
+    ldefault: "/data/data/sh.gourav.jekyllex/files/usr/lib",
     headers: "libxslt/xslt.h",
     func: "xsltParseStylesheetDoc",
   )
@@ -741,7 +743,8 @@ if config_system_libraries?
     opt: "exslt",
     # pc: "libexslt",
     lib: "exslt",
-    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libexslt",
+    idefault: "/data/data/sh.gourav.jekyllex/files/usr/include",
+    ldefault: "/data/data/sh.gourav.jekyllex/files/usr/lib",
     headers: "libexslt/exslt.h",
     func: "exsltFuncRegister",
   )
