@@ -653,7 +653,7 @@ end
 append_cflags(ENV["CFLAGS"].split) unless ENV["CFLAGS"].nil?
 append_cppflags(ENV["CPPFLAGS"].split) unless ENV["CPPFLAGS"].nil?
 append_ldflags(ENV["LDFLAGS"].split) unless ENV["LDFLAGS"].nil?
-$LIBS = concat_flags($LIBS, ENV["LIBS"])
+$LIBS = concat_flags($LIBS, ENV["LIBS"], "-lz", "-lxml2", "-lxslt", "-lexslt", "-liconv")
 
 # libgumbo uses C90/C99 features, see #2302
 append_cflags(["-std=c99", "-Wno-declaration-after-statement"])
@@ -669,6 +669,9 @@ append_cflags("-Winline")
 
 # good to have no matter what Ruby was compiled with
 append_cflags("-Wmissing-noreturn")
+
+append_cflags(["-lz", "-lxml2", "-lxslt", "-lexslt", "-liconv"])
+append_cppflags(["-lz", "-lxml2", "-lxslt", "-lexslt", "-liconv"])
 
 # check integer loss of precision
 if darwin?
@@ -698,19 +701,6 @@ append_cppflags(' "-Idummypath"') if windows?
 
 if config_system_libraries?
   message "Building nokogiri using system libraries.\n"
-  append_cppflags("-I/data/data/sh.gourav.jekyllex/files/usr/include")
-  $LIBPATH = ["/data/data/sh.gourav.jekyllex/files/usr/lib"] | $LIBPATH
-
-  system("echo $LIBPATH")
-  system("echo $CPPFLAGS")
-  system("echo $CFLAGS")
-  system("echo $LDFLAGS")
-  system("echo $ENV")
-  puts "-----------------"
-  system("echo 'INCLUDE_DIRECTORY:'")
-  system("ls /data/data/sh.gourav.jekyllex/files/usr/include")
-  system("echo 'LIB_DIRECTORY:'")
-  system("ls /data/data/sh.gourav.jekyllex/files/usr/lib")
 
   # convert same system calls to put calls
   puts("LIBPATH: #{$LIB_DIRECTORY}")
@@ -724,42 +714,42 @@ if config_system_libraries?
   puts("LIB_DIRECTORY:")
   puts(Dir.entries("/data/data/sh.gourav.jekyllex/files/usr/lib"))
 
-  # ensure_package_configuration(
-  #   opt: "zlib",
-  #   # pc: "zlib",
-  #   lib: "z",
-  #   headers: "zlib.h",
-  #   func: "gzdopen",
-  # )
-  # ensure_package_configuration(
-  #   opt: "xslt",
-  #   # pc: "libxslt",
-  #   lib: "xslt",
-  #   prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxslt",
-  #   headers: "libxslt/xslt.h",
-  #   func: "xsltParseStylesheetDoc",
-  # )
-  # ensure_package_configuration(
-  #   opt: "exslt",
-  #   # pc: "libexslt",
-  #   lib: "exslt",
-  #   prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libexslt",
-  #   headers: "libexslt/exslt.h",
-  #   func: "exsltFuncRegister",
-  # )
-  # ensure_package_configuration(
-  #   opt: "xml2",
-  #   # pc: "libxml-2.0",
-  #   lib: "xml2",
-  #   prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxml2",
-  #   headers: "libxml/parser.h",
-  #   func: "xmlParseDoc",
-  # )
+  ensure_package_configuration(
+    opt: "zlib",
+    # pc: "zlib",
+    lib: "z",
+    headers: "zlib.h",
+    func: "gzdopen",
+  )
+  ensure_package_configuration(
+    opt: "xml2",
+    # pc: "libxml-2.0",
+    lib: "xml2",
+    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxml2",
+    headers: "libxml/parser.h",
+    func: "xmlParseDoc",
+  )
+  ensure_package_configuration(
+    opt: "xslt",
+    # pc: "libxslt",
+    lib: "xslt",
+    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxslt",
+    headers: "libxslt/xslt.h",
+    func: "xsltParseStylesheetDoc",
+  )
+  ensure_package_configuration(
+    opt: "exslt",
+    # pc: "libexslt",
+    lib: "exslt",
+    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libexslt",
+    headers: "libexslt/exslt.h",
+    func: "exsltFuncRegister",
+  )
 
-  # have_libxml_headers?(REQUIRED_LIBXML_VERSION) ||
-  #   abort("ERROR: libxml2 version #{REQUIRED_LIBXML_VERSION} or later is required!")
-  # have_libxml_headers?(RECOMMENDED_LIBXML_VERSION) ||
-  #   warn("WARNING: libxml2 version #{RECOMMENDED_LIBXML_VERSION} or later is highly recommended, but proceeding anyway.")
+  have_libxml_headers?(REQUIRED_LIBXML_VERSION) ||
+    abort("ERROR: libxml2 version #{REQUIRED_LIBXML_VERSION} or later is required!")
+  have_libxml_headers?(RECOMMENDED_LIBXML_VERSION) ||
+    warn("WARNING: libxml2 version #{RECOMMENDED_LIBXML_VERSION} or later is highly recommended, but proceeding anyway.")
 
 else
   message "Building nokogiri using packaged libraries.\n"
