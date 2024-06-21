@@ -1,8 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..90a3789 100755
+index 97fe1ea..52eac99 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,14 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,6 +1109,22 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
@@ -13,6 +13,14 @@ index 97fe1ea..90a3789 100755
 +        puts "#{INDENT}patching #{patch_file}"
 +        File.write(target, File.read(patch_file))
 +      end
++    end
++    if spec.name == "nokogiri"
++      dir_flags = %w[zlib libiconv libxml2 libxslt].map do |package|
++        "--with-#{package.sub(/^lib/, '')}-dir=/home/builder/.termux-build/#{package}/build"
++      end
++      options[:build_args] = ["--use-system-libraries"].append(dir_flags).flatten
++    else
++      options[:build_args] = []
 +    end
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
