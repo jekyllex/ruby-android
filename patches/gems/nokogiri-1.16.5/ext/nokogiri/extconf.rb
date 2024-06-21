@@ -274,9 +274,9 @@ end
 
 # set up mkmf to link against the library if we can find it
 # def have_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
-def have_package_configuration(opt: nil, lib:, func:, headers:)
+def have_package_configuration(opt: nil, prefix: "/data/data/sh.gourav.jekyllex/files/usr", lib:, func:, headers:)
   if opt
-    dir_config(opt, "/data/data/sh.gourav.jekyllex/files/usr/include", "/data/data/sh.gourav.jekyllex/files/usr/lib")
+    dir_config(opt, prefix)
     dir_config("opt", "/data/data/sh.gourav.jekyllex/files/usr/include", "/data/data/sh.gourav.jekyllex/files/usr/lib")
   end
 
@@ -292,9 +292,9 @@ def have_package_configuration(opt: nil, lib:, func:, headers:)
 end
 
 # def ensure_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
-def ensure_package_configuration(opt: nil, lib:, func:, headers:)
+def ensure_package_configuration(opt: nil, prefix: nil, lib:, func:, headers:)
   #  have_package_configuration(opt: opt, pc: pc, lib: lib, func: func, headers: headers) ||
-  have_package_configuration(opt: opt, lib: lib, func: func, headers: headers) ||
+  have_package_configuration(opt: opt, prefix: prefix, lib: lib, func: func, headers: headers) ||
     abort_could_not_find_library(lib)
 end
 
@@ -732,13 +732,6 @@ if config_system_libraries?
     func: "gzdopen",
   )
   ensure_package_configuration(
-    opt: "xml2",
-    # pc: "libxml-2.0",
-    lib: "xml2",
-    headers: "libxml/parser.h",
-    func: "xmlParseDoc",
-  )
-  ensure_package_configuration(
     opt: "xslt",
     # pc: "libxslt",
     lib: "xslt",
@@ -751,6 +744,14 @@ if config_system_libraries?
     lib: "exslt",
     headers: "libexslt/exslt.h",
     func: "exsltFuncRegister",
+  )
+  ensure_package_configuration(
+    opt: "xml2",
+    # pc: "libxml-2.0",
+    lib: "xml2",
+    prefix: "/data/data/sh.gourav.jekyllex/files/usr/include/libxml2",
+    headers: "libxml/parser.h",
+    func: "xmlParseDoc",
   )
 
   have_libxml_headers?(REQUIRED_LIBXML_VERSION) ||
