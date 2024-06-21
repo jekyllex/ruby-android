@@ -698,6 +698,32 @@ append_cppflags(' "-Idummypath"') if windows?
 
 if config_system_libraries?
   message "Building nokogiri using system libraries.\n"
+  append_cppflags("-I/data/data/sh.gourav.jekyllex/files/usr/include")
+  $LIBPATH = ["/data/data/sh.gourav.jekyllex/files/usr/lib"] | $LIBPATH
+
+  system("echo $LIBPATH")
+  system("echo $CPPFLAGS")
+  system("echo $CFLAGS")
+  system("echo $LDFLAGS")
+  system("echo $ENV")
+  puts "-----------------"
+  system("echo 'INCLUDE_DIRECTORY:'")
+  system("ls /data/data/sh.gourav.jekyllex/files/usr/include")
+  system("echo 'LIB_DIRECTORY:'")
+  system("ls /data/data/sh.gourav.jekyllex/files/usr/lib")
+
+  # convert same system calls to put calls
+  puts("LIBPATH: #{$LIB_DIRECTORY}")
+  puts("CPPFLAGS: #{$CPPFLAGS}")
+  puts("CFLAGS: #{$CFLAGS}")
+  puts("LDFLAGS: #{$LDFLAGS}")
+  puts("ENV: #{ENV}")
+  puts("-----------------")
+  puts("INCLUDE_DIRECTORY:")
+  puts(Dir.entries("/data/data/sh.gourav.jekyllex/files/usr/include"))
+  puts("LIB_DIRECTORY:")
+  puts(Dir.entries("/data/data/sh.gourav.jekyllex/files/usr/lib"))
+
   ensure_package_configuration(
     opt: "zlib",
     # pc: "zlib",
