@@ -276,8 +276,8 @@ end
 # def have_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
 def have_package_configuration(opt: nil, lib:, func:, headers:)
   if opt
-    dir_config(opt, "--with-opt-dir=/data/data/sh.gourav.jekyllex/files/usr")
-    dir_config("opt", "--with-opt-dir=/data/data/sh.gourav.jekyllex/files/usr")
+    dir_config(opt, "/data/data/sh.gourav.jekyllex/files/usr/include", "/data/data/sh.gourav.jekyllex/files/usr/lib")
+    dir_config("opt", "/data/data/sh.gourav.jekyllex/files/usr/include", "/data/data/sh.gourav.jekyllex/files/usr/lib")
   end
 
   # see if we have enough path info to do this without trying any harder

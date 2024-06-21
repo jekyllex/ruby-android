@@ -1,8 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..b713846 100755
+index 97fe1ea..90a3789 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,26 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,6 +1109,14 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
@@ -14,35 +14,6 @@ index 97fe1ea..b713846 100755
 +        File.write(target, File.read(patch_file))
 +      end
 +    end
-+    if spec.name == "nokogiri"
-+      # dir_flags = %w[zlib libiconv libxml2 libxslt].map do |package|
-+      #   "--with-#{package.sub(/^lib/, '')}-dir=/home/builder/.termux-build/#{package}/build"
-+      #   "--with-#{package.sub(/^lib/, '')}-dir=/home/builder/.termux-build/#{package}/build"
-+      # end
-+      options[:build_args] = [
-+        "--use-system-libraries",
-+        "--with-opt-dir=/data/data/sh.gourav.jekyllex/files/usr"
-+      ] # .append(dir_flags).flatten
-+    else
-+      options[:build_args] = nil
-+    end
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
-@@ -1119,6 +1139,16 @@ def install_default_gem(dir, srcdir, bindir)
-     end
-     installed_gems[spec.full_name] = true
-   end
-+  files = Dir.glob('/home/builder/nokogiri/tmp/**/nokogiri/**/mkmf.log').select { |e| File.file? e }
-+  files.each do |file_path|
-+    begin
-+      puts "Contents of #{file_path}:"
-+      puts File.read(file_path)
-+      puts "-" * 50
-+    rescue StandardError => e
-+      puts "Error reading #{file_path}: #{e.message}"
-+    end
-+  end
-   installed_gems, gems = Dir.glob(srcdir+'/gems/*.gem').partition {|gem| installed_gems.key?(File.basename(gem, '.gem'))}
-   unless installed_gems.empty?
-     prepare "bundled gem cache", gem_dir+"/cache"
