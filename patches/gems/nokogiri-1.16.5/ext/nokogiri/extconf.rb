@@ -170,8 +170,8 @@ def config_cross_build?
 end
 
 def config_system_libraries?
-  enable_config("system-libraries", ENV.key?("NOKOGIRI_USE_SYSTEM_LIBRARIES")) do |_, default|
-    arg_config("--use-system-libraries", default)
+  enable_config("system-libraries", true) do |_, default|
+    arg_config("--use-system-libraries", true)
   end
 end
 
@@ -273,10 +273,11 @@ def try_package_configuration(pc)
 end
 
 # set up mkmf to link against the library if we can find it
-def have_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
+# def have_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
+def have_package_configuration(opt: nil, lib:, func:, headers:)
   if opt
-    dir_config(opt)
-    dir_config("opt")
+    dir_config(opt, "--with-opt-dir=/data/data/sh.gourav.jekyllex/files/usr")
+    dir_config("opt", "--with-opt-dir=/data/data/sh.gourav.jekyllex/files/usr")
   end
 
   # see if we have enough path info to do this without trying any harder
@@ -284,14 +285,16 @@ def have_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
     return true if local_have_library(lib, func, headers)
   end
 
-  try_package_configuration(pc) if pc
+  # try_package_configuration(pc) if pc
 
   # verify that we can compile and link against the library
   local_have_library(lib, func, headers)
 end
 
-def ensure_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
-  have_package_configuration(opt: opt, pc: pc, lib: lib, func: func, headers: headers) ||
+# def ensure_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
+def ensure_package_configuration(opt: nil, lib:, func:, headers:)
+  #  have_package_configuration(opt: opt, pc: pc, lib: lib, func: func, headers: headers) ||
+  have_package_configuration(opt: opt, lib: lib, func: func, headers: headers) ||
     abort_could_not_find_library(lib)
 end
 
@@ -697,28 +700,28 @@ if config_system_libraries?
   message "Building nokogiri using system libraries.\n"
   ensure_package_configuration(
     opt: "zlib",
-    pc: "zlib",
+    # pc: "zlib",
     lib: "z",
     headers: "zlib.h",
     func: "gzdopen",
   )
   ensure_package_configuration(
     opt: "xml2",
-    pc: "libxml-2.0",
+    # pc: "libxml-2.0",
     lib: "xml2",
     headers: "libxml/parser.h",
     func: "xmlParseDoc",
   )
   ensure_package_configuration(
     opt: "xslt",
-    pc: "libxslt",
+    # pc: "libxslt",
     lib: "xslt",
     headers: "libxslt/xslt.h",
     func: "xsltParseStylesheetDoc",
   )
   ensure_package_configuration(
     opt: "exslt",
-    pc: "libexslt",
+    # pc: "libexslt",
     lib: "exslt",
     headers: "libexslt/exslt.h",
     func: "exsltFuncRegister",
@@ -850,7 +853,7 @@ else
     $LIBPATH = ["#{zlib_recipe.path}/lib"] | $LIBPATH
     ensure_package_configuration(
       opt: "zlib",
-      pc: "zlib",
+      # pc: "zlib",
       lib: "z",
       headers: "zlib.h",
       func: "gzdopen",
@@ -862,7 +865,7 @@ else
     $LIBPATH = ["#{libiconv_recipe.path}/lib"] | $LIBPATH
     ensure_package_configuration(
       opt: "iconv",
-      pc: "iconv",
+      # pc: "iconv",
       lib: "iconv",
       headers: "iconv.h",
       func: "iconv_open",

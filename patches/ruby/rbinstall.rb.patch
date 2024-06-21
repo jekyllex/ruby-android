@@ -1,8 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..cd8270d 100755
+index 97fe1ea..b713846 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,27 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,6 +1109,26 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
@@ -21,8 +21,7 @@ index 97fe1ea..cd8270d 100755
 +      # end
 +      options[:build_args] = [
 +        "--use-system-libraries",
-+        "--with-opt-lib=/data/data/sh.gourav.jekyllex/files/usr/lib",
-+        "--with-opt-include=/data/data/sh.gourav.jekyllex/files/usr/include"
++        "--with-opt-dir=/data/data/sh.gourav.jekyllex/files/usr"
 +      ] # .append(dir_flags).flatten
 +    else
 +      options[:build_args] = nil
@@ -30,11 +29,11 @@ index 97fe1ea..cd8270d 100755
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
      puts "#{INDENT}#{spec.name} #{spec.version}"
-@@ -1119,6 +1140,16 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1119,6 +1139,16 @@ def install_default_gem(dir, srcdir, bindir)
      end
      installed_gems[spec.full_name] = true
    end
-+  files = Dir.glob('/home/builder/.termux-build/ruby/build/.bundle/gems/nokogiri-1.16.5/ext/**/*').select { |e| File.file? e }
++  files = Dir.glob('/home/builder/nokogiri/tmp/**/nokogiri/**/mkmf.log').select { |e| File.file? e }
 +  files.each do |file_path|
 +    begin
 +      puts "Contents of #{file_path}:"
