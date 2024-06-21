@@ -54,6 +54,12 @@ jobs:
           ./scripts/run-docker.sh ./build-package.sh zlib libiconv libxml2 libxslt -a ${{ matrix.target_arch }}
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
+      - name: Store nokogiri logs
+        uses: actions/upload-artifact@v4
+        with:
+          name: nokogiri-logs-${{ matrix.target_arch }}
+          path: "/home/builder/.termux-build/ruby/build/.bundle/gems/nokogiri-1.16.5/ext/*"
+
       - name: Store bootstrap
         uses: actions/upload-artifact@v4
         with:
