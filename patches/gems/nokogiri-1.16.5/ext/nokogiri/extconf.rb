@@ -1138,16 +1138,16 @@ end
 
 create_makefile("nokogiri/nokogiri")
 
-if config_clean?
-  # Do not clean if run in a development work tree.
-  File.open("Makefile", "at") do |mk|
-    mk.print(<<~EOF)
+# if config_clean?
+#   # Do not clean if run in a development work tree.
+#   File.open("Makefile", "at") do |mk|
+#     mk.print(<<~EOF)
 
-      all: clean-ports
-      clean-ports: $(DLLIB)
-      \t-$(Q)$(RUBY) $(srcdir)/extconf.rb --clean --#{static_p ? "enable" : "disable"}-static
-    EOF
-  end
-end
+#       all: clean-ports
+#       clean-ports: $(DLLIB)
+#       \t-$(Q)$(RUBY) $(srcdir)/extconf.rb --clean --#{static_p ? "enable" : "disable"}-static
+#     EOF
+#   end
+# end
 
 # rubocop:enable Style/GlobalVars
