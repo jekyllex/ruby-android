@@ -273,11 +273,10 @@ def try_package_configuration(pc)
 end
 
 # set up mkmf to link against the library if we can find it
-# def have_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
-def have_package_configuration(opt: nil, idefault: "/data/data/sh.gourav.jekyllex/files/usr/include", ldefault: "/data/data/sh.gourav.jekyllex/files/usr/lib", lib:, func:, headers:)
+def have_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
   if opt
-    dir_config(opt, idefault, ldefault)
-    dir_config("opt", idefault, ldefault)
+    dir_config(opt)
+    dir_config("opt")
   end
 
   # see if we have enough path info to do this without trying any harder
@@ -285,16 +284,14 @@ def have_package_configuration(opt: nil, idefault: "/data/data/sh.gourav.jekylle
     return true if local_have_library(lib, func, headers)
   end
 
-  # try_package_configuration(pc) if pc
+  try_package_configuration(pc) if pc
 
   # verify that we can compile and link against the library
   local_have_library(lib, func, headers)
 end
 
-# def ensure_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
-def ensure_package_configuration(opt: nil, idefault: nil, ldefault: nil, lib:, func:, headers:)
-  #  have_package_configuration(opt: opt, pc: pc, lib: lib, func: func, headers: headers) ||
-  have_package_configuration(opt: opt, idefault: idefault, ldefault: ldefault, lib: lib, func: func, headers: headers) ||
+def ensure_package_configuration(opt: nil, pc: nil, lib:, func:, headers:)
+  have_package_configuration(opt: opt, pc: pc, lib: lib, func: func, headers: headers) ||
     abort_could_not_find_library(lib)
 end
 
@@ -653,7 +650,7 @@ end
 append_cflags(ENV["CFLAGS"].split) unless ENV["CFLAGS"].nil?
 append_cppflags(ENV["CPPFLAGS"].split) unless ENV["CPPFLAGS"].nil?
 append_ldflags(ENV["LDFLAGS"].split) unless ENV["LDFLAGS"].nil?
-$LIBS = concat_flags($LIBS, ENV["LIBS"], "-lz", "-lxml2", "-lxslt", "-lexslt", "-liconv")
+$LIBS = concat_flags($LIBS, ENV["LIBS"])
 
 # libgumbo uses C90/C99 features, see #2302
 append_cflags(["-std=c99", "-Wno-declaration-after-statement"])
@@ -669,9 +666,6 @@ append_cflags("-Winline")
 
 # good to have no matter what Ruby was compiled with
 append_cflags("-Wmissing-noreturn")
-
-append_cflags(["-lz", "-lxml2", "-lxslt", "-lexslt", "-liconv"])
-append_cppflags(["-lz", "-lxml2", "-lxslt", "-lexslt", "-liconv"])
 
 # check integer loss of precision
 if darwin?
@@ -701,50 +695,31 @@ append_cppflags(' "-Idummypath"') if windows?
 
 if config_system_libraries?
   message "Building nokogiri using system libraries.\n"
-
-  # convert same system calls to put calls
-  puts("LIBPATH: #{$LIB_DIRECTORY}")
-  puts("CPPFLAGS: #{$CPPFLAGS}")
-  puts("CFLAGS: #{$CFLAGS}")
-  puts("LDFLAGS: #{$LDFLAGS}")
-  puts("ENV: #{ENV}")
-  puts("-----------------")
-  puts("INCLUDE_DIRECTORY:")
-  puts(Dir.entries("/data/data/sh.gourav.jekyllex/files/usr/include"))
-  puts("LIB_DIRECTORY:")
-  puts(Dir.entries("/data/data/sh.gourav.jekyllex/files/usr/lib"))
-
   ensure_package_configuration(
     opt: "zlib",
-    # pc: "zlib",
+    pc: "zlib",
     lib: "z",
     headers: "zlib.h",
     func: "gzdopen",
   )
   ensure_package_configuration(
     opt: "xml2",
-    # pc: "libxml-2.0",
+    pc: "libxml-2.0",
     lib: "xml2",
-    idefault: "/data/data/sh.gourav.jekyllex/files/usr/include/libxml2",
-    ldefault: "/data/data/sh.gourav.jekyllex/files/usr/lib",
     headers: "libxml/parser.h",
     func: "xmlParseDoc",
   )
   ensure_package_configuration(
     opt: "xslt",
-    # pc: "libxslt",
+    pc: "libxslt",
     lib: "xslt",
-    idefault: "/data/data/sh.gourav.jekyllex/files/usr/include",
-    ldefault: "/data/data/sh.gourav.jekyllex/files/usr/lib",
     headers: "libxslt/xslt.h",
     func: "xsltParseStylesheetDoc",
   )
   ensure_package_configuration(
     opt: "exslt",
-    # pc: "libexslt",
+    pc: "libexslt",
     lib: "exslt",
-    idefault: "/data/data/sh.gourav.jekyllex/files/usr/include",
-    ldefault: "/data/data/sh.gourav.jekyllex/files/usr/lib",
     headers: "libexslt/exslt.h",
     func: "exsltFuncRegister",
   )
@@ -875,7 +850,7 @@ else
     $LIBPATH = ["#{zlib_recipe.path}/lib"] | $LIBPATH
     ensure_package_configuration(
       opt: "zlib",
-      # pc: "zlib",
+      pc: "zlib",
       lib: "z",
       headers: "zlib.h",
       func: "gzdopen",
@@ -887,7 +862,7 @@ else
     $LIBPATH = ["#{libiconv_recipe.path}/lib"] | $LIBPATH
     ensure_package_configuration(
       opt: "iconv",
-      # pc: "iconv",
+      pc: "iconv",
       lib: "iconv",
       headers: "iconv.h",
       func: "iconv_open",
