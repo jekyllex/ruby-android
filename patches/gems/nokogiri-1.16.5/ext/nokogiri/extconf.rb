@@ -195,6 +195,10 @@ def aix?
   RbConfig::CONFIG["target_os"].include?("aix")
 end
 
+def android?
+  RbConfig::CONFIG["target_os"].include?("android")
+end
+
 def nix?
   !(windows? || solaris? || darwin?)
 end
@@ -574,7 +578,7 @@ def do_clean
       FileUtils.rm_rf(dir, verbose: true)
     end
 
-    if config_static?
+    if config_static? || config_system_libraries?
       # ports installation can be safely removed if statically linked.
       FileUtils.rm_rf(root + "ports", verbose: true)
     else
@@ -1113,16 +1117,16 @@ end
 
 create_makefile("nokogiri/nokogiri")
 
-# if config_clean?
-#   # Do not clean if run in a development work tree.
-#   File.open("Makefile", "at") do |mk|
-#     mk.print(<<~EOF)
+if config_clean?
+  # Do not clean if run in a development work tree.
+  File.open("Makefile", "at") do |mk|
+    mk.print(<<~EOF)
 
-#       all: clean-ports
-#       clean-ports: $(DLLIB)
-#       \t-$(Q)$(RUBY) $(srcdir)/extconf.rb --clean --#{static_p ? "enable" : "disable"}-static
-#     EOF
-#   end
-# end
+      all: clean-ports
+      clean-ports: #{android? ? "$(TARGET_SO)" : "$(DLLIB)"}
+      \t-$(Q)$(RUBY) $(srcdir)/extconf.rb --clean --#{static_p ? "enable" : "disable"}-static
+    EOF
+  end
+end
 
 # rubocop:enable Style/GlobalVars
