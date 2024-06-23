@@ -588,13 +588,19 @@ def do_clean
 
     begin
       if config_static?
-        # ports installation can be safely removed if statically linked.
-        FileUtils.rm_rf(root + "ports", verbose: true)
+        begin
+          # ports installation can be safely removed if statically linked.
+          FileUtils.rm_rf(root + "ports", verbose: true)
+        rescue Errno::ENOENT => e
+          puts "Error: #{e.message}"
+        end
       else
-        FileUtils.rm_rf(root + "ports" + "archives", verbose: true)
+        begin
+          FileUtils.rm_rf(root + "ports" + "archives", verbose: true)
+        rescue Errno::ENOENT => e
+          puts "Error: #{e.message}"
+        end
       end
-    rescue Errno::ENOENT => e
-      puts "Error: #{e.message}"
     end
   end
 
