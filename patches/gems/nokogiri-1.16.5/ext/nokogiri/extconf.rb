@@ -578,12 +578,13 @@ def do_clean
       FileUtils.rm_rf(dir, verbose: true)
     end
 
-    Pathname.glob(root.join("ports", config_static? ? "" : "archives")) do |dir|
-      begin
-        FileUtils.rm_rf(dir, verbose: true) if File.directory?(dir)
-      rescue Errno::ENOENT => e
-        puts "Error: #{e.message}"
-      end
+    exit!(0) if android?
+
+    if config_static?
+      # ports installation can be safely removed if statically linked.
+      FileUtils.rm_rf(root + "ports", verbose: true)
+    else
+      FileUtils.rm_rf(root + "ports" + "archives", verbose: true)
     end
   end
 
