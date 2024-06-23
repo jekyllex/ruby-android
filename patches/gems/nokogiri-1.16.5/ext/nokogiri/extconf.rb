@@ -580,7 +580,7 @@ def do_clean
 
     Pathname.glob(root.join("ports", config_static? ? "" : "archives")) do |dir|
       begin
-        FileUtils.rm_rf(dir, verbose: true)
+        FileUtils.rm_rf(dir, verbose: true) if File.directory?(dir)
       rescue Errno::ENOENT => e
         puts "Error: #{e.message}"
       end
