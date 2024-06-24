@@ -623,7 +623,9 @@ end
 do_help if arg_config("--help")
 do_clean if arg_config("--clean")
 
-append_cppflags "-I/data/data/com.termux/files/usr"
+append_cppflags "-I/data/data/com.termux/files/usr/include"
+append_ldflags "-L/data/data/com.termux/files/usr/lib"
+append_ldflags "-Wl,-rpath=/data/data/com.termux/files/usr/lib"
 
 if openbsd? && !config_system_libraries?
   unless %x(#{ENV["CC"] || "/usr/bin/cc"} -v 2>&1).include?("clang")
