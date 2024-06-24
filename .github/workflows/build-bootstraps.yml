@@ -47,7 +47,7 @@ jobs:
         run: |
           ./scripts/run-docker.sh ./clean.sh
           ./scripts/run-docker.sh ./build-package.sh zlib libiconv libxml2 libxslt -a ${{ matrix.target_arch }} -i -q
-          docker cp $(docker ps -lq):/data/data/com.termux/files/usr ./usr
+          docker cp $(docker ps -lq):/data/data/com.termux/files/usr .
           ./scripts/run-docker.sh ./clean.sh
 
       - name: Setup JekyllEx environment
