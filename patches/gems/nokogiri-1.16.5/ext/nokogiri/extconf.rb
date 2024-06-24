@@ -170,8 +170,8 @@ def config_cross_build?
 end
 
 def config_system_libraries?
-  enable_config("system-libraries", true) do |_, default|
-    arg_config("--use-system-libraries", true)
+  enable_config("system-libraries", ENV.key?("NOKOGIRI_USE_SYSTEM_LIBRARIES")) do |_, default|
+    arg_config("--use-system-libraries", default)
   end
 end
 
@@ -193,10 +193,6 @@ end
 
 def aix?
   RbConfig::CONFIG["target_os"].include?("aix")
-end
-
-def android?
-  RbConfig::CONFIG["target_os"].include?("android")
 end
 
 def nix?
@@ -577,8 +573,6 @@ def do_clean
     Pathname.glob(pwd.join("tmp", "*", "ports")) do |dir|
       FileUtils.rm_rf(dir, verbose: true)
     end
-
-    exit!(0) if android?
 
     if config_static?
       # ports installation can be safely removed if statically linked.
@@ -1125,7 +1119,7 @@ if config_clean?
     mk.print(<<~EOF)
 
       all: clean-ports
-      clean-ports: #{android? ? "$(TARGET_SO)" : "$(DLLIB)"}
+      clean-ports: $(DLLIB)
       \t-$(Q)$(RUBY) $(srcdir)/extconf.rb --clean --#{static_p ? "enable" : "disable"}-static
     EOF
   end
