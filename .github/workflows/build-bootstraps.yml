@@ -47,8 +47,8 @@ jobs:
         run: |
           ./scripts/run-docker.sh ./clean.sh
           ./scripts/run-docker.sh ./build-package.sh zlib libiconv libxml2 libxslt -a ${{ matrix.target_arch }} -i -q
-          docker cp $(docker ps -lq):/data/data/com.termux/files/usr .
-          ./scripts/run-docker.sh ./clean.sh
+          ./scripts/run-docker.sh mkdir -p /data/data/sh.gourav.jekyllex/files
+          ./scripts/run-docker.sh cp -r /data/data/com.termux/files/usr /data/data/sh.gourav.jekyllex/files
 
       - name: Setup JekyllEx environment
         run: |
@@ -61,9 +61,6 @@ jobs:
 
       - name: Create bootstrap archive
         run: |
-          ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh mkdir -p /data/data/com.termux/files
-          docker cp ./usr $(docker ps -lq):/data/data/com.termux/files
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
