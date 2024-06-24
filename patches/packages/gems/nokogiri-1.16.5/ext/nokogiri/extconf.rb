@@ -170,8 +170,8 @@ def config_cross_build?
 end
 
 def config_system_libraries?
-  enable_config("system-libraries", ENV.key?("NOKOGIRI_USE_SYSTEM_LIBRARIES")) do |_, default|
-    arg_config("--use-system-libraries", default)
+  enable_config("system-libraries", true) do |_, default|
+    arg_config("--use-system-libraries", true)
   end
 end
 
