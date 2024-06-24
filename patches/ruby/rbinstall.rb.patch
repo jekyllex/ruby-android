@@ -15,7 +15,7 @@ index 97fe1ea..fcbc578 100755
 +      end
 +    end
 +    if spec.name == "nokogiri"
-+      options[:build_args] = %w[--use-system-libraries --disable-clean]
++      options[:build_args] = %w[-- --use-system-libraries --disable-clean]
 +    else
 +      options[:build_args] = nil
 +    end
