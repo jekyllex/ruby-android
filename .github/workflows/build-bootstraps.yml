@@ -52,10 +52,12 @@ jobs:
         run: |
           ./scripts/run-docker.sh ./clean.sh
           ./scripts/run-docker.sh ./build-package.sh zlib libiconv libxml2 libxslt -a ${{ matrix.target_arch }} -q
-          docker cp $(docker ps -lq):/data/data/sh.gourav.jekyllex/files/usr ./usr
+          docker cp $(docker ps -lq):/data/data/sh.gourav.jekyllex/files/usr/lib ./lib
+          docker cp $(docker ps -lq):/data/data/sh.gourav.jekyllex/files/usr/include ./include
           ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh mkdir -p /data/data/sh.gourav.jekyllex/files
-          docker cp ./usr $(docker ps -lq):/data/data/sh.gourav.jekyllex/files
+          ./scripts/run-docker.sh mkdir -p /data/data/sh.gourav.jekyllex/files/usr
+          docker cp ./lib $(docker ps -lq):/data/data/sh.gourav.jekyllex/files/usr
+          docker cp ./include $(docker ps -lq):/data/data/sh.gourav.jekyllex/files/usr
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
