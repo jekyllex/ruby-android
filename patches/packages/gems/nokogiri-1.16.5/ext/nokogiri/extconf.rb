@@ -736,7 +736,7 @@ if config_system_libraries?
     libs << "-lxslt"
     libs << "-liconv"
     libs << "-lexslt"
-  end
+  end.shelljoin
 else
   message "Building nokogiri using packaged libraries.\n"
 
