@@ -38,29 +38,22 @@ jobs:
           path: termux-packages
           fetch-depth: 1
 
-      - name: Set up build system
-        run: |
-          mv termux-packages/* .
-          rm -rf termux-packages
-
-      - name: Set up dependencies
-        run: |
-          ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh ./build-package.sh zlib libiconv libxml2 libxslt -a ${{ matrix.target_arch }} -i -q
-          ./scripts/run-docker.sh mkdir -p /data/data/sh.gourav.jekyllex/files
-          ./scripts/run-docker.sh cp -r /data/data/com.termux/files/usr /data/data/sh.gourav.jekyllex/files
-
-      - name: Setup JekyllEx environment
+      - name: Setup environment
         run: |
           # Use custom packaging properties for JekyllEx
-          rm scripts/properties.sh scripts/build-bootstraps.sh
-          mv patches/scripts/properties.sh patches/scripts/build-bootstraps.sh scripts/
-          for package in patches/packages/*; do
+          rm termux-packages/scripts/properties.sh termux-packages/scripts/build-bootstraps.sh
+          mv termux-packages/* .
+          rm -rf termux-packages
+          mv properties.sh build-bootstraps.sh scripts/
+          for package in patches/*; do
             cp -r $package packages;
           done
+          find packages/libxml2 -type f -name "*python*" -exec rm {} +
 
       - name: Create bootstrap archive
         run: |
+          ./scripts/run-docker.sh ./clean.sh
+          ./scripts/run-docker.sh ./build-package.sh libxml2 libxslt -a ${{ matrix.target_arch }} -q
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
