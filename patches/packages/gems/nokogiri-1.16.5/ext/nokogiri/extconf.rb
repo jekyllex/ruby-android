@@ -650,7 +650,7 @@ end
 append_cflags(ENV["CFLAGS"].split) unless ENV["CFLAGS"].nil?
 append_cppflags(ENV["CPPFLAGS"].split) unless ENV["CPPFLAGS"].nil?
 append_ldflags(ENV["LDFLAGS"].split) unless ENV["LDFLAGS"].nil?
-$LIBS = concat_flags($LIBS, ENV["LIBS"], "-lz", "-llzma", "-liconv", "-lxml2", "-lxslt", "-lexslt")
+$LIBS = concat_flags($LIBS, ENV["LIBS"])
 
 # libgumbo uses C90/C99 features, see #2302
 append_cflags(["-std=c99", "-Wno-declaration-after-statement"])
@@ -729,14 +729,6 @@ if config_system_libraries?
   have_libxml_headers?(RECOMMENDED_LIBXML_VERSION) ||
     warn("WARNING: libxml2 version #{RECOMMENDED_LIBXML_VERSION} or later is highly recommended, but proceeding anyway.")
 
-  $libs = $libs.shellsplit.tap do |libs|
-    libs << "-lz"
-    libs << "-llzma"
-    libs << "-lxml2"
-    libs << "-lxslt"
-    libs << "-liconv"
-    libs << "-lexslt"
-  end.shelljoin
 else
   message "Building nokogiri using packaged libraries.\n"
 

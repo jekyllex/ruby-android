@@ -396,6 +396,8 @@ main() {
 
 		# Core JekyllEx utilities.
     # PACKAGES+=("git")
+    PACKAGES+=("libxml2")
+    PACKAGES+=("libxslt")
     PACKAGES+=("ruby")
     PACKAGES+=("coreutils")
 
