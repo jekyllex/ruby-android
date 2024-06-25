@@ -6,9 +6,9 @@ index 97fe1ea..90a3789 100755
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
-+    patch_files = Dir.glob("/home/builder/termux-packages/patches/packages/gems/#{gem_name}/**/*")
++    patch_files = Dir.glob("/home/builder/termux-packages/patches/gems/#{gem_name}/**/*")
 +    patch_files.each do |patch_file|
-+      target = patch_file.sub("/home/builder/termux-packages/patches/packages/gems/#{gem_name}/", "#{srcdir}/.bundle/gems/#{gem_name}/")
++      target = patch_file.sub("/home/builder/termux-packages/patches/gems/#{gem_name}/", "#{srcdir}/.bundle/gems/#{gem_name}/")
 +      if File.file?(patch_file) and File.file?(target)
 +        puts "#{INDENT}patching #{patch_file}"
 +        File.write(target, File.read(patch_file))
