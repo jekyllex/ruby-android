@@ -650,7 +650,7 @@ end
 append_cflags(ENV["CFLAGS"].split) unless ENV["CFLAGS"].nil?
 append_cppflags(ENV["CPPFLAGS"].split) unless ENV["CPPFLAGS"].nil?
 append_ldflags(ENV["LDFLAGS"].split) unless ENV["LDFLAGS"].nil?
-$LIBS = concat_flags($LIBS, ENV["LIBS"])
+$LIBS = concat_flags($LIBS, ENV["LIBS"], "-lz", "-llzma", "-liconv", "-lxml2", "-lxslt", "-lexslt")
 
 # libgumbo uses C90/C99 features, see #2302
 append_cflags(["-std=c99", "-Wno-declaration-after-statement"])
