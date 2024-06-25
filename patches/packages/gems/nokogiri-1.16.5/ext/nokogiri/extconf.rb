@@ -729,6 +729,14 @@ if config_system_libraries?
   have_libxml_headers?(RECOMMENDED_LIBXML_VERSION) ||
     warn("WARNING: libxml2 version #{RECOMMENDED_LIBXML_VERSION} or later is highly recommended, but proceeding anyway.")
 
+  $libs = $libs.shellsplit.tap do |libs|
+    libs << "-lz"
+    libs << "-llzma"
+    libs << "-lxml2"
+    libs << "-lxslt"
+    libs << "-liconv"
+    libs << "-lexslt"
+  end
 else
   message "Building nokogiri using packaged libraries.\n"
 
