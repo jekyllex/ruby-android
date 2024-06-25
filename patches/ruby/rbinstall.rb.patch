@@ -1,18 +1,24 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..90a3789 100755
+index 97fe1ea..bea22a6 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,14 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,6 +1109,20 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
-+    patch_files = Dir.glob("/home/builder/termux-packages/patches/gems/#{gem_name}/**/*")
++    patch_files = Dir.glob("/home/builder/termux-packages/patches/packages/gems/#{gem_name}/**/*")
 +    patch_files.each do |patch_file|
-+      target = patch_file.sub("/home/builder/termux-packages/patches/gems/#{gem_name}/", "#{srcdir}/.bundle/gems/#{gem_name}/")
++      target = patch_file.sub("/home/builder/termux-packages/patches/packages/gems/#{gem_name}/", "#{srcdir}/.bundle/gems/#{gem_name}/")
 +      if File.file?(patch_file) and File.file?(target)
 +        puts "#{INDENT}patching #{patch_file}"
 +        File.write(target, File.read(patch_file))
 +      end
++    end
++    if spec.name == "sass-embedded"
++      puts "SASS EMBEDDED"
++      options[:build_args] = ["compile"]
++    else
++      options[:build_args] = nil
 +    end
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
