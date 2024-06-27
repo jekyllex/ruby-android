@@ -1,11 +1,18 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..f9a2e9e 100755
+index 97fe1ea..9765f06 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,25 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,13 +1109,35 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
+-    package = RbInstall::DirPackage.new spec
+-    ins = RbInstall::UnpackedInstaller.new(package, options)
+-    puts "#{INDENT}#{spec.name} #{spec.version}"
+-    ins.install
+-    install_recursive("#{build_dir}/#{gem_name}", "#{extensions_dir}/#{gem_name}") do |src, dest|
+-      # puts "#{INDENT}    #{dest[extensions_dir.size+gem_name.size+2..-1]}"
+-      install src, dest, :mode => (File.executable?(src) ? $prog_mode : $data_mode)
 +    patch_files = Dir.glob("/home/builder/termux-packages/patches/gems/#{gem_name}/**/*")
 +    patch_files.each do |patch_file|
 +      target = patch_file.sub("/home/builder/termux-packages/patches/gems/#{gem_name}/", "#{srcdir}/.bundle/gems/#{gem_name}/")
@@ -23,8 +30,18 @@ index 97fe1ea..f9a2e9e 100755
 +      puts "SASS EMBEDDED"
 +      output = system("cd #{srcdir}/.bundle/gems/#{gem_name} && gem install google-protobuf && rake compile ext_platform=#{RbConfig::CONFIG['platform']}")
 +      puts output
-+      ENV['gem_platform'] = RbConfig::CONFIG['platform']
-+    end
-     package = RbInstall::DirPackage.new spec
-     ins = RbInstall::UnpackedInstaller.new(package, options)
-     puts "#{INDENT}#{spec.name} #{spec.version}"
++      puts '---'
++      output = system("cd #{srcdir}/.bundle/gems/#{gem_name}/ext rake gem_platform=#{RbConfig::CONFIG['platform']}")
++      puts output
++    else
++      package = RbInstall::DirPackage.new spec
++      ins = RbInstall::UnpackedInstaller.new(package, options)
++      puts "#{INDENT}#{spec.name} #{spec.version}"
++      ins.install
++      install_recursive("#{build_dir}/#{gem_name}", "#{extensions_dir}/#{gem_name}") do |src, dest|
++        # puts "#{INDENT}    #{dest[extensions_dir.size+gem_name.size+2..-1]}"
++        install src, dest, :mode => (File.executable?(src) ? $prog_mode : $data_mode)
++      end
+     end
+     installed_gems[spec.full_name] = true
+   end
