@@ -1,33 +1,14 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..e931d85 100755
+index 97fe1ea..7fd8cff 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1091,15 +1091,15 @@ def install_default_gem(dir, srcdir, bindir)
-     # Try to find the gemspec file for C ext gems
-     # ex .bundle/gems/debug-1.7.1/debug-1.7.1.gemspec
-     # This gemspec keep the original dependencies
--    path = "#{srcdir}/.bundle/gems/#{gem_name}/#{gem_name}.gemspec"
-+    src_dir = "#{srcdir}/.bundle/gems/#{gem_name}"
-+    path = "#{src_dir}/#{gem_name}.gemspec"
-     unless File.exist?(path)
--      path = "#{srcdir}/.bundle/specifications/#{gem_name}.gemspec"
-       unless File.exist?(path)
-          skipped[gem_name] = "gemspec not found"
-          next
-       end
-     end
--    spec = load_gemspec(path, "#{srcdir}/.bundle/gems/#{gem_name}")
-+    spec = load_gemspec(path, src_dir)
-     unless spec.platform == Gem::Platform::RUBY
-       skipped[gem_name] = "not ruby platform (#{spec.platform})"
-       next
-@@ -1109,6 +1109,21 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,6 +1109,19 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
 +    patch_files = Dir.glob("/home/builder/termux-packages/patches/packages/gems/#{gem_name}/**/*")
 +    patch_files.each do |patch_file|
-+      target = patch_file.sub("/home/builder/termux-packages/patches/packages/gems/#{gem_name}", srcdir)
++      target = patch_file.sub("/home/builder/termux-packages/patches/packages/gems/#{gem_name}/", "#{srcdir}/.bundle/gems/#{gem_name}/")
 +      if File.file?(patch_file) and File.file?(target)
 +        puts "#{INDENT}patching #{patch_file}"
 +        File.write(target, File.read(patch_file))
@@ -35,10 +16,8 @@ index 97fe1ea..e931d85 100755
 +    end
 +    if spec.name == "sass-embedded"
 +      puts "SASS EMBEDDED"
-+      output = system("cd #{src_dir} && rake compile ext_platform=#{RbConfig::CONFIG['platform']}")
++      output = system("cd #{srcdir}/.bundle/gems/#{gem_name} && rake compile ext_platform=#{RbConfig::CONFIG['platform']}")
 +      puts output
-+    else
-+      options[:build_args] = nil
 +    end
      package = RbInstall::DirPackage.new spec
      ins = RbInstall::UnpackedInstaller.new(package, options)
