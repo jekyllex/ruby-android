@@ -16,7 +16,7 @@ task :compile do
     # rm 'ext/sass/cli.rb'
     # rm_rf 'ext/sass/dart-sass'
 
-    sh 'rake', '-C', 'ext/sass',
+    sh 'rake', '-C', 'ext/sass', 'clobber', 'install',
        '-E', "RbConfig::CONFIG.merge!({ 'host_cpu' => #{host_cpu.dump}, 'host_os' => #{host_os.dump} })", 'cli.rb'
   end
 end
