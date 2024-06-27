@@ -1,8 +1,8 @@
 diff --git a/tool/rbinstall.rb b/tool/rbinstall.rb
-index 97fe1ea..7ccc8af 100755
+index 97fe1ea..82de5a1 100755
 --- a/tool/rbinstall.rb
 +++ b/tool/rbinstall.rb
-@@ -1109,6 +1109,27 @@ def install_default_gem(dir, srcdir, bindir)
+@@ -1109,6 +1109,24 @@ def install_default_gem(dir, srcdir, bindir)
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
@@ -22,9 +22,6 @@ index 97fe1ea..7ccc8af 100755
 +    if spec.name == "sass-embedded"
 +      puts "SASS EMBEDDED"
 +      output = system("cd #{srcdir}/.bundle/gems/#{gem_name} && gem install google-protobuf && rake compile ext_platform=#{RbConfig::CONFIG['platform']}")
-+      puts output
-+      puts '---'
-+      output = system("cd #{srcdir}/.bundle/gems/#{gem_name}/ext && rake gem_platform=#{RbConfig::CONFIG['platform']}")
 +      puts output
 +    end
      package = RbInstall::DirPackage.new spec
