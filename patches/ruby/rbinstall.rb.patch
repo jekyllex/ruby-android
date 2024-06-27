@@ -21,7 +21,7 @@ index 97fe1ea..80cd6e1 100755
 +    end
 +    if spec.name == "sass-embedded"
 +      puts "SASS EMBEDDED"
-+      output = system("cd #{srcdir}/.bundle/gems/#{gem_name} && rake compile ext_platform=#{RbConfig::CONFIG['platform']}")
++      output = system("cd #{srcdir}/.bundle/gems/#{gem_name} && gem install google-protobuf && rake compile ext_platform=#{RbConfig::CONFIG['platform']}")
 +      puts output
 +    end
      package = RbInstall::DirPackage.new spec
