@@ -20,7 +20,7 @@ end
 file 'dart-sass' do |t|
   raise if ENV.key?('DART_SASS')
 
-  gem_install 'sass-embedded', SassConfig.gem_version, ENV['gem_platform'] do |dir|
+  gem_install 'sass-embedded', SassConfig.gem_version, SassConfig.gem_platform do |dir|
     mv File.absolute_path("ext/sass/#{t.name}", dir), t.name
   end
 rescue StandardError
