@@ -6,29 +6,32 @@ TERMUX_PKG_VERSION="2.45.2"
 TERMUX_PKG_SRCURL=https://mirrors.kernel.org/pub/software/scm/git/git-${TERMUX_PKG_VERSION}.tar.xz
 TERMUX_PKG_SHA256=51bfe87eb1c02fed1484051875365eeab229831d30d0cec5d89a14f9e40e9adb
 TERMUX_PKG_AUTO_UPDATE=true
-TERMUX_PKG_DEPENDS="libcurl, libexpat, libiconv, less, openssl, pcre2, zlib"
-TERMUX_PKG_RECOMMENDS="openssh"
-TERMUX_PKG_SUGGESTS="perl"
+# removed libexpat, pcre2
+TERMUX_PKG_DEPENDS="libcurl, libiconv, less, openssl, zlib"
+# TERMUX_PKG_RECOMMENDS="openssh"
+# TERMUX_PKG_SUGGESTS="perl"
 
 ## This requires a working $TERMUX_PREFIX/bin/sh on the host building:
+# removed --with-expat --with-tcltk=$TERMUX_PREFIX/bin/wish
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 ac_cv_fread_reads_directories=yes
 ac_cv_header_libintl_h=no
 ac_cv_iconv_omits_bom=no
 ac_cv_snprintf_returns_bogus=no
 --with-curl
---with-expat
 --with-shell=$TERMUX_PREFIX/bin/sh
---with-tcltk=$TERMUX_PREFIX/bin/wish
 "
 # expat is only used by git-http-push for remote lock management over DAV, so disable:
 # NO_INSTALL_HARDLINKS to use symlinks instead of hardlinks (which does not work on Android M):
+# added: NO_PERL=1, NO_EXPAT=1, NO_TCLTK=1
+# removed: PERL_PATH=$TERMUX_PREFIX/bin/perl, USE_LIBPCRE2=1
 TERMUX_PKG_EXTRA_MAKE_ARGS="
 NO_NSEC=1
+NO_PERL=1
+NO_EXPAT=1
+NO_TCLTK=1
 NO_GETTEXT=1
 NO_INSTALL_HARDLINKS=1
-PERL_PATH=$TERMUX_PREFIX/bin/perl
-USE_LIBPCRE2=1
 "
 TERMUX_PKG_BUILD_IN_SRC=true
 
@@ -52,8 +55,8 @@ termux_step_pre_configure() {
 	fi
 
 	# Setup perl so that the build process can execute it:
-	rm -f $TERMUX_PREFIX/bin/perl
-	ln -s $(command -v perl) $TERMUX_PREFIX/bin/perl
+	# rm -f $TERMUX_PREFIX/bin/perl
+	# ln -s $(command -v perl) $TERMUX_PREFIX/bin/perl
 
 	# Force fresh perl files (otherwise files from earlier builds
 	# remains without bumped modification times, so are not picked
@@ -78,7 +81,7 @@ termux_step_post_make_install() {
 		$TERMUX_PREFIX/etc/bash_completion.d/
 
 	# Remove the build machine perl setup in termux_step_pre_configure to avoid it being packaged:
-	rm $TERMUX_PREFIX/bin/perl
+	# rm $TERMUX_PREFIX/bin/perl
 
 	# Remove clutter:
 	rm -Rf $TERMUX_PREFIX/lib/*-linux*/perl
