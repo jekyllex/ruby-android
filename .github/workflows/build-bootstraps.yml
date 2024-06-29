@@ -48,6 +48,7 @@ jobs:
           for package in patches/*; do
             cp -r $package packages;
           done
+          find packages/git -type f -name "*subpackage*" -exec rm {} +
           find packages/libxml2 -type f -name "*python*" -exec rm {} +
 
       - name: Create bootstrap archive
