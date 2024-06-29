@@ -21,7 +21,7 @@ index 97fe1ea..f431c57 100755
      prepare "bundled gem cache", gem_dir+"/cache"
      install installed_gems, gem_dir+"/cache"
    end
-+  system("gem install sass-embedded -v 1.77.4 --platform #{RbConfig::CONFIG['platform']} --ignore-dependencies -i #{install_dir}")
++  system("gem install sass-embedded -v 1.77.5 --platform #{RbConfig::CONFIG['platform']} --ignore-dependencies -i #{install_dir}")
    unless gems.empty?
      skipped.default = "not found in bundled_gems"
      puts "skipped bundled gems:"
