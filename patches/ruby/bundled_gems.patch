@@ -41,7 +41,7 @@ index ae0a1ac..160619d 100644
 +coffee-script 2.4.1 http://github.com/josh/ruby-coffee-script
 +coffee-script-source 1.12.2 http://coffeescript.org
 +colorator 1.1.0 https://github.com/octopress/colorator
-+commonmarker 1.1.4  https://github.com/gjtorikian/commonmarker
++commonmarker 0.23.10  https://github.com/gjtorikian/commonmarker
 +concurrent-ruby 1.3.3 https://github.com/ruby-concurrency/concurrent-ruby
 +connection_pool 2.4.1 https://github.com/mperham/connection_pool
 +csv 3.3.0 https://github.com/ruby/csv
