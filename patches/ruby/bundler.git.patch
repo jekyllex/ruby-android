@@ -7,14 +7,14 @@ index 6458512..3e9ace7 100644
  
          def capture3_args_for(cmd, dir)
 -          return ["git", *cmd] unless dir
-+          return ["/system/bin/linker64", "/data/data/sh.gourav.jekyllex/files/usr/bin/git", *cmd] unless dir
++          return ["/data/data/sh.gourav.jekyllex/files/usr/bin/git", *cmd] unless dir
  
            if Bundler.feature_flag.bundler_3_mode? || supports_minus_c?
 -            ["git", "-C", dir.to_s, *cmd]
-+            ["/system/bin/linker64", "/data/data/sh.gourav.jekyllex/files/usr/bin/git", "-C", dir.to_s, *cmd]
++            ["/data/data/sh.gourav.jekyllex/files/usr/bin/git", "-C", dir.to_s, *cmd]
            else
 -            ["git", *cmd, { chdir: dir.to_s }]
-+            ["/system/bin/linker64", "/data/data/sh.gourav.jekyllex/files/usr/bin/git", *cmd, { chdir: dir.to_s }]
++            ["/data/data/sh.gourav.jekyllex/files/usr/bin/git", *cmd, { chdir: dir.to_s }]
            end
          end
  
@@ -27,7 +27,7 @@ index 89342ff..7ba273a 100644
      super()
  
 -    @git             = ENV["git"] || "git"
-+    @git             = ENV["git"] || "/system/bin/linker64 /data/data/sh.gourav.jekyllex/files/usr/bin/git"
++    @git             = ENV["git"] || "/data/data/sh.gourav.jekyllex/files/usr/bin/git"
      @need_submodules = {}
      @repositories    = {}
      @root_dir        = Gem.dir
@@ -40,7 +40,7 @@ index bda63c6..4258c61 100644
      @remote   = true
      @root_dir = Gem.dir
 -    @git      = ENV["git"] || "git"
-+    @git      = ENV["git"] || "/system/bin/linker64 /data/data/sh.gourav.jekyllex/files/usr/bin/git"
++    @git      = ENV["git"] || "/data/data/sh.gourav.jekyllex/files/usr/bin/git"
    end
  
    def <=>(other)
