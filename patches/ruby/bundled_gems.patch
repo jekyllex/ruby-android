@@ -1,8 +1,8 @@
 diff --git a/gems/bundled_gems b/gems/bundled_gems
-index ae0a1ac..0cbd088 100644
+index ae0a1ac..28648e9 100644
 --- a/gems/bundled_gems
 +++ b/gems/bundled_gems
-@@ -21,3 +21,100 @@ rbs             3.4.0   https://github.com/ruby/rbs
+@@ -21,3 +21,101 @@ rbs             3.4.0   https://github.com/ruby/rbs
  typeprof        0.21.9  https://github.com/ruby/typeprof
  debug           1.9.1   https://github.com/ruby/debug
  racc            1.7.3   https://github.com/ruby/racc
@@ -33,7 +33,7 @@ index ae0a1ac..0cbd088 100644
 +html-pipeline 2.14.3 https://github.com/jch/html-pipeline
 +http_parser.rb 0.8.0 https://github.com/tmm1/http_parser.rb
 +i18n 1.14.5 https://github.com/ruby-i18n/i18n
-+jekyll 4.3.3 https://github.com/jekyll/jekyll
++jekyll 3.9.5 https://github.com/jekyll/jekyll
 +jekyll-avatar 0.8.0 https://github.com/jekyll/jekyll-avatar
 +jekyll-coffeescript 1.2.2 https://github.com/jekyll/jekyll-coffeescript
 +jekyll-commonmark 1.4.0 https://github.com/jekyll/jekyll-commonmark
@@ -50,7 +50,7 @@ index ae0a1ac..0cbd088 100644
 +jekyll-redirect-from 0.16.0 https://github.com/jekyll/jekyll-redirect-from
 +jekyll-relative-links 0.6.1 https://github.com/benbalter/jekyll-relative-links
 +jekyll-remote-theme 0.4.3 https://github.com/benbalter/jekyll-remote-theme
-+jekyll-sass-converter 3.0.0 https://github.com/jekyll/jekyll-sass-converter
++jekyll-sass-converter 1.5.2 https://github.com/jekyll/jekyll-sass-converter
 +jekyll-seo-tag 2.8.0 https://github.com/jekyll/jekyll-seo-tag
 +jekyll-sitemap 1.4.0 https://github.com/jekyll/jekyll-sitemap
 +jekyll-swiss 1.0.0 http://broccolini.net/swiss
@@ -103,3 +103,4 @@ index ae0a1ac..0cbd088 100644
 +unicode-display_width 2.5.0 https://github.com/janlelis/unicode-display_width
 +uri 0.13.0 https://github.com/ruby/uri
 +webrick 1.8.1 https://github.com/ruby/webrick
++github-pages 231 https://github.com/github/pages-gem
