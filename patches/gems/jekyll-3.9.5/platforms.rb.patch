@@ -1,0 +1,13 @@
+diff --git a/lib/jekyll/utils/platforms.rb b/lib/jekyll/utils/platforms.rb
+index 0748b0e..1ee065e 100644
+--- a/lib/jekyll/utils/platforms.rb
++++ b/lib/jekyll/utils/platforms.rb
+@@ -73,7 +73,7 @@ module Jekyll
+           File.read(
+             "/proc/version"
+           ).downcase
+-        rescue Errno::ENOENT
++        rescue Errno::ENOENT, Errno::EACCES
+           nil
+         end
+       end
