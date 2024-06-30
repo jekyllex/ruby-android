@@ -1,8 +1,8 @@
 diff --git a/gems/bundled_gems b/gems/bundled_gems
-index ae0a1ac..e4560d1 100644
+index ae0a1ac..33cfbab 100644
 --- a/gems/bundled_gems
 +++ b/gems/bundled_gems
-@@ -21,3 +21,103 @@ rbs             3.4.0   https://github.com/ruby/rbs
+@@ -21,3 +21,110 @@ rbs             3.4.0   https://github.com/ruby/rbs
  typeprof        0.21.9  https://github.com/ruby/typeprof
  debug           1.9.1   https://github.com/ruby/debug
  racc            1.7.3   https://github.com/ruby/racc
@@ -29,7 +29,7 @@ index ae0a1ac..e4560d1 100644
 +ffi 1.17.0 https://github.com/ffi/ffi/
 +forwardable-extended 2.6.0 http://github.com/envygeeks/forwardable-extended
 +gemoji 4.1.0 https://github.com/github/gemoji
-+google-protobuf 4.27.2 https://github.com/protocolbuffers/protobuf/tree/v4.27.0/ruby
++google-protobuf 4.27.2 https://github.com/protocolbuffers/protobuf/tree/v4.27.2/ruby
 +html-pipeline 2.14.3 https://github.com/jch/html-pipeline
 +http_parser.rb 0.8.0 https://github.com/tmm1/http_parser.rb
 +i18n 1.14.5 https://github.com/ruby-i18n/i18n
@@ -74,7 +74,7 @@ index ae0a1ac..e4560d1 100644
 +kramdown-parser-gfm 1.1.0 https://github.com/kramdown/parser-gfm
 +liquid 4.0.4 http://www.liquidmarkup.org
 +listen 3.9.0 https://github.com/guard/listen/tree/v3.9.0
-+mercenary 0.4.0 https://github.com/jekyll/mercenary
++mercenary 0.3.6 https://github.com/jekyll/mercenary
 +mini_portile2 2.8.7 https://github.com/flavorjones/mini_portile
 +minima 2.5.1 https://github.com/jekyll/minima
 +minitest 5.23.1 https://github.com/minitest/minitest
@@ -88,8 +88,8 @@ index ae0a1ac..e4560d1 100644
 +rake 13.2.1 https://github.com/ruby/rake/tree/v13.2.1
 +rb-fsevent 0.11.2 https://github.com/thibaudgg/rb-fsevent
 +rb-inotify 0.11.1 https://github.com/guard/rb-inotify
-+rexml 3.2.8 https://github.com/ruby/rexml
-+rouge 4.2.1 https://github.com/rouge-ruby/rouge
++rexml 3.3.1 https://github.com/ruby/rexml
++rouge 3.30.0 https://github.com/rouge-ruby/rouge
 +rubyzip 2.3.2 https://github.com/rubyzip/rubyzip/tree/v2.3.2
 +safe_yaml 1.0.5 https://github.com/dtao/safe_yaml
 +sass 3.7.4 https://github.com/sass/ruby-sass
