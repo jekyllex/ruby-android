@@ -1,8 +1,8 @@
 diff --git a/gems/bundled_gems b/gems/bundled_gems
-index ae0a1ac..28648e9 100644
+index ae0a1ac..fb8f85a 100644
 --- a/gems/bundled_gems
 +++ b/gems/bundled_gems
-@@ -21,3 +21,101 @@ rbs             3.4.0   https://github.com/ruby/rbs
+@@ -21,3 +21,102 @@ rbs             3.4.0   https://github.com/ruby/rbs
  typeprof        0.21.9  https://github.com/ruby/typeprof
  debug           1.9.1   https://github.com/ruby/debug
  racc            1.7.3   https://github.com/ruby/racc
@@ -92,6 +92,7 @@ index ae0a1ac..28648e9 100644
 +rouge 4.2.1 https://github.com/rouge-ruby/rouge
 +rubyzip 2.3.2 https://github.com/rubyzip/rubyzip/tree/v2.3.2
 +safe_yaml 1.0.5 https://github.com/dtao/safe_yaml
++sass 3.7.4 https://github.com/sass/ruby-sass
 +sawyer 0.9.2 https://github.com/lostisland/sawyer
 +simpleidn 0.2.1 https://github.com/mmriis/simpleidn
 +strscan 3.1.0 https://github.com/ruby/strscan
