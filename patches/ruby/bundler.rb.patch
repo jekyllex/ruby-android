@@ -1,0 +1,42 @@
+diff --git a/lib/bundler/cli.rb b/lib/bundler/cli.rb
+index 3640536..d5ce867 100644
+--- a/lib/bundler/cli.rb
++++ b/lib/bundler/cli.rb
+@@ -64,7 +64,8 @@ def initialize(*args)
+         Bundler.reset_settings_and_root!
+       end
+ 
+-      Bundler.self_manager.restart_with_locked_bundler_if_needed
++      # JekyllEx doesn't support restarting with a locked bundler
++      # Bundler.self_manager.restart_with_locked_bundler_if_needed
+ 
+       Bundler.settings.set_command_option_if_given :retry, options[:retry]
+ 
+diff --git a/lib/bundler/cli/install.rb b/lib/bundler/cli/install.rb
+index 6c102d5..e30da95 100644
+--- a/lib/bundler/cli/install.rb
++++ b/lib/bundler/cli/install.rb
+@@ -12,7 +12,8 @@ def run
+ 
+       warn_if_root
+ 
+-      Bundler.self_manager.install_locked_bundler_and_restart_with_it_if_needed
++      # JekyllEx doesn't support restarting with a locked bundler
++      # Bundler.self_manager.install_locked_bundler_and_restart_with_it_if_needed
+ 
+       Bundler::SharedHelpers.set_env "RB_USER_INSTALL", "1" if Bundler::FREEBSD
+ 
+diff --git a/lib/bundler/cli/update.rb b/lib/bundler/cli/update.rb
+index 985e8db..4844ab8 100644
+--- a/lib/bundler/cli/update.rb
++++ b/lib/bundler/cli/update.rb
+@@ -13,7 +13,8 @@ def run
+ 
+       update_bundler = options[:bundler]
+ 
+-      Bundler.self_manager.update_bundler_and_restart_with_it_if_needed(update_bundler) if update_bundler
++      # JekyllEx doesn't support restarting self restarting bundler
++      # Bundler.self_manager.update_bundler_and_restart_with_it_if_needed(update_bundler) if update_bundler
+ 
+       Plugin.gemfile_install(Bundler.default_gemfile) if Bundler.feature_flag.plugins?
+ 
