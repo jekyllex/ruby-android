@@ -1,0 +1,13 @@
+diff --git a/ext/extconf.rb b/ext/extconf.rb
+index 676b4c4..e5fe026 100644
+--- a/ext/extconf.rb
++++ b/ext/extconf.rb
+@@ -267,4 +267,8 @@ add_define 'HAVE_MAKE_PAIR' if try_link(<<SRC, '-lstdc++')
+ SRC
+ TRY_LINK.sub!('$(CXX)', '$(CC)')
+ 
++$defs.each do |flag|
++  $CPPFLAGS += " #{flag}"
++end
++
+ create_makefile "rubyeventmachine"

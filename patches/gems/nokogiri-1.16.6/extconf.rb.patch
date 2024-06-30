@@ -1,0 +1,51 @@
+diff --git a/ext/nokogiri/extconf.rb b/ext/nokogiri/extconf.rb
+index 07db836..a09f744 100644
+--- a/ext/nokogiri/extconf.rb
++++ b/ext/nokogiri/extconf.rb
+@@ -170,8 +170,8 @@ def config_cross_build?
+ end
+ 
+ def config_system_libraries?
+-  enable_config("system-libraries", ENV.key?("NOKOGIRI_USE_SYSTEM_LIBRARIES")) do |_, default|
+-    arg_config("--use-system-libraries", default)
++  enable_config("system-libraries", true) do |_, default|
++    arg_config("--use-system-libraries", true)
+   end
+ end
+ 
+@@ -426,6 +426,7 @@ def iconv_configure_flags
+ end
+ 
+ def process_recipe(name, version, static_p, cross_p, cacheable_p = true)
++  system("gem install mini_portile2 -v '#{REQUIRED_MINI_PORTILE_VERSION}' --no-document -i /home/builder/.local/share/gem/ruby/3.3.0")
+   require "rubygems"
+   gem("mini_portile2", REQUIRED_MINI_PORTILE_VERSION) # gemspec is not respected at install time
+   require "mini_portile2"
+@@ -1112,16 +1113,16 @@ end
+ 
+ create_makefile("nokogiri/nokogiri")
+ 
+-if config_clean?
+-  # Do not clean if run in a development work tree.
+-  File.open("Makefile", "at") do |mk|
+-    mk.print(<<~EOF)
+-
+-      all: clean-ports
+-      clean-ports: $(DLLIB)
+-      \t-$(Q)$(RUBY) $(srcdir)/extconf.rb --clean --#{static_p ? "enable" : "disable"}-static
+-    EOF
+-  end
+-end
++# if config_clean?
++#   # Do not clean if run in a development work tree.
++#   File.open("Makefile", "at") do |mk|
++#     mk.print(<<~EOF)
++
++#       all: clean-ports
++#       clean-ports: $(DLLIB)
++#       \t-$(Q)$(RUBY) $(srcdir)/extconf.rb --clean --#{static_p ? "enable" : "disable"}-static
++#     EOF
++#   end
++# end
+ 
+ # rubocop:enable Style/GlobalVars
