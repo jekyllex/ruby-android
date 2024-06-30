@@ -1,0 +1,24 @@
+diff --git a/lib/jekyll/readers/theme_assets_reader.rb b/lib/jekyll/readers/theme_assets_reader.rb
+index 2706690..3e5e19c 100644
+--- a/lib/jekyll/readers/theme_assets_reader.rb
++++ b/lib/jekyll/readers/theme_assets_reader.rb
+@@ -12,11 +12,14 @@ module Jekyll
+ 
+       Find.find(site.theme.assets_path) do |path|
+         next if File.directory?(path)
+-        if File.symlink?(path)
+-          Jekyll.logger.warn "Theme reader:", "Ignored symlinked asset: #{path}"
+-        else
+-          read_theme_asset(path)
+-        end
++
++        read_theme_asset(path)
++
++        # if File.symlink?(path)
++        #   Jekyll.logger.warn "Theme reader:", "Ignored symlinked asset: #{path}"
++        # else
++        #   read_theme_asset(path)
++        # end
+       end
+     end
+ 
