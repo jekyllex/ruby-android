@@ -1,18 +1,23 @@
 diff --git a/lib/jekyll/commands/new.rb b/lib/jekyll/commands/new.rb
-index 97549b1..695e37f 100644
+index 97549b1..5e0d9b3 100644
 --- a/lib/jekyll/commands/new.rb
 +++ b/lib/jekyll/commands/new.rb
-@@ -104,6 +104,9 @@ gem "kramdown-parser-gfm"
+@@ -99,11 +99,13 @@ gem "wdm", "~> 0.1.0", :install_if => Gem.win_platform?
+ 
+ # kramdown v2 ships without the gfm parser by default. If you're using
+ # kramdown v1, comment out this line.
+-gem "kramdown-parser-gfm"
++gem "kramdown-parser-gfm", "~> 1.1"
+ 
  # Lock `http_parser.rb` gem to `v0.6.x` on JRuby builds since newer versions of the gem
  # do not have a Java counterpart.
  gem "http_parser.rb", "~> 0.6.0", :platforms => [:jruby]
 +
 +gem "webrick", "~> 1.8"
-+gem "kramdown-parser-gfm", "~> 1.1"
  RUBY
          end
  
-@@ -159,7 +162,7 @@ RUBY
+@@ -159,7 +161,7 @@ RUBY
            Jekyll.logger.info "Running bundle install in #{path.cyan}..."
            Dir.chdir(path) do
              exe = Gem.bin_path("bundler", "bundle")
