@@ -2,20 +2,20 @@
 
 This is a custom build of ruby programming language built for native execution of [Jekyll](https://jekyllrb.com) software on the Android app [JekyllEx](https://jekyllex.xyz).
 
-The [original patches](https://github.com/termux/termux-packages/tree/master/packages/ruby) for ruby to work on Android were developed by the [Termux team](https://github.com/termux). The custom build scripts, properties scripts and workflows for building the package are developed by [Gourav Khunger](https://github.com/gouravkhunger).
+The original [patches for ruby](https://github.com/termux/termux-packages/tree/master/packages/ruby) to work on Android were developed by the [Termux team](https://github.com/termux). The [custom patches](https://github.com/jekyllex/ruby-android/tree/main/patches) for tools to work on Android 10 & above, build scripts and workflows are developed by [Gourav Khunger](https://github.com/gouravkhunger).
 
-This repository hosts 4 `zip` bootstraped files at `dl.jekyllex.xyz` for ruby, to have support for [each CPU type](https://developer.android.com/ndk/guides/abis#sa) that Android devices support:
+This repository [releases](https://github.com/jekyllex/ruby-android/releases) 4 `zip` bootstrapped files available for download through `dl.jekyllex.xyz`, to provide support for [each CPU type](https://developer.android.com/ndk/guides/abis#sa) that Android devices support:
 
-- armeabi-v7a (arm)
-- arm64-v8a (aarch64)
 - x86 (i686)
 - x86_64 (x86_64)
+- armeabi-v7a (arm)
+- arm64-v8a (aarch64)
 
-The bootstraps of which can be found at these links:
+The latest bootstraps can be found at these links:
 
-- armeabi-v7a: https://dl.jekyllex.xyz/ruby-arm.zip
-- arm64-v8a: https://dl.jekyllex.xyz/ruby-aarch64.zip
-- x86: https://dl.jekyllex.xyz/ruby-i686.zip
-- x86_64: https://dl.jekyllex.xyz/ruby-x86_64.zip
+- x86: https://dl.jekyllex.xyz/ruby/v0.1.0/i686.zip
+- x86_64: https://dl.jekyllex.xyz/ruby/v0.1.0/x86_64.zip
+- armeabi-v7a: https://dl.jekyllex.xyz/ruby/v0.1.0/arm.zip
+- arm64-v8a: https://dl.jekyllex.xyz/ruby/v0.1.0/aarch64.zip
 
-These files would be downloaded by [Jekyllex Android app](https://github.com/jekyllex/jekyllex-android) at runtime based on device cpu architecture and extracted to the App Home directoy. This simulates a linux working environment which can run ruby and thus jekyll.
+These files are downloaded by [Jekyllex](https://github.com/jekyllex/jekyllex-android) at build time based on the target device architecture and extracted to the app's home directoy upon app installation. This simulates a linux-like working environment which can execute ruby and thus jekyll.
