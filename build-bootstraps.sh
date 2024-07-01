@@ -17,7 +17,7 @@ set -e
 TERMUX_SCRIPTDIR=$(realpath "$(dirname "$0")/../")
 . $(dirname "$(realpath "$0")")/properties.sh
 
-BOOTSTRAP_TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/bootstrap-tmp.XXXXXXXX")
+BOOTSTRAP_TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ruby-tmp.XXXXXXXX")
 
 # By default, bootstrap archives are compatible with Android >=7.0
 # and <10.
@@ -196,7 +196,7 @@ extract_debs() {
 # Information about symlinks is stored in file SYMLINKS.txt.
 create_bootstrap_archive() {
 
-	echo $'\n\n\n'"[*] Creating 'bootstrap-${1}.zip'..."
+	echo $'\n\n\n'"[*] Creating 'ruby-${1}.zip'..."
 	(cd "${BOOTSTRAP_ROOTFS}/${TERMUX_PREFIX}"
 		# Do not store symlinks in bootstrap archive.
 		# Instead, put all information to SYMLINKS.txt
@@ -205,10 +205,10 @@ create_bootstrap_archive() {
 			rm -f "$link"
 		done < <(find . -type l -print0)
 
-		zip -r9 "${BOOTSTRAP_TMPDIR}/bootstrap-${1}.zip" ./*
+		zip -r9 "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" ./*
 	)
 
-	mv -f "${BOOTSTRAP_TMPDIR}/bootstrap-${1}.zip" "$TERMUX_PACKAGES_DIRECTORY/"
+	mv -f "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" "$TERMUX_PACKAGES_DIRECTORY/"
 
 	echo "[*] Finished successfully (${1})."
 
