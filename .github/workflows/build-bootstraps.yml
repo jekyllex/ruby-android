@@ -73,7 +73,7 @@ jobs:
   release:
     needs: bootstraps
     runs-on: ubuntu-latest
-    if: github.event.inputs.release == 'true' && github.event.inputs.tag.startsWith('v')
+    if: github.event.inputs.release == 'true' && startsWith(github.event.inputs.tag, 'v')
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
