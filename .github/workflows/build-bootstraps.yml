@@ -86,6 +86,11 @@ jobs:
           merge-multiple: true
           path: ./
 
+      - name: Create new tag
+        run: |
+          echo "${{ github.event.inputs.tag }}"
+          # git push --tags
+
       # - name: Create new tag
       #   run: |
       #     git tag "${{ github.event.inputs.tag }}"
