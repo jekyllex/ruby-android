@@ -1,7 +1,14 @@
 name: Build bootstraps
 
 on:
-  - workflow_dispatch
+  workflow_dispatch:
+    inputs:
+      release:
+        type: boolean
+        description: "Release built bootstraps"
+      tag:
+        type: string
+        description: "Tag for the release"
 
 jobs:
   bootstraps:
@@ -54,7 +61,7 @@ jobs:
       - name: Create bootstrap archive
         run: |
           ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh ./build-package.sh libxml2 libxslt -a ${{ matrix.target_arch }} -q
+          # ./scripts/run-docker.sh ./build-package.sh libxml2 libxslt -a ${{ matrix.target_arch }} -q
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
@@ -62,6 +69,36 @@ jobs:
         with:
           name: bootstrap-${{ matrix.target_arch }}
           path: "*.zip"
+
+  release:
+    needs: bootstraps
+    runs-on: ubuntu-latest
+    if: github.event.inputs.release == 'true' && github.event.inputs.tag.startsWith('v')
+    steps:
+      - name: Clone repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+
+      - name: Fetch bootstrap archives
+        uses: actions/download-artifact@v4
+        with:
+          merge-multiple: true
+          path: ./
+
+      # - name: Create new tag
+      #   run: |
+      #     git tag "${{ github.event.inputs.tag }}"
+      #     git push --tags
+
+      # - name: Publish bootstrap zips to GitHub release
+      #   uses: termux/upload-release-action@v4.1.0
+      #   with:
+      #     file: "*.zip"
+      #     file_glob: true
+      #     checksums: sha256
+      #     tag: ${{ github.event.inputs.tag }}
+      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   apk:
     needs: bootstraps
