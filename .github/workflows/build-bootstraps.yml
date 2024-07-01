@@ -61,7 +61,7 @@ jobs:
       - name: Create bootstrap archive
         run: |
           ./scripts/run-docker.sh ./clean.sh
-          # ./scripts/run-docker.sh ./build-package.sh libxml2 libxslt -a ${{ matrix.target_arch }} -q
+          ./scripts/run-docker.sh ./build-package.sh libxml2 libxslt -a ${{ matrix.target_arch }} -q
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
@@ -73,7 +73,7 @@ jobs:
   release:
     needs: bootstraps
     runs-on: ubuntu-latest
-    if: github.event.inputs.release == 'true' && startsWith(github.event.inputs.tag, 'v')
+    if: github.ref == 'refs/heads/main' && github.event.inputs.release == 'true' && startsWith(github.event.inputs.tag, 'v')
     steps:
       - name: Clone repository
         uses: actions/checkout@v4
@@ -88,22 +88,17 @@ jobs:
 
       - name: Create new tag
         run: |
-          echo "${{ github.event.inputs.tag }}"
-          # git push --tags
+          git tag "${{ github.event.inputs.tag }}"
+          git push --tags
 
-      # - name: Create new tag
-      #   run: |
-      #     git tag "${{ github.event.inputs.tag }}"
-      #     git push --tags
-
-      # - name: Publish bootstrap zips to GitHub release
-      #   uses: termux/upload-release-action@v4.1.0
-      #   with:
-      #     file: "*.zip"
-      #     file_glob: true
-      #     checksums: sha256
-      #     tag: ${{ github.event.inputs.tag }}
-      #     repo_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Publish bootstrap zips to GitHub release
+        uses: termux/upload-release-action@v4.1.0
+        with:
+          file: "*.zip"
+          file_glob: true
+          checksums: sha256
+          tag: ${{ github.event.inputs.tag }}
+          repo_token: ${{ secrets.GITHUB_TOKEN }}
 
   apk:
     needs: bootstraps
