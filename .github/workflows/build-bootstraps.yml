@@ -67,7 +67,7 @@ jobs:
       - name: Store bootstrap
         uses: actions/upload-artifact@v4
         with:
-          name: bootstrap-${{ matrix.target_arch }}
+          name: ruby-${{ matrix.target_arch }}
           path: "*.zip"
 
   release:
