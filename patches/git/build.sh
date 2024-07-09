@@ -69,16 +69,16 @@ termux_step_pre_configure() {
 
 termux_step_post_make_install() {
 	# Installing man requires asciidoc and xmlto, so git uses separate make targets for man pages
-	make -j $TERMUX_PKG_MAKE_PROCESSES install-man
+	# make -j $TERMUX_PKG_MAKE_PROCESSES install-man
 
-	make -j $TERMUX_PKG_MAKE_PROCESSES -C contrib/subtree $TERMUX_PKG_EXTRA_MAKE_ARGS
-	make -C contrib/subtree $TERMUX_PKG_EXTRA_MAKE_ARGS ${TERMUX_PKG_MAKE_INSTALL_TARGET}
-	make -j $TERMUX_PKG_MAKE_PROCESSES -C contrib/subtree install-man
+	# make -j $TERMUX_PKG_MAKE_PROCESSES -C contrib/subtree $TERMUX_PKG_EXTRA_MAKE_ARGS
+	# make -C contrib/subtree $TERMUX_PKG_EXTRA_MAKE_ARGS ${TERMUX_PKG_MAKE_INSTALL_TARGET}
+	# make -j $TERMUX_PKG_MAKE_PROCESSES -C contrib/subtree install-man
 
-	mkdir -p $TERMUX_PREFIX/etc/bash_completion.d/
-	cp $TERMUX_PKG_SRCDIR/contrib/completion/git-completion.bash \
-		$TERMUX_PKG_SRCDIR/contrib/completion/git-prompt.sh \
-		$TERMUX_PREFIX/etc/bash_completion.d/
+	# mkdir -p $TERMUX_PREFIX/etc/bash_completion.d/
+	# cp $TERMUX_PKG_SRCDIR/contrib/completion/git-completion.bash \
+	# 	$TERMUX_PKG_SRCDIR/contrib/completion/git-prompt.sh \
+	# 	$TERMUX_PREFIX/etc/bash_completion.d/
 
 	# Remove the build machine perl setup in termux_step_pre_configure to avoid it being packaged:
 	# rm $TERMUX_PREFIX/bin/perl
