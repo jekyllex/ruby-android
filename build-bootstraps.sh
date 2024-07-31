@@ -198,6 +198,15 @@ create_bootstrap_archive() {
 
 	echo $'\n\n\n'"[*] Creating 'ruby-${1}.zip'..."
 	(cd "${BOOTSTRAP_ROOTFS}/${TERMUX_PREFIX}"
+		rm -rf ./share/man
+		rm -rf ./share/doc
+		rm -rf ./share/info
+		rm -rf ./share/ri
+		rm -rf ./share/locale
+    rm -rf ./share/tabset
+    rm -rf ./share/aclocal
+    rm -rf ./share/terminfo
+
 		# Do not store symlinks in bootstrap archive.
 		# Instead, put all information to SYMLINKS.txt
 		while read -r -d '' link; do
