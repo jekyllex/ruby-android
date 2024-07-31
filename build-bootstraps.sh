@@ -203,9 +203,9 @@ create_bootstrap_archive() {
 		rm -rf ./share/info
 		rm -rf ./share/ri
 		rm -rf ./share/locale
-    rm -rf ./share/tabset
-    rm -rf ./share/aclocal
-    rm -rf ./share/terminfo
+		rm -rf ./share/tabset
+		rm -rf ./share/aclocal
+		rm -rf ./share/terminfo
 
 		# Do not store symlinks in bootstrap archive.
 		# Instead, put all information to SYMLINKS.txt
