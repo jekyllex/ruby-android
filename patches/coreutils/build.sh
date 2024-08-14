@@ -30,7 +30,7 @@ termux_step_pre_configure() {
 		TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --disable-year2038"
 	fi
 
-	CPPFLAGS+=" -Wno-implicit-function-declaration -D__USE_FORTIFY_LEVEL=0"
+	CPPFLAGS+=" -Wno-implicit-function-declaration -Wno-int-conversion -D__USE_FORTIFY_LEVEL=0"
 
 	# On device build is unsupported as it removes utility 'ln' (and maybe
 	# something else) in the installation process.
