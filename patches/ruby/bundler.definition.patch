@@ -1,0 +1,71 @@
+diff --git a/lib/bundler/definition.rb b/lib/bundler/definition.rb
+index c8faf77..8994395 100644
+--- a/lib/bundler/definition.rb
++++ b/lib/bundler/definition.rb
+@@ -224,6 +224,7 @@ def missing_specs?
+       @resolve = nil
+       @resolver = nil
+       @resolution_packages = nil
++      @source_requirements = nil
+       @specs = nil
+       @gem_version_promoter = nil
+ 
+@@ -547,8 +548,12 @@ def write_lock(file, preserve_unknown_sections)
+       end
+     end
+ 
+-    def resolver
+-      @resolver ||= Resolver.new(resolution_packages, gem_version_promoter)
++    def resolver(packages = nil)
++      if packages
++        @resolver = Resolver.new(packages, gem_version_promoter)
++      else
++        @resolver ||= Resolver.new(resolution_packages, gem_version_promoter)
++      end
+     end
+ 
+     def expanded_dependencies
+@@ -562,13 +567,14 @@ def dependencies_with_bundler
+       [Dependency.new("bundler", @unlocking_bundler)] + dependencies
+     end
+ 
+-    def resolution_packages
+-      @resolution_packages ||= begin
++    def resolution_packages(replace = nil)
++      @resolution_packages = begin
+         last_resolve = converge_locked_specs
+         remove_invalid_platforms!(current_dependencies)
+-        packages = Resolver::Base.new(source_requirements, expanded_dependencies, last_resolve, @platforms, locked_specs: @originally_locked_specs, unlock: @unlock[:gems], prerelease: gem_version_promoter.pre?)
++        packages = Resolver::Base.new(replace || source_requirements, expanded_dependencies, last_resolve, @platforms, locked_specs: @originally_locked_specs, unlock: @unlock[:gems], prerelease: gem_version_promoter.pre?)
+         additional_base_requirements_for_resolve(packages, last_resolve)
+       end
++      @resolution_packages
+     end
+ 
+     def filter_specs(specs, deps)
+@@ -630,6 +636,14 @@ def start_resolution
+ 
+       result.complete_platforms!(platforms)
+ 
++      # Prefer local versions for sub dependencies too
++      if @prefer_local
++        all_requirements = SourceMap.new(sources, result, @locked_specs).all_requirements
++        all_requirements = pin_locally_available_names(all_requirements)
++        @source_requirements.merge!(all_requirements)
++        return SpecSet.new(resolver(resolution_packages(@source_requirements)).start)
++      end
++
+       SpecSet.new(result.for(dependencies, false, @platforms))
+     end
+ 
+@@ -950,6 +964,10 @@ def metadata_dependencies
+     end
+ 
+     def source_requirements
++      @source_requirements ||= find_source_requirements
++    end
++
++    def find_source_requirements
+       # Record the specs available in each gem's source, so that those
+       # specs will be available later when the resolver knows where to
+       # look for that gemspec (or its dependencies)
