@@ -1,9 +1,14 @@
 diff --git a/lib/jekyll/commands/new.rb b/lib/jekyll/commands/new.rb
-index 97549b1..5e0d9b3 100644
+index 97549b1..73fd2da 100644
 --- a/lib/jekyll/commands/new.rb
 +++ b/lib/jekyll/commands/new.rb
-@@ -99,11 +99,13 @@ gem "wdm", "~> 0.1.0", :install_if => Gem.win_platform?
+@@ -94,16 +94,15 @@ platforms :mingw, :x64_mingw, :mswin, :jruby do
+   gem "tzinfo-data"
+ end
  
+-# Performance-booster for watching directories on Windows
+-gem "wdm", "~> 0.1.0", :install_if => Gem.win_platform?
+-
  # kramdown v2 ships without the gfm parser by default. If you're using
  # kramdown v1, comment out this line.
 -gem "kramdown-parser-gfm"
@@ -17,7 +22,7 @@ index 97549b1..5e0d9b3 100644
  RUBY
          end
  
-@@ -159,7 +161,7 @@ RUBY
+@@ -159,7 +158,7 @@ RUBY
            Jekyll.logger.info "Running bundle install in #{path.cyan}..."
            Dir.chdir(path) do
              exe = Gem.bin_path("bundler", "bundle")
