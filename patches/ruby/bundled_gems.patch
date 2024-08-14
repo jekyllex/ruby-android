@@ -51,7 +51,7 @@ index ae0a1ac..96cc6a1 100644
 +jekyll-redirect-from 0.16.0 https://github.com/jekyll/jekyll-redirect-from
 +jekyll-relative-links 0.6.1 https://github.com/benbalter/jekyll-relative-links
 +jekyll-remote-theme 0.4.3 https://github.com/benbalter/jekyll-remote-theme
-+jekyll-sass-converter 3.0.0 https://github.com/jekyll/jekyll-sass-converter
++jekyll-sass-converter 1.5.2 https://github.com/jekyll/jekyll-sass-converter
 +jekyll-seo-tag 2.8.0 https://github.com/jekyll/jekyll-seo-tag
 +jekyll-sitemap 1.4.0 https://github.com/jekyll/jekyll-sitemap
 +jekyll-swiss 1.0.0 http://broccolini.net/swiss
@@ -75,7 +75,7 @@ index ae0a1ac..96cc6a1 100644
 +kramdown-parser-gfm 1.1.0 https://github.com/kramdown/parser-gfm
 +liquid 4.0.4 http://www.liquidmarkup.org
 +listen 3.9.0 https://github.com/guard/listen/tree/v3.9.0
-+mercenary 0.4.0 https://github.com/jekyll/mercenary
++mercenary 0.3.6 https://github.com/jekyll/mercenary
 +mini_portile2 2.8.7 https://github.com/flavorjones/mini_portile
 +minima 2.5.1 https://github.com/jekyll/minima
 +mutex_m 0.2.0 https://github.com/ruby/mutex_m
@@ -88,8 +88,8 @@ index ae0a1ac..96cc6a1 100644
 +rake 13.2.1 https://github.com/ruby/rake/tree/v13.2.1
 +rb-fsevent 0.11.2 https://github.com/thibaudgg/rb-fsevent
 +rb-inotify 0.11.1 https://github.com/guard/rb-inotify
-+rexml 3.3.4 https://github.com/ruby/rexml
-+rouge 4.3.0 https://github.com/rouge-ruby/rouge
++rexml 3.3.5 https://github.com/ruby/rexml
++rouge 3.30.0 https://github.com/rouge-ruby/rouge
 +rubyzip 2.3.2 https://github.com/rubyzip/rubyzip/tree/v2.3.2
 +safe_yaml 1.0.5 https://github.com/dtao/safe_yaml
 +sass 3.7.4 https://github.com/sass/ruby-sass
