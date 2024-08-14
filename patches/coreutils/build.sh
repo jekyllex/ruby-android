@@ -18,6 +18,7 @@ TERMUX_PKG_ESSENTIAL=true
 TERMUX_PKG_EXTRA_CONFIGURE_ARGS="
 gl_cv_host_operating_system=Android
 ac_cv_func_getpass=yes
+ac_cv_type_timezone_t=no
 --disable-xattr
 --enable-no-install-program=pinky,df,users,who,uptime
 --enable-single-binary=symlinks
@@ -30,7 +31,7 @@ termux_step_pre_configure() {
 		TERMUX_PKG_EXTRA_CONFIGURE_ARGS+=" --disable-year2038"
 	fi
 
-	CPPFLAGS+=" -Wno-implicit-function-declaration -Wno-int-conversion -D__USE_FORTIFY_LEVEL=0"
+	CPPFLAGS+=" -D__USE_FORTIFY_LEVEL=0"
 
 	# On device build is unsupported as it removes utility 'ln' (and maybe
 	# something else) in the installation process.
