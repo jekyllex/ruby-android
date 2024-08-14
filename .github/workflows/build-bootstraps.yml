@@ -32,6 +32,7 @@ jobs:
       - name: Get packages from termux-packages
         uses: actions/checkout@v4
         with:
+          ref: 'issue-21113'
           repository: termux/termux-packages
           path: termux-packages
           fetch-depth: 1
