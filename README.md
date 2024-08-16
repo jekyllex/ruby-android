@@ -13,9 +13,9 @@ This repository [releases](https://github.com/jekyllex/ruby-android/releases) 4 
 
 The latest bootstraps can be found at these links:
 
-- x86: https://dl.jekyllex.xyz/ruby/v0.1.1/i686.zip
-- x86_64: https://dl.jekyllex.xyz/ruby/v0.1.1/x86_64.zip
-- armeabi-v7a: https://dl.jekyllex.xyz/ruby/v0.1.1/arm.zip
-- arm64-v8a: https://dl.jekyllex.xyz/ruby/v0.1.1/aarch64.zip
+- x86: https://dl.jekyllex.xyz/ruby/v0.1.2/i686.zip
+- x86_64: https://dl.jekyllex.xyz/ruby/v0.1.2/x86_64.zip
+- armeabi-v7a: https://dl.jekyllex.xyz/ruby/v0.1.2/arm.zip
+- arm64-v8a: https://dl.jekyllex.xyz/ruby/v0.1.2/aarch64.zip
 
 These files are downloaded by [Jekyllex](https://github.com/jekyllex/jekyllex-android) at build time based on the target device architecture and extracted to the app's home directoy upon app installation. This simulates a linux-like working environment which can execute ruby and thus jekyll.
