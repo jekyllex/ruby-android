@@ -33,7 +33,6 @@ jobs:
         uses: actions/checkout@v4
         with:
           ref: 'be322af'
-          fetch-depth: 1
           path: termux-packages
           repository: termux/termux-packages
 
