@@ -32,9 +32,9 @@ jobs:
       - name: Get packages from termux-packages
         uses: actions/checkout@v4
         with:
-          ref: 'be322af'
           path: termux-packages
           repository: termux/termux-packages
+          ref: 'be322af79ad54a6bac8b7f988b4aca8c5ef7d1e8'
 
       - name: Setup environment
         run: |
