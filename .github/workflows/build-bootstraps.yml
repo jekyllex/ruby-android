@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANDROID_HOME: "/opt/termux/android-sdk"
       NDK: "/opt/termux/android-ndk"
+      ANDROID_HOME: "/opt/termux/android-sdk"
 
     strategy:
       fail-fast: false
@@ -32,10 +32,10 @@ jobs:
       - name: Get packages from termux-packages
         uses: actions/checkout@v4
         with:
-          ref: 'issue-21113'
-          repository: termux/termux-packages
-          path: termux-packages
+          ref: 'be322af'
           fetch-depth: 1
+          path: termux-packages
+          repository: termux/termux-packages
 
       - name: Setup environment
         run: |
@@ -75,8 +75,8 @@ jobs:
       - name: Fetch bootstrap archives
         uses: actions/download-artifact@v4
         with:
-          merge-multiple: true
           path: ./
+          merge-multiple: true
 
       - name: Create new tag
         run: |
