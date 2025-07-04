@@ -15,8 +15,8 @@ jobs:
     runs-on: ubuntu-latest
 
     env:
-      ANDROID_HOME: "/opt/termux/android-sdk"
       NDK: "/opt/termux/android-ndk"
+      ANDROID_HOME: "/opt/termux/android-sdk"
 
     strategy:
       fail-fast: false
@@ -32,10 +32,9 @@ jobs:
       - name: Get packages from termux-packages
         uses: actions/checkout@v4
         with:
-          ref: 'issue-21113'
-          repository: termux/termux-packages
           path: termux-packages
-          fetch-depth: 1
+          repository: termux/termux-packages
+          ref: 'be322af79ad54a6bac8b7f988b4aca8c5ef7d1e8'
 
       - name: Setup environment
         run: |
@@ -43,7 +42,7 @@ jobs:
           rm termux-packages/scripts/properties.sh termux-packages/scripts/build-bootstraps.sh
           mv termux-packages/* .
           rm -rf termux-packages
-          mv properties.sh build-bootstraps.sh scripts/
+          mv properties.sh run-docker.sh build-bootstraps.sh scripts/
           for package in patches/*; do
             cp -r $package packages;
           done
@@ -75,8 +74,8 @@ jobs:
       - name: Fetch bootstrap archives
         uses: actions/download-artifact@v4
         with:
-          merge-multiple: true
           path: ./
+          merge-multiple: true
 
       - name: Create new tag
         run: |
