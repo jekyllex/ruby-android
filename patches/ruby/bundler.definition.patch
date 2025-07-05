@@ -1,16 +1,16 @@
 diff --git a/lib/bundler/definition.rb b/lib/bundler/definition.rb
-index c8faf77..8994395 100644
+index 6cf1f9a..b232329 100644
 --- a/lib/bundler/definition.rb
 +++ b/lib/bundler/definition.rb
-@@ -224,6 +224,7 @@ def missing_specs?
+@@ -214,6 +214,7 @@ def missing_specs?
        @resolve = nil
        @resolver = nil
        @resolution_packages = nil
 +      @source_requirements = nil
        @specs = nil
-       @gem_version_promoter = nil
  
-@@ -547,8 +548,12 @@ def write_lock(file, preserve_unknown_sections)
+       Bundler.ui.debug "The definition is missing dependencies, failed to resolve & materialize locally (#{e})"
+@@ -543,8 +544,12 @@ def write_lock(file, preserve_unknown_sections)
        end
      end
  
@@ -25,7 +25,7 @@ index c8faf77..8994395 100644
      end
  
      def expanded_dependencies
-@@ -562,13 +567,14 @@ def dependencies_with_bundler
+@@ -558,15 +563,16 @@ def dependencies_with_bundler
        [Dependency.new("bundler", @unlocking_bundler)] + dependencies
      end
  
@@ -35,15 +35,17 @@ index c8faf77..8994395 100644
 +      @resolution_packages = begin
          last_resolve = converge_locked_specs
          remove_invalid_platforms!(current_dependencies)
--        packages = Resolver::Base.new(source_requirements, expanded_dependencies, last_resolve, @platforms, locked_specs: @originally_locked_specs, unlock: @unlock[:gems], prerelease: gem_version_promoter.pre?)
+-        packages = Resolver::Base.new(source_requirements, expanded_dependencies, last_resolve, @platforms, locked_specs: @originally_locked_specs, unlock: @gems_to_unlock, prerelease: gem_version_promoter.pre?)
 +        packages = Resolver::Base.new(replace || source_requirements, expanded_dependencies, last_resolve, @platforms, locked_specs: @originally_locked_specs, unlock: @unlock[:gems], prerelease: gem_version_promoter.pre?)
-         additional_base_requirements_for_resolve(packages, last_resolve)
+         packages = additional_base_requirements_to_prevent_downgrades(packages, last_resolve)
+         packages = additional_base_requirements_to_force_updates(packages)
+         packages
        end
 +      @resolution_packages
      end
  
      def filter_specs(specs, deps)
-@@ -630,6 +636,14 @@ def start_resolution
+@@ -628,6 +634,14 @@ def start_resolution
  
        result.complete_platforms!(platforms)
  

@@ -1,4 +1,4 @@
-# Adapted from: https://github.com/termux/termux-packages/blob/master/scripts/properties.sh
+# Adapted from: https://github.com/termux/termux-packages/blob/acf1df1e90034ce0100ac54726ae56792bf56859/scripts/properties.sh
 TERMUX_SDK_REVISION=9123335
 TERMUX_ANDROID_BUILD_TOOLS_VERSION=33.0.1
 
@@ -26,8 +26,13 @@ TERMUX_ANDROID_HOME="${TERMUX_BASE_DIR}/home"
 TERMUX_APPS_DIR="${TERMUX_BASE_DIR}/apps"
 TERMUX_PREFIX_CLASSICAL="${TERMUX_BASE_DIR}/usr"
 TERMUX_PREFIX="${TERMUX_PREFIX_CLASSICAL}"
+TERMUX_ETC_PREFIX_DIR_PATH="${TERMUX_PREFIX}/etc"
+TERMUX_PROFILE_D_PREFIX_DIR_PATH="${TERMUX_ETC_PREFIX_DIR_PATH}/profile.d"
+TERMUX_CONFIG_PREFIX_DIR_PATH="${TERMUX_ETC_PREFIX_DIR_PATH}/termux"
+TERMUX_BOOTSTRAP_CONFIG_DIR_PATH="${TERMUX_CONFIG_PREFIX_DIR_PATH}/bootstrap"
 
 # Path to CGCT tools
+CGCT_DEFAULT_PREFIX="/data/data/${TERMUX_APP_PACKAGE}/files/usr/glibc"
 export CGCT_DIR="/data/data/${TERMUX_APP_PACKAGE}/cgct"
 
 export TERMUX_PACKAGES_DIRECTORIES=$(jq --raw-output 'del(.pkg_format) | keys | .[]' ${TERMUX_SCRIPTDIR}/repo.json)

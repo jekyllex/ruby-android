@@ -9,7 +9,7 @@
 #                apps without having to publish an apt repo first.
 # Usage:         run "build-bootstrap.sh --help"
 #
-# Adapted from: https://github.com/termux/termux-packages/blob/master/scripts/build-bootstraps.sh
+# Adapted from: https://github.com/termux/termux-packages/blob/acf1df1e90034ce0100ac54726ae56792bf56859/scripts/build-bootstraps.sh
 version=0.1.0
 
 set -e
