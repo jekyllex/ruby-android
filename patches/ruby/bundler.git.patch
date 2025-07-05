@@ -1,0 +1,59 @@
+diff --git a/lib/bundler/source/git/git_proxy.rb b/lib/bundler/source/git/git_proxy.rb
+index 6458512..3e9ace7 100644
+--- a/lib/bundler/source/git/git_proxy.rb
++++ b/lib/bundler/source/git/git_proxy.rb
+@@ -393,12 +393,12 @@ def capture(cmd, dir, ignore_err: false)
+         end
+ 
+         def capture3_args_for(cmd, dir)
+-          return ["git", *cmd] unless dir
++          return ["/data/data/xyz.jekyllex/files/usr/bin/git", *cmd] unless dir
+ 
+           if Bundler.feature_flag.bundler_3_mode? || supports_minus_c?
+-            ["git", "-C", dir.to_s, *cmd]
++            ["/data/data/xyz.jekyllex/files/usr/bin/git", "-C", dir.to_s, *cmd]
+           else
+-            ["git", *cmd, { chdir: dir.to_s }]
++            ["/data/data/xyz.jekyllex/files/usr/bin/git", *cmd, { chdir: dir.to_s }]
+           end
+         end
+ 
+diff --git a/lib/rubygems/resolver/git_set.rb b/lib/rubygems/resolver/git_set.rb
+index 89342ff..7ba273a 100644
+--- a/lib/rubygems/resolver/git_set.rb
++++ b/lib/rubygems/resolver/git_set.rb
+@@ -36,7 +36,7 @@ class Gem::Resolver::GitSet < Gem::Resolver::Set
+   def initialize # :nodoc:
+     super()
+ 
+-    @git             = ENV["git"] || "git"
++    @git             = ENV["git"] || "/data/data/xyz.jekyllex/files/usr/bin/git"
+     @need_submodules = {}
+     @repositories    = {}
+     @root_dir        = Gem.dir
+diff --git a/lib/rubygems/source/git.rb b/lib/rubygems/source/git.rb
+index bda63c6..4258c61 100644
+--- a/lib/rubygems/source/git.rb
++++ b/lib/rubygems/source/git.rb
+@@ -58,7 +58,7 @@ def initialize(name, repository, reference, submodules = false)
+ 
+     @remote   = true
+     @root_dir = Gem.dir
+-    @git      = ENV["git"] || "git"
++    @git      = ENV["git"] || "/data/data/xyz.jekyllex/files/usr/bin/git"
+   end
+ 
+   def <=>(other)
+diff --git a/tool/lib/vcs.rb b/tool/lib/vcs.rb
+index ace60f8..689f73b 100644
+--- a/tool/lib/vcs.rb
++++ b/tool/lib/vcs.rb
+@@ -423,7 +423,7 @@ class GIT < self
+     register(".git") do |path, dir|
+       SAFE_DIRECTORIES ||=
+         begin
+-          command = ENV["GIT"] || 'git'
++          command = ENV["git"] || "/system/bin/linker64 /data/data/xyz.jekyllex/files/usr/bin/git"
+           dirs = IO.popen(%W"#{command} config --global --get-all safe.directory", &:read).split("\n")
+         rescue
+           command = nil
