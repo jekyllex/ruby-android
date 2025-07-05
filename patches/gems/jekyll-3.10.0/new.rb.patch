@@ -27,7 +27,7 @@ index 97549b1..73fd2da 100644
            Dir.chdir(path) do
              exe = Gem.bin_path("bundler", "bundle")
 -            process, output = Jekyll::Utils::Exec.run("ruby", exe, "install")
-+            process, output = Jekyll::Utils::Exec.run("/data/data/xyz.jekyllex/files/usr/bin/ruby", exe, "install", "--prefer-local")
++            process, output = Jekyll::Utils::Exec.run("@TERMUX_PREFIX@/bin/ruby", exe, "install", "--prefer-local")
  
              output.to_s.each_line do |line|
                Jekyll.logger.info("Bundler:".green, line.strip) unless line.to_s.empty?
