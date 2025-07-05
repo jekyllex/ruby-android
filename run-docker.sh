@@ -1,4 +1,6 @@
 #!/bin/sh
+# Adapted from: https://github.com/termux/termux-packages/blob/acf1df1e90034ce0100ac54726ae56792bf56859/scripts/run-docker.sh
+
 set -e -u
 
 TERMUX_SCRIPTDIR=$(cd "$(realpath "$(dirname "$0")")"; cd ..; pwd)
@@ -23,7 +25,7 @@ else
 	VOLUME=$REPOROOT:$CONTAINER_HOME_DIR/termux-packages
 fi
 
-: ${TERMUX_BUILDER_IMAGE_NAME:=ghcr.io/termux/package-builder@sha256:c6ad5a9da424b11a9b5d25837daf73fac6b66d7824909b1420d49b54951c831d}
+: ${TERMUX_BUILDER_IMAGE_NAME:=ghcr.io/termux/package-builder@sha256:0ee468bc414ddad510667e6ef6719b104e5a9b45df2161eb8eab5855ed47b650}
 : ${CONTAINER_NAME:=termux-package-builder}
 
 USER=builder
