@@ -1,15 +1,14 @@
 diff --git a/gems/bundled_gems b/gems/bundled_gems
-index ae0a1ac..96cc6a1 100644
+index aa96ab8..15daddb 100644
 --- a/gems/bundled_gems
 +++ b/gems/bundled_gems
-@@ -21,3 +21,103 @@ rbs             3.4.0   https://github.com/ruby/rbs
+@@ -21,3 +21,99 @@ rbs             3.4.0   https://github.com/ruby/rbs
  typeprof        0.21.9  https://github.com/ruby/typeprof
  debug           1.9.1   https://github.com/ruby/debug
  racc            1.7.3   https://github.com/ruby/racc
 +
 +activesupport 7.1.3.4 https://github.com/rails/rails/tree/v7.1.3.4/activesupport
 +addressable 2.8.7 https://github.com/sporkmonger/addressable
-+base64 0.3.0 https://github.com/ruby/base64
 +bigdecimal 3.2.2 https://github.com/ruby/bigdecimal
 +coffee-script 2.4.1 http://github.com/josh/ruby-coffee-script
 +coffee-script-source 1.12.2 http://coffeescript.org
@@ -17,9 +16,7 @@ index ae0a1ac..96cc6a1 100644
 +commonmarker 0.23.10 https://github.com/gjtorikian/commonmarker
 +concurrent-ruby 1.3.5 https://github.com/ruby-concurrency/concurrent-ruby
 +connection_pool 2.5.3 https://github.com/mperham/connection_pool
-+csv 3.3.5 https://github.com/ruby/csv
 +dnsruby 1.72.1 https://github.com/alexdalitz/dnsruby
-+drb 2.2.1 https://github.com/ruby/drb
 +em-websocket 0.5.3 http://github.com/igrigorik/em-websocket
 +ethon 0.16.0 https://github.com/typhoeus/ethon
 +eventmachine 1.2.7 http://rubyeventmachine.com
@@ -104,5 +101,4 @@ index ae0a1ac..96cc6a1 100644
 +unf 0.1.4 https://github.com/knu/ruby-unf
 +unf_ext 0.0.8.2 https://github.com/knu/ruby-unf_ext
 +unicode-display_width 1.8.0 https://github.com/janlelis/unicode-display_width
-+uri 0.13.0 https://github.com/ruby/uri
 +webrick 1.9.1 https://github.com/ruby/webrick
