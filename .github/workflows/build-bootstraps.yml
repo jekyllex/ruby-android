@@ -34,7 +34,7 @@ jobs:
         with:
           path: termux-packages
           repository: termux/termux-packages
-          ref: 'be322af79ad54a6bac8b7f988b4aca8c5ef7d1e8'
+          ref: 'acf1df1e90034ce0100ac54726ae56792bf56859'
 
       - name: Setup environment
         run: |
