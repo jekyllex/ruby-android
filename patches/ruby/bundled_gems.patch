@@ -76,7 +76,7 @@ index ae0a1ac..96cc6a1 100644
 +kramdown-parser-gfm 1.1.0 https://github.com/kramdown/parser-gfm
 +liquid 4.0.4 http://www.liquidmarkup.org
 +listen 3.9.0 https://github.com/guard/listen/tree/v3.9.0
-+mercenary 0.4.0 https://github.com/jekyll/mercenary
++mercenary 0.3.6 https://github.com/jekyll/mercenary
 +mini_portile2 2.8.7 https://github.com/flavorjones/mini_portile
 +minima 2.5.1 https://github.com/jekyll/minima
 +mutex_m 0.2.0 https://github.com/ruby/mutex_m
@@ -98,11 +98,11 @@ index ae0a1ac..96cc6a1 100644
 +sawyer 0.9.2 https://github.com/lostisland/sawyer
 +simpleidn 0.2.3 https://github.com/mmriis/simpleidn
 +strscan 3.1.5 https://github.com/ruby/strscan
-+terminal-table 3.0.2 https://github.com/tj/terminal-table
++terminal-table 1.8.0 https://github.com/tj/terminal-table
 +typhoeus 1.4.1 https://github.com/typhoeus/typhoeus
 +tzinfo 2.0.6 https://github.com/tzinfo/tzinfo/tree/v2.0.6
 +unf 0.1.4 https://github.com/knu/ruby-unf
 +unf_ext 0.0.8.2 https://github.com/knu/ruby-unf_ext
-+unicode-display_width 2.6.0 https://github.com/janlelis/unicode-display_width
++unicode-display_width 1.8.0 https://github.com/janlelis/unicode-display_width
 +uri 0.13.0 https://github.com/ruby/uri
 +webrick 1.9.1 https://github.com/ruby/webrick
