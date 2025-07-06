@@ -26,7 +26,7 @@ index ae0a1ac..96cc6a1 100644
 +execjs 2.9.1 https://github.com/rails/execjs
 +faraday 2.9.2 https://github.com/lostisland/faraday
 +faraday-net_http 3.1.0 https://github.com/lostisland/faraday-net_http
-+ffi 1.17.0 https://github.com/ffi/ffi/
++ffi 1.17.2 https://github.com/ffi/ffi/
 +forwardable-extended 2.6.0 http://github.com/envygeeks/forwardable-extended
 +gemoji 4.1.0 https://github.com/github/gemoji
 +github-pages-health-check 1.18.2 https://github.com/github/github-pages-health-check
