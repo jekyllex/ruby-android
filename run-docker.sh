@@ -26,7 +26,7 @@ else
 fi
 
 : ${TERMUX_BUILDER_IMAGE_NAME:=ghcr.io/termux/package-builder@sha256:0ee468bc414ddad510667e6ef6719b104e5a9b45df2161eb8eab5855ed47b650}
-: ${CONTAINER_NAME:=termux-package-builder}
+CONTAINER_NAME="termux-package-builder-$(date +%s%N | sha256sum | head -c 8)"
 
 USER=builder
 
