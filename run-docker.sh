@@ -73,4 +73,4 @@ if [ "$#" -eq "0" ]; then
 	set -- bash
 fi
 
-$SUDO docker exec --env "DOCKER_EXEC_PID_FILE_PATH=$DOCKER_EXEC_PID_FILE_PATH" --interactive $DOCKER_TTY $CONTAINER_NAME "$@"
+$SUDO docker exec --env "DOCKER_EXEC_PID_FILE_PATH=$DOCKER_EXEC_PID_FILE_PATH" --interactive $DOCKER_TTY --workdir "$HOME" $CONTAINER_NAME "$@"
