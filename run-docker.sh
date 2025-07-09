@@ -5,7 +5,8 @@ set -e -u
 
 TERMUX_SCRIPTDIR=$(cd "$(realpath "$(dirname "$0")")"; cd ..; pwd)
 
-CONTAINER_HOME_DIR="/home/runner"
+export HOME="/home/runner"
+CONTAINER_HOME_DIR="$HOME"
 UNAME=$(uname)
 if [ "$UNAME" = Darwin ]; then
 	# Workaround for mac readlink not supporting -f.
