@@ -50,8 +50,7 @@ jobs:
           done
           find packages/git -type f -name "*subpackage*" -exec rm {} +
           find packages/libxml2 -type f -name "*python*" -exec rm {} +
-          mv ./* /home/runner
-          cd /home/runner
+          mv ./* $HOME && cd $HOME
 
       - name: Create bootstrap archive
         run: |
