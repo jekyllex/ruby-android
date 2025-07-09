@@ -53,8 +53,8 @@ jobs:
           mv ./* $HOME
 
       - name: Create bootstrap archive
-        working-directory: ${{ env.HOME }}
         run: |
+          cd $HOME
           ./clean.sh
           ./scripts/setup-android-sdk.sh
           ./scripts/build-bootstraps.sh --android10 --architectures aarch64
