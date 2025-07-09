@@ -14,9 +14,9 @@ jobs:
   bootstraps:
     runs-on: ubuntu-latest
 
-    env:
-      NDK: "/opt/termux/android-ndk"
-      ANDROID_HOME: "/opt/termux/android-sdk"
+    # env:
+    #   NDK: "/opt/termux/android-ndk"
+    #   ANDROID_HOME: "/opt/termux/android-sdk"
 
     strategy:
       fail-fast: false
@@ -46,9 +46,11 @@ jobs:
           done
           find packages/git -type f -name "*subpackage*" -exec rm {} +
           find packages/libxml2 -type f -name "*python*" -exec rm {} +
+          mv ./* $HOME
 
       - name: Create bootstrap archive
         run: |
+          cd $HOME
           ./scripts/run-docker.sh ./clean.sh
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
@@ -56,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ruby-${{ matrix.target_arch }}
-          path: "*.zip"
+          path: "/home/runner/*.zip"
 
   release:
     needs: bootstraps

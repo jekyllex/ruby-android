@@ -12,7 +12,7 @@ if [ "$UNAME" = Darwin ]; then
 	REPOROOT=$PWD
 	SEC_OPT=""
 else
-	REPOROOT="$(dirname $(readlink -f $0))/../"
+	REPOROOT="$HOME"
 	SEC_OPT=" --security-opt seccomp=$REPOROOT/scripts/profile.json"
 fi
 
@@ -20,9 +20,9 @@ fi
 # To reset, use "restorecon -Fr ."
 # To check, use "ls -Z ."
 if [ -n "$(command -v getenforce)" ] && [ "$(getenforce)" = Enforcing ]; then
-	VOLUME=$REPOROOT:$CONTAINER_HOME_DIR/termux-packages:z
+	VOLUME=$REPOROOT:$CONTAINER_HOME_DIR:z
 else
-	VOLUME=$REPOROOT:$CONTAINER_HOME_DIR/termux-packages
+	VOLUME=$REPOROOT:$CONTAINER_HOME_DIR
 fi
 
 : ${TERMUX_BUILDER_IMAGE_NAME:=ghcr.io/termux/package-builder@sha256:0ee468bc414ddad510667e6ef6719b104e5a9b45df2161eb8eab5855ed47b650}
