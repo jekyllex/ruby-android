@@ -405,10 +405,10 @@ main() {
 		EXTRACTED_PACKAGES=()
 
 		# Core JekyllEx utilities.
-		# PACKAGES+=("coreutils")
+		PACKAGES+=("coreutils")
 		# PACKAGES+=("libxslt")
 		# PACKAGES+=("libxml2")
-		PACKAGES+=("ruby")
+		# PACKAGES+=("ruby")
 		# PACKAGES+=("git")
 
 		# Handle additional packages.
