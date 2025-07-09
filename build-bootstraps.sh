@@ -407,8 +407,8 @@ main() {
 		# PACKAGES+=("coreutils")
 		# PACKAGES+=("libxslt")
 		# PACKAGES+=("libxml2")
-		# PACKAGES+=("ruby")
-		PACKAGES+=("git")
+		PACKAGES+=("ruby")
+		# PACKAGES+=("git")
 
 		# Handle additional packages.
 		for add_pkg in "${ADDITIONAL_PACKAGES[@]}"; do
