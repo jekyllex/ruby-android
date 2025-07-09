@@ -17,7 +17,7 @@ index 07db836..a09f744 100644
  end
  
  def process_recipe(name, version, static_p, cross_p, cacheable_p = true)
-+  system("echo mini_portile2_installing && gem install mini_portile2 -v '#{REQUIRED_MINI_PORTILE_VERSION}' --no-document -i /home/runner/.termux-build/ruby/build/ruby/gems/3.3.0")
++  system("gem install mini_portile2 -v '#{REQUIRED_MINI_PORTILE_VERSION}' --no-document -i /home/runner/.local/share/gem/ruby/3.3.0")
    require "rubygems"
    gem("mini_portile2", REQUIRED_MINI_PORTILE_VERSION) # gemspec is not respected at install time
    require "mini_portile2"
