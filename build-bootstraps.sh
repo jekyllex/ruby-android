@@ -29,7 +29,7 @@ BOOTSTRAP_ANDROID10_COMPATIBLE=false
 TERMUX_DEFAULT_ARCHITECTURES=("aarch64" "arm" "i686" "x86_64")
 TERMUX_ARCHITECTURES=("${TERMUX_DEFAULT_ARCHITECTURES[@]}")
 
-TERMUX_PACKAGES_DIRECTORY="/home/builder/termux-packages"
+TERMUX_PACKAGES_DIRECTORY="/tmp/builder/termux-packages"
 TERMUX_BUILT_DEBS_DIRECTORY="$TERMUX_PACKAGES_DIRECTORY/output"
 TERMUX_BUILT_PACKAGES_DIRECTORY="$TERMUX_PACKAGES_DIRECTORY/.built-packages"
 
@@ -405,10 +405,10 @@ main() {
 
 		# Core JekyllEx utilities.
 		PACKAGES+=("coreutils")
-		PACKAGES+=("libxslt")
-		PACKAGES+=("libxml2")
-		PACKAGES+=("ruby")
-		PACKAGES+=("git")
+		# PACKAGES+=("libxslt")
+		# PACKAGES+=("libxml2")
+		# PACKAGES+=("ruby")
+		# PACKAGES+=("git")
 
 		# Handle additional packages.
 		for add_pkg in "${ADDITIONAL_PACKAGES[@]}"; do
