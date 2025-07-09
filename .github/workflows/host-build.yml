@@ -50,10 +50,13 @@ jobs:
           done
           find packages/git -type f -name "*subpackage*" -exec rm {} +
           find packages/libxml2 -type f -name "*python*" -exec rm {} +
-          mv ./* $HOME && cd $HOME
+          mv ./* $HOME
 
       - name: Create bootstrap archive
         run: |
+          echo "home: $HOME"
+          pwd
+          cd $HOME
           ./clean.sh
           ./scripts/setup-android-sdk.sh
           ./scripts/build-bootstraps.sh --android10 --architectures aarch64
