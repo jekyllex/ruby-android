@@ -50,12 +50,12 @@ jobs:
         run: |
           ./clean.sh
           ./scripts/setup-android-sdk.sh
-          ./scripts/build-bootstraps.sh --android10 --architectures arm
+          ./scripts/build-bootstraps.sh --android10 --architectures aarch64
 
       - name: Store bootstrap
         uses: actions/upload-artifact@v4
         with:
-          name: ruby-arm
+          name: ruby-aarch64
           path: "*.zip"
 
   apk:
