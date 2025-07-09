@@ -5,14 +5,14 @@ set -e -u
 
 TERMUX_SCRIPTDIR=$(cd "$(realpath "$(dirname "$0")")"; cd ..; pwd)
 
-CONTAINER_HOME_DIR="/home/runner"
+CONTAINER_HOME_DIR=/home/builder
 UNAME=$(uname)
 if [ "$UNAME" = Darwin ]; then
 	# Workaround for mac readlink not supporting -f.
 	REPOROOT=$PWD
 	SEC_OPT=""
 else
-	REPOROOT="$CONTAINER_HOME_DIR"
+	REPOROOT="$(dirname $(readlink -f $0))/../"
 	SEC_OPT=" --security-opt seccomp=$REPOROOT/scripts/profile.json"
 fi
 
@@ -20,15 +20,15 @@ fi
 # To reset, use "restorecon -Fr ."
 # To check, use "ls -Z ."
 if [ -n "$(command -v getenforce)" ] && [ "$(getenforce)" = Enforcing ]; then
-	VOLUME=$REPOROOT:$CONTAINER_HOME_DIR:z
+	VOLUME=$REPOROOT:$CONTAINER_HOME_DIR/termux-packages:z
 else
-	VOLUME=$REPOROOT:$CONTAINER_HOME_DIR
+	VOLUME=$REPOROOT:$CONTAINER_HOME_DIR/termux-packages
 fi
 
 : ${TERMUX_BUILDER_IMAGE_NAME:=ghcr.io/termux/package-builder@sha256:0ee468bc414ddad510667e6ef6719b104e5a9b45df2161eb8eab5855ed47b650}
 : ${CONTAINER_NAME:=termux-package-builder}
 
-USER=runner
+USER=builder
 
 if [ -n "${TERMUX_DOCKER_USE_SUDO-}" ]; then
 	SUDO="sudo"
@@ -60,8 +60,8 @@ $SUDO docker start $CONTAINER_NAME >/dev/null 2>&1 || {
 			echo "Changed builder uid/gid... (this may take a while)"
 			$SUDO docker exec $DOCKER_TTY $CONTAINER_NAME sudo chown -R $(id -u) $CONTAINER_HOME_DIR
 			$SUDO docker exec $DOCKER_TTY $CONTAINER_NAME sudo chown -R $(id -u) /data
-			$SUDO docker exec $DOCKER_TTY $CONTAINER_NAME sudo usermod -u $(id -u) runner
-			$SUDO docker exec $DOCKER_TTY $CONTAINER_NAME sudo groupmod -g $(id -g) runner
+			$SUDO docker exec $DOCKER_TTY $CONTAINER_NAME sudo usermod -u $(id -u) builder
+			$SUDO docker exec $DOCKER_TTY $CONTAINER_NAME sudo groupmod -g $(id -g) builder
 		fi
 	fi
 }
@@ -73,4 +73,4 @@ if [ "$#" -eq "0" ]; then
 	set -- bash
 fi
 
-$SUDO docker exec --env "DOCKER_EXEC_PID_FILE_PATH=$DOCKER_EXEC_PID_FILE_PATH" --interactive $DOCKER_TTY --workdir "$CONTAINER_HOME_DIR" $CONTAINER_NAME "$@"
+$SUDO docker exec --env "DOCKER_EXEC_PID_FILE_PATH=$DOCKER_EXEC_PID_FILE_PATH" --interactive $DOCKER_TTY $CONTAINER_NAME "$@"

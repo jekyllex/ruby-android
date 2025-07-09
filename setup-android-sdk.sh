@@ -1,4 +1,5 @@
 #!/bin/bash
+# Adapted from: https://github.com/termux/termux-packages/blob/acf1df1e90034ce0100ac54726ae56792bf56859/scripts/setup-android-sdk.sh
 
 set -e -u
 
