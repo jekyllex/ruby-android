@@ -13,6 +13,11 @@ jobs:
     #     target_arch: [aarch64, arm, i686, x86_64]
 
     steps:
+      - name: Force create /data
+        run: |
+          sudo mkdir -p /data
+          sudo chown $USER:$USER /data
+
       - name: Clone repository
         uses: actions/checkout@v4
         with:
