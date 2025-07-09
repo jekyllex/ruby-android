@@ -7,10 +7,6 @@ jobs:
   bootstraps:
     runs-on: ubuntu-latest
 
-    env:
-      NDK: "/opt/termux/android-ndk"
-      ANDROID_HOME: "/opt/termux/android-sdk"
-
     # strategy:
     #   fail-fast: false
     #   matrix:
