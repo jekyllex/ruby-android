@@ -36,7 +36,7 @@ index bb2e6a2..8b98bd8 100755
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
-+    patch_files = Dir.glob("#{ENV['TERMUX_PACKAGES_DIRECTORY']}/patches/gems/#{gem_name}/*"); puts "#{INDENT}Patches dir: #{ENV['TERMUX_PACKAGES_DIRECTORY']}/patches/gems/#{gem_name}/*"
++    patch_files = Dir.glob("#{ENV['TERMUX_PACKAGES_DIRECTORY']}/patches/gems/#{gem_name}/*", File::FNM_DOTMATCH); puts "Current dir: #{Dir.pwd}"
 +    patch_files.each do |patch_file|
 +      target = "#{srcdir}/.bundle/gems/#{gem_name}"; puts "#{INDENT}Applying patch #{File.basename(patch_file)} to #{target}"
 +      FileUtils.cp(patch_file, target)
