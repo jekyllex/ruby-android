@@ -32,8 +32,8 @@ jobs:
       - name: Setup environment
         run: |
           # Use custom packaging properties for JekyllEx
+          mv *.sh termux-packages/scripts/
           mv termux-packages/* .
-          mv *.sh scripts/
           for package in patches/*; do
             cp -r $package packages;
           done
