@@ -58,7 +58,7 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: ruby-${{ matrix.target_arch }}
-          path: "/home/runner/*.zip"
+          path: "*.zip"
 
   release:
     needs: bootstraps
