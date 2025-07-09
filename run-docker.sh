@@ -5,7 +5,6 @@ set -e -u
 
 TERMUX_SCRIPTDIR=$(cd "$(realpath "$(dirname "$0")")"; cd ..; pwd)
 
-export HOME="/home/runner"
 CONTAINER_HOME_DIR="$HOME"
 UNAME=$(uname)
 if [ "$UNAME" = Darwin ]; then
@@ -29,7 +28,7 @@ fi
 : ${TERMUX_BUILDER_IMAGE_NAME:=ghcr.io/termux/package-builder@sha256:0ee468bc414ddad510667e6ef6719b104e5a9b45df2161eb8eab5855ed47b650}
 : ${CONTAINER_NAME:=termux-package-builder}
 
-USER=builder
+USER=runner
 
 if [ -n "${TERMUX_DOCKER_USE_SUDO-}" ]; then
 	SUDO="sudo"
