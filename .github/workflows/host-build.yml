@@ -44,6 +44,7 @@ jobs:
 
       - name: Create bootstrap archive
         run: |
+          ./script/clean.sh
           ./scripts/setup-android-sdk.sh
           ./scripts/build-bootstraps.sh --android10 --architectures arm
 
