@@ -51,7 +51,6 @@ jobs:
       - name: Create bootstrap archive
         run: |
           cd $HOME
-          ./scripts/run-docker.sh export HOME=$HOME
           ./scripts/run-docker.sh ./clean.sh
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
