@@ -6,11 +6,11 @@ TERMUX_ANDROID_BUILD_TOOLS_VERSION=33.0.1
 : "${TERMUX_NDK_REVISION:=""}"
 TERMUX_NDK_VERSION=$TERMUX_NDK_VERSION_NUM$TERMUX_NDK_REVISION
 
-if [ -z "${JAVA_HOME}" ]; then
+if [ -n "${JAVA_HOME+x}" ]; then
+  : "${TERMUX_JAVA_HOME:="${JAVA_HOME}"}"
+else
   : "${TERMUX_JAVA_HOME:=/usr/lib/jvm/java-17-openjdk-amd64}"
   export JAVA_HOME="${TERMUX_JAVA_HOME}"
-else
-  : "${TERMUX_JAVA_HOME:="${JAVA_HOME}"}"
 fi
 
 if [ "${TERMUX_PACKAGES_OFFLINE-false}" = "true" ]; then
