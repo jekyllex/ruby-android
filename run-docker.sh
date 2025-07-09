@@ -5,14 +5,14 @@ set -e -u
 
 TERMUX_SCRIPTDIR=$(cd "$(realpath "$(dirname "$0")")"; cd ..; pwd)
 
-CONTAINER_HOME_DIR="$HOME"
+CONTAINER_HOME_DIR="/home/runner"
 UNAME=$(uname)
 if [ "$UNAME" = Darwin ]; then
 	# Workaround for mac readlink not supporting -f.
 	REPOROOT=$PWD
 	SEC_OPT=""
 else
-	REPOROOT="$HOME"
+	REPOROOT="/home/runner"
 	SEC_OPT=" --security-opt seccomp=$REPOROOT/scripts/profile.json"
 fi
 
@@ -73,4 +73,4 @@ if [ "$#" -eq "0" ]; then
 	set -- bash
 fi
 
-$SUDO docker exec --env "DOCKER_EXEC_PID_FILE_PATH=$DOCKER_EXEC_PID_FILE_PATH" --interactive $DOCKER_TTY --workdir "$HOME" $CONTAINER_NAME "$@"
+$SUDO docker exec --env "DOCKER_EXEC_PID_FILE_PATH=$DOCKER_EXEC_PID_FILE_PATH" --interactive $DOCKER_TTY --workdir "$CONTAINER_HOME_DIR" $CONTAINER_NAME "$@"
