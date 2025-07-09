@@ -1,0 +1,4 @@
+name: Build bootstraps (host)
+
+on:
+  - workflow_dispatch
