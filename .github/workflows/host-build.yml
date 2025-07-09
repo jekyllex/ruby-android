@@ -29,6 +29,11 @@ jobs:
           repository: termux/termux-packages
           ref: 'acf1df1e90034ce0100ac54726ae56792bf56859'
 
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
       - name: Setup environment
         run: |
           # Use custom packaging properties for JekyllEx
