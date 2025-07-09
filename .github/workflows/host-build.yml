@@ -7,10 +7,10 @@ jobs:
   bootstraps:
     runs-on: ubuntu-latest
 
-    # strategy:
-    #   fail-fast: false
-    #   matrix:
-    #     target_arch: [aarch64, arm, i686, x86_64]
+    strategy:
+      fail-fast: false
+      matrix:
+        target_arch: [aarch64, arm, i686, x86_64]
 
     steps:
       - name: Install requirements
@@ -57,12 +57,12 @@ jobs:
           cd $HOME
           ./clean.sh
           ./scripts/setup-android-sdk.sh
-          ./scripts/build-bootstraps.sh --android10 --architectures aarch64
+          ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
         uses: actions/upload-artifact@v4
         with:
-          name: ruby-aarch64
+          name: ruby-${{ matrix.target_arch }}
           path: "*.zip"
 
   apk:
