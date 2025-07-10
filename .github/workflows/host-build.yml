@@ -45,9 +45,6 @@ jobs:
           # Use custom packaging properties for JekyllEx
           mv *.sh termux-packages/scripts/
           mv termux-packages/* .
-          for package in patches/*; do
-            cp -r $package packages;
-          done
           find packages/git -type f -name "*subpackage*" -exec rm {} +
           find packages/libxml2 -type f -name "*python*" -exec rm {} +
           sudo mkdir -p /home/builder && mv ./* /home/builder
