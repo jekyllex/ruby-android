@@ -25,10 +25,8 @@ jobs:
           sudo mkdir -p /data
           sudo chown $USER:$USER /data
 
-          sudo apt-get -yq update
-          sudo env DEBIAN_FRONTEND=noninteractive \
-            apt-get install -yq --no-install-recommends \
-            autopoint
+          sudo apt-get update
+          sudo apt-get install -y autopoint
 
       - name: Clone repository
         uses: actions/checkout@v4
