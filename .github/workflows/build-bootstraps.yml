@@ -20,6 +20,16 @@ jobs:
         target_arch: [aarch64, arm, i686, x86_64]
 
     steps:
+      - name: Install requirements
+        run: |
+          sudo mkdir -p /data
+          sudo chown $USER:$USER /data
+
+          # sudo apt-get -yq update
+          # sudo env DEBIAN_FRONTEND=noninteractive \
+          #   apt-get install -yq --no-install-recommends \
+          #   build-essential autopoint
+
       - name: Clone repository
         uses: actions/checkout@v4
         with:
@@ -31,6 +41,11 @@ jobs:
           path: termux-packages
           repository: termux/termux-packages
           ref: 'acf1df1e90034ce0100ac54726ae56792bf56859'
+
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
 
       - name: Setup environment
         run: |
@@ -47,9 +62,9 @@ jobs:
       - name: Create bootstrap archive
         working-directory: /home/builder
         run: |
-          ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh ./scripts/setup-android-sdk.sh
-          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
+          ./clean.sh
+          ./scripts/setup-android-sdk.sh
+          ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
         uses: actions/upload-artifact@v4
