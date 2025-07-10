@@ -22,9 +22,6 @@ jobs:
     steps:
       - name: Install requirements
         run: |
-          sudo mkdir -p /data
-          sudo chown $USER:$USER /data
-
           sudo apt-get update
           sudo apt-get install -y autopoint
 
@@ -47,7 +44,8 @@ jobs:
 
       - name: Setup environment
         run: |
-          # Use custom packaging properties for JekyllEx
+          sudo mkdir -p /data
+          sudo chown $USER:$USER /data
           mv *.sh termux-packages/scripts/
           mv termux-packages/* .
           for package in patches/*; do
