@@ -14,16 +14,20 @@ jobs:
   bootstraps:
     runs-on: ubuntu-latest
 
-    env:
-      NDK: "/opt/termux/android-ndk"
-      ANDROID_HOME: "/opt/termux/android-sdk"
-
     strategy:
       fail-fast: false
       matrix:
         target_arch: [aarch64, arm, i686, x86_64]
 
     steps:
+      - name: Install requirements
+        run: |
+          sudo mkdir -p /data
+          sudo chown $USER:$USER /data
+
+          sudo apt-get update
+          sudo apt-get install -y autopoint
+
       - name: Clone repository
         uses: actions/checkout@v4
         with:
@@ -36,30 +40,35 @@ jobs:
           repository: termux/termux-packages
           ref: 'acf1df1e90034ce0100ac54726ae56792bf56859'
 
+      - name: Setup java
+        uses: actions/setup-java@v1
+        with:
+          java-version: 17
+
       - name: Setup environment
         run: |
           # Use custom packaging properties for JekyllEx
-          rm termux-packages/scripts/properties.sh termux-packages/scripts/build-bootstraps.sh
+          mv *.sh termux-packages/scripts/
           mv termux-packages/* .
-          rm -rf termux-packages
-          mv properties.sh run-docker.sh build-bootstraps.sh scripts/
           for package in patches/*; do
             cp -r $package packages;
           done
           find packages/git -type f -name "*subpackage*" -exec rm {} +
           find packages/libxml2 -type f -name "*python*" -exec rm {} +
+          sudo mkdir -p /home/builder && mv ./* /home/builder
 
       - name: Create bootstrap archive
+        working-directory: /home/builder
         run: |
-          ./scripts/run-docker.sh ./clean.sh
-          ./scripts/run-docker.sh ./build-package.sh libxml2 libxslt -a ${{ matrix.target_arch }} -q
-          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
+          ./clean.sh
+          ./scripts/setup-android-sdk.sh
+          ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
 
       - name: Store bootstrap
         uses: actions/upload-artifact@v4
         with:
           name: ruby-${{ matrix.target_arch }}
-          path: "*.zip"
+          path: "/home/builder/*.zip"
 
   release:
     needs: bootstraps

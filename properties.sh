@@ -6,15 +6,19 @@ TERMUX_ANDROID_BUILD_TOOLS_VERSION=33.0.1
 : "${TERMUX_NDK_REVISION:=""}"
 TERMUX_NDK_VERSION=$TERMUX_NDK_VERSION_NUM$TERMUX_NDK_REVISION
 
-: "${TERMUX_JAVA_HOME:=/usr/lib/jvm/java-17-openjdk-amd64}"
-export JAVA_HOME=${TERMUX_JAVA_HOME}
-
-if [ "${TERMUX_PACKAGES_OFFLINE-false}" = "true" ]; then
-	export ANDROID_HOME=${TERMUX_SCRIPTDIR}/build-tools/android-sdk-$TERMUX_SDK_REVISION
-	export NDK=${TERMUX_SCRIPTDIR}/build-tools/android-ndk-r${TERMUX_NDK_VERSION}
+if [ -n "${JAVA_HOME+x}" ]; then
+  : "${TERMUX_JAVA_HOME:="${JAVA_HOME}"}"
 else
-	: "${ANDROID_HOME:="${HOME}/lib/android-sdk-$TERMUX_SDK_REVISION"}"
-	: "${NDK:="${HOME}/lib/android-ndk-r${TERMUX_NDK_VERSION}"}"
+  : "${TERMUX_JAVA_HOME:=/usr/lib/jvm/java-17-openjdk-amd64}"
+  export JAVA_HOME="${TERMUX_JAVA_HOME}"
+fi
+
+if [ -z "${ANDROID_HOME+x}" ]; then
+  : "${ANDROID_HOME:="${HOME}/lib/android-sdk-$TERMUX_SDK_REVISION"}"
+fi
+
+if [ -z "${NDK+x}" ]; then
+  : "${NDK:="${HOME}/lib/android-ndk-r${TERMUX_NDK_VERSION}"}"
 fi
 
 # Termux packages configuration.
