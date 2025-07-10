@@ -41,17 +41,6 @@ jobs:
           find packages/libxml2 -type f -name "*python*" -exec rm {} +
           sudo mkdir -p /home/builder && mv ./* /home/builder
 
-      - name: File paths
-        run: |
-          echo "Current directory: $PWD"
-          echo "Files in current directory:"
-          ls -la
-          echo "Files in /home/builder:"
-          ls -la /home/builder
-          echo "Tree structure of /home/builder:"
-          tree /home/builder || echo "tree command not found, listing files instead"
-          exit 1
-
       - name: Create bootstrap archive
         working-directory: /home/builder
         run: |
