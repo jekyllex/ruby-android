@@ -12,7 +12,7 @@ if [ "$UNAME" = Darwin ]; then
 	REPOROOT=$PWD
 	SEC_OPT=""
 else
-	REPOROOT="$(dirname $(readlink -f $0))/../"
+	REPOROOT="$CONTAINER_HOME_DIR"
 	SEC_OPT=" --security-opt seccomp=$REPOROOT/scripts/profile.json"
 fi
 
