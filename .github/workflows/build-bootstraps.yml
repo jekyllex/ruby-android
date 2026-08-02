@@ -10,6 +10,11 @@ on:
         type: string
         description: "Tag for the release"
 
+# termux-packages @ NDK r29 (16 KB ELF align by default).
+# Bump when intentionally rebasing the package tree.
+env:
+  TERMUX_PACKAGES_REF: "23d530425344010b73b0392ab66b041e8f65e34b"
+
 jobs:
   bootstraps:
     runs-on: ubuntu-latest
@@ -20,53 +25,77 @@ jobs:
         target_arch: [aarch64, arm, i686, x86_64]
 
     steps:
-      - name: Install requirements
+      - name: Free disk space
         run: |
-          sudo apt-get update
-          sudo apt-get install -y autopoint
+          sudo rm -rf /usr/share/dotnet /opt/ghc /usr/local/share/boost || true
+          df -h
 
       - name: Clone repository
         uses: actions/checkout@v4
         with:
           fetch-depth: 1
+          path: jekyllex
 
       - name: Get packages from termux-packages
         uses: actions/checkout@v4
         with:
           path: termux-packages
           repository: termux/termux-packages
-          ref: 'acf1df1e90034ce0100ac54726ae56792bf56859'
+          ref: ${{ env.TERMUX_PACKAGES_REF }}
 
-      - name: Setup java
-        uses: actions/setup-java@v1
-        with:
-          java-version: 17
-
-      - name: Setup environment
+      - name: Overlay JekyllEx scripts and patches
         run: |
-          sudo mkdir -p /data
-          sudo chown $USER:$USER /data
-          mv *.sh termux-packages/scripts/
-          mv termux-packages/* .
-          for package in patches/*; do
-            cp -r $package packages;
+          set -euo pipefail
+          cp jekyllex/build-bootstraps.sh termux-packages/scripts/
+          chmod +x termux-packages/scripts/build-bootstraps.sh jekyllex/apply-jekyllex-identity.sh
+          jekyllex/apply-jekyllex-identity.sh termux-packages/scripts/properties.sh
+
+          for package in jekyllex/patches/*; do
+            cp -r "$package" termux-packages/packages/
           done
-          find packages/git -type f -name "*subpackage*" -exec rm {} +
-          find packages/libxml2 -type f -name "*python*" -exec rm {} +
-          sudo mkdir -p /home/builder && mv ./* /home/builder
+          find termux-packages/packages/git -type f -name "*subpackage*" -exec rm {} +
+          find termux-packages/packages/libxml2 -type f -name "*python*" -exec rm {} +
 
-      - name: Create bootstrap archive
-        working-directory: /home/builder
+      - name: Create bootstrap archive (Termux docker builder)
+        working-directory: termux-packages
+        env:
+          CI: "true"
         run: |
-          ./clean.sh
-          ./scripts/setup-android-sdk.sh
-          ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
+          set -euo pipefail
+          # Same builder image / layout Termux uses (NDK r29, host toolchains).
+          ./scripts/run-docker.sh ./scripts/setup-android-sdk.sh
+          ./scripts/run-docker.sh ./scripts/build-bootstraps.sh \
+            --android10 -f --architectures ${{ matrix.target_arch }}
+
+      - name: Verify 16 KB ELF alignment (arm64/x86_64)
+        if: matrix.target_arch == 'aarch64' || matrix.target_arch == 'x86_64'
+        working-directory: termux-packages
+        run: |
+          set -euo pipefail
+          zip="ruby-${{ matrix.target_arch }}.zip"
+          test -f "$zip"
+          tmp=$(mktemp -d)
+          unzip -q -d "$tmp" "$zip"
+          mapfile -t files < <(find "$tmp" -type f -exec file -b {} + | paste -d '|' <(find "$tmp" -type f) - | awk -F'|' '/ELF/ {print $1}' | head -30)
+          test "${#files[@]}" -gt 0
+          failed=0
+          for f in "${files[@]}"; do
+            out=$(readelf -lW "$f" 2>/dev/null || llvm-readelf -lW "$f" 2>/dev/null || true)
+            [ -n "$out" ] || continue
+            echo "== $f =="
+            echo "$out" | awk '/LOAD/ {print}'
+            if echo "$out" | awk '/LOAD/ {print $NF}' | grep -qE '0x1000$'; then
+              echo "FAIL: 4 KB LOAD align in $f"
+              failed=1
+            fi
+          done
+          exit "$failed"
 
       - name: Store bootstrap
         uses: actions/upload-artifact@v4
         with:
           name: ruby-${{ matrix.target_arch }}
-          path: "/home/builder/*.zip"
+          path: termux-packages/ruby-*.zip
 
   release:
     needs: bootstraps
@@ -114,8 +143,9 @@ jobs:
           path: ./
 
       - name: Setup java
-        uses: actions/setup-java@v1
+        uses: actions/setup-java@v4
         with:
+          distribution: temurin
           java-version: 17
 
       - name: Build apk
