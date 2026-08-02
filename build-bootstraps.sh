@@ -17,6 +17,24 @@ set -e
 TERMUX_SCRIPTDIR=$(realpath "$(dirname "$0")/../")
 . $(dirname "$(realpath "$0")")/properties.sh
 
+# NDK r27 16 KB ELF align: https://developer.android.com/guide/practices/page-sizes
+enable_16kb_page_size_alignment() {
+	local toolchain_file="${TERMUX_SCRIPTDIR}/scripts/build/toolchain/termux_setup_toolchain_${TERMUX_NDK_VERSION_NUM}.sh"
+	if [ ! -f "$toolchain_file" ]; then
+		echo "[!] Missing toolchain setup: $toolchain_file" 1>&2
+		return 1
+	fi
+	if grep -q 'max-page-size=16384' "$toolchain_file"; then
+		return 0
+	fi
+	if ! grep -q 'LDFLAGS+=" -Wl,-z,relro,-z,now"' "$toolchain_file"; then
+		echo "[!] Unexpected toolchain setup (no relro LDFLAGS line): $toolchain_file" 1>&2
+		return 1
+	fi
+	sed -i '/LDFLAGS+=" -Wl,-z,relro,-z,now"/a LDFLAGS+=" -Wl,-z,max-page-size=16384 -Wl,-z,common-page-size=16384"' "$toolchain_file"
+	echo "[*] Applied 16 KB page-size linker flags (NDK r${TERMUX_NDK_VERSION_NUM})"
+}
+
 BOOTSTRAP_TMPDIR=$(mktemp -d "${TMPDIR:-/tmp}/ruby-tmp.XXXXXXXX")
 
 # By default, bootstrap archives are compatible with Android >=7.0
@@ -355,6 +373,8 @@ main() {
 	done
 
 	set_build_bootstrap_traps
+
+	enable_16kb_page_size_alignment || return 1
 
 	for package_arch in "${TERMUX_ARCHITECTURES[@]}"; do
 		if [[ " ${TERMUX_DEFAULT_ARCHITECTURES[*]} " != *" $package_arch "* ]]; then
