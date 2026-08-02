@@ -62,8 +62,10 @@ jobs:
           CI: "true"
         run: |
           set -euo pipefail
-          # Same builder image / layout Termux uses (NDK r29, host toolchains).
-          ./scripts/run-docker.sh ./scripts/setup-android-sdk.sh
+          # package-builder image already has NDK r29 + SDK (baked by Termux Dockerfile).
+          # Do not re-run setup-android-sdk.sh: after UID remap it fails with
+          # "Failed to read or create install properties file".
+          ./scripts/run-docker.sh true
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh \
             --android10 -f --architectures ${{ matrix.target_arch }}
 
