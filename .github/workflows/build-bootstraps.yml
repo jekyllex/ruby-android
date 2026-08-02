@@ -50,11 +50,20 @@ jobs:
           chmod +x termux-packages/scripts/build-bootstraps.sh jekyllex/apply-jekyllex-identity.sh
           jekyllex/apply-jekyllex-identity.sh termux-packages/scripts/properties.sh
 
-          for package in jekyllex/patches/*; do
-            cp -r "$package" termux-packages/packages/
-          done
-          find termux-packages/packages/git -type f -name "*subpackage*" -exec rm {} +
-          find termux-packages/packages/libxml2 -type f -name "*python*" -exec rm {} +
+          # Use upstream ncurses/libxml2/git recipes (NDK r29 / current sources).
+          # Replace only the ruby package with JekyllEx 3.3.x + app-specific patches.
+          # Keep tool-rbinstall.rb.diff from upstream (required by ruby build.sh).
+          cp termux-packages/packages/ruby/tool-rbinstall.rb.diff /tmp/tool-rbinstall.rb.diff
+          rm -rf termux-packages/packages/ruby
+          cp -a jekyllex/patches/ruby termux-packages/packages/ruby
+          cp /tmp/tool-rbinstall.rb.diff termux-packages/packages/ruby/
+
+          # Optional git password-from-config fix (ignore if hunk fails later).
+          if [ -f jekyllex/patches/git/credential.c.patch ]; then
+            cp -a jekyllex/patches/git/credential.c.patch termux-packages/packages/git/ || true
+          fi
+
+          find termux-packages/packages/git -type f -name "*subpackage*" -exec rm {} + || true
 
       - name: Create bootstrap archive (Termux docker builder)
         working-directory: termux-packages
