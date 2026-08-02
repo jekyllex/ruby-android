@@ -57,14 +57,17 @@ jobs:
           rm -rf termux-packages/packages/ruby
           cp -a jekyllex/patches/ruby termux-packages/packages/ruby
           cp /tmp/tool-rbinstall.rb.diff termux-packages/packages/ruby/
+          # Bundled-gem patches (nokogiri/eventmachine/jekyll) applied at make time.
+          if [ -d jekyllex/patches/gems ]; then
+            cp -a jekyllex/patches/gems termux-packages/packages/ruby/gem-patches
+          fi
 
-          # Optional git password-from-config fix (ignore if hunk fails later).
+          # Optional git password-from-config fix.
           if [ -f jekyllex/patches/git/credential.c.patch ]; then
             cp -a jekyllex/patches/git/credential.c.patch termux-packages/packages/git/ || true
           fi
 
           find termux-packages/packages/git -type f -name "*subpackage*" -exec rm {} + || true
-
       - name: Create bootstrap archive (Termux docker builder)
         working-directory: termux-packages
         env:

@@ -9,7 +9,7 @@ TERMUX_PKG_VERSION=3.3.4
 TERMUX_PKG_SRCURL=https://cache.ruby-lang.org/pub/ruby/$(echo $TERMUX_PKG_VERSION | cut -d . -f 1-2)/ruby-${TERMUX_PKG_VERSION}.tar.xz
 TERMUX_PKG_SHA256=1caaee9a5a6befef54bab67da68ace8d985e4fb59cd17ce23c28d9ab04f4ddad
 # libbffi is used by the fiddle extension module:
-TERMUX_PKG_DEPENDS="libandroid-execinfo, libandroid-support, libffi, libgmp, readline, openssl, libyaml, zlib"
+TERMUX_PKG_DEPENDS="libandroid-execinfo, libandroid-support, libffi, libgmp, libxml2, libxslt, readline, openssl, libyaml, zlib"
 TERMUX_PKG_RECOMMENDS="clang, make, pkg-config, resolv-conf"
 TERMUX_PKG_BREAKS="ruby-dev"
 TERMUX_PKG_REPLACES="ruby-dev"
@@ -28,6 +28,24 @@ TERMUX_PKG_EXTRA_HOSTBUILD_CONFIGURE_ARGS="
 --disable-install-rdoc
 --disable-install-capi
 "
+
+_jekyllex_apply_gem_patches() {
+	local gems_root="$TERMUX_PKG_SRCDIR/.bundle/gems"
+	local patches_root="$TERMUX_PKG_BUILDER_DIR/gem-patches"
+	local gem_dir name patch_file
+	[ -d "$gems_root" ] || return 0
+	[ -d "$patches_root" ] || return 0
+	for gem_dir in "$gems_root"/*; do
+		[ -d "$gem_dir" ] || continue
+		name=$(basename "$gem_dir")
+		[ -d "$patches_root/$name" ] || continue
+		for patch_file in "$patches_root/$name"/*; do
+			[ -f "$patch_file" ] || continue
+			echo "Applying gem patch $(basename "$patch_file") -> $name"
+			(cd "$gem_dir" && patch -p1 --forward --batch < "$patch_file") || true
+		done
+	done
+}
 
 termux_step_host_build() {
 	"$TERMUX_PKG_SRCDIR/configure" ${TERMUX_PKG_EXTRA_HOSTBUILD_CONFIGURE_ARGS}
@@ -48,6 +66,11 @@ termux_step_pre_configure() {
 	autoreconf -fi
 
 	export PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/bin:$PATH
+	# nokogiri: use prefix libxml2/libxslt (built earlier in bootstrap)
+	export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
+	export PKG_CONFIG_PATH="${TERMUX_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+	# host gem for nokogiri extconf fallback when mini_portile is required
+	gem install mini_portile2 -v 2.8.7 --no-document || true
 
 	if [ "$TERMUX_ARCH_BITS" = 32 ]; then
 		# process.c:function timetick2integer: error: undefined reference to '__mulodi4'
@@ -56,6 +79,18 @@ termux_step_pre_configure() {
 
 	# Do not remove: fix for Clang's "overoptimization".
 	CFLAGS+=" -fno-strict-aliasing"
+}
+
+termux_step_make() {
+	export PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/bin:$PATH
+	export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
+	export PKG_CONFIG_PATH="${TERMUX_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+
+	# First pass may extract bundled gems then fail configuring nokogiri before patches apply.
+	if ! make -j $TERMUX_PKG_MAKE_PROCESSES; then
+		_jekyllex_apply_gem_patches
+		make -j $TERMUX_PKG_MAKE_PROCESSES
+	fi
 }
 
 termux_step_make_install() {
