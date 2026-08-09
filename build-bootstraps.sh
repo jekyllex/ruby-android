@@ -116,6 +116,13 @@ extract_debs() {
 			continue
 		fi
 
+		case "$current_package_name" in
+			python|python-*|doxygen|tk|xorgproto|libx11|libx11-*|libxcb|libxcb-*|libxau|libxdmcp|libxext|libxrender|libxft|libxfixes|libxi|libxt|libsm|libice|util-macros|fontconfig|freetype|pixman)
+				echo "[*] Skipping build-only package '$deb'..."
+				continue
+				;;
+		esac
+
 		if [[ " ${EXTRACTED_PACKAGES[*]} " == *" $current_package_name "* ]]; then
 			echo "[*] Skipping already extracted package '$current_package_name'..."
 			continue
@@ -197,7 +204,11 @@ create_bootstrap_archive() {
 		zip -r9 "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" ./*
 	)
 
-	mv -f "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" "$TERMUX_PACKAGES_DIRECTORY/"
+	local dest_dir="$TERMUX_PACKAGES_DIRECTORY/output"
+	mkdir -p "$dest_dir"
+	cp -f "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" "$dest_dir/ruby-${1}.zip"
+	cp -f "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" "$TERMUX_PACKAGES_DIRECTORY/ruby-${1}.zip" || true
+	test -f "$dest_dir/ruby-${1}.zip"
 	echo "[*] Finished successfully (${1})."
 }
 

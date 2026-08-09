@@ -60,13 +60,18 @@ jobs:
 
           # libxml2 python bindings pull CPython (+tk/X11) as a build dep.
           # Disable them; nokogiri only needs libxml2/libxslt C libraries.
-          if [ -f termux-packages/packages/libxml2/build.sh ]; then
-            sed -i \
-              -e 's/TERMUX_PKG_SETUP_PYTHON=true/TERMUX_PKG_SETUP_PYTHON=false/' \
-              -e 's/-Dpython=enabled/-Dpython=disabled/' \
-              -e 's/doxygen, python, readline/readline/' \
-              termux-packages/packages/libxml2/build.sh
-          fi
+          python3 - <<'PY'
+from pathlib import Path
+p = Path("termux-packages/packages/libxml2/build.sh")
+t = p.read_text()
+t = t.replace("TERMUX_PKG_SETUP_PYTHON=true", "TERMUX_PKG_SETUP_PYTHON=false")
+t = t.replace("-Dpython=enabled", "-Dpython=disabled")
+t = t.replace("doxygen, python, readline", "readline")
+p.write_text(t)
+assert "TERMUX_PKG_SETUP_PYTHON=false" in t
+assert "-Dpython=disabled" in t
+print("[*] libxml2 python bindings disabled")
+PY
 
           # Optional git password-from-config fix.
           if [ -f jekyllex/patches/git/credential.c.patch ]; then
@@ -92,30 +97,49 @@ jobs:
         working-directory: termux-packages
         run: |
           set -euo pipefail
-          zip="ruby-${{ matrix.target_arch }}.zip"
-          test -f "$zip"
+          zip=""
+          for cand in "output/ruby-${{ matrix.target_arch }}.zip" "ruby-${{ matrix.target_arch }}.zip"; do
+            if [ -f "$cand" ]; then zip="$cand"; break; fi
+          done
+          test -n "$zip"
           tmp=$(mktemp -d)
           unzip -q -d "$tmp" "$zip"
-          mapfile -t files < <(find "$tmp" -type f -exec file -b {} + | paste -d '|' <(find "$tmp" -type f) - | awk -F'|' '/ELF/ {print $1}' | head -30)
-          test "${#files[@]}" -gt 0
           failed=0
-          for f in "${files[@]}"; do
+          checked=0
+          while IFS= read -r -d '' f; do
+            ft=$(file -b "$f")
+            case "$ft" in
+              *ELF*shared*|*ELF*executable*) ;;
+              *) continue ;;
+            esac
             out=$(readelf -lW "$f" 2>/dev/null || llvm-readelf -lW "$f" 2>/dev/null || true)
             [ -n "$out" ] || continue
+            aligns=$(echo "$out" | awk '/LOAD/ {print $NF}')
+            [ -n "$aligns" ] || continue
+            checked=$((checked + 1))
             echo "== $f =="
-            echo "$out" | awk '/LOAD/ {print}'
-            if echo "$out" | awk '/LOAD/ {print $NF}' | grep -qE '0x1000$'; then
-              echo "FAIL: 4 KB LOAD align in $f"
-              failed=1
-            fi
-          done
+            echo "$aligns"
+            while read -r al; do
+              [ -n "$al" ] || continue
+              val=$((al))
+              if [ "$val" -lt 16384 ]; then
+                echo "FAIL: LOAD align $al (< 16 KB) in $f"
+                failed=1
+              fi
+            done <<< "$aligns"
+          done < <(find "$tmp" -type f -print0)
+          echo "checked $checked ELF shared/executable files"
+          test "$checked" -gt 0
           exit "$failed"
 
       - name: Store bootstrap
         uses: actions/upload-artifact@v4
         with:
           name: ruby-${{ matrix.target_arch }}
-          path: termux-packages/ruby-*.zip
+          path: |
+            termux-packages/output/ruby-*.zip
+            termux-packages/ruby-*.zip
+          if-no-files-found: error
 
   release:
     needs: bootstraps
