@@ -52,12 +52,8 @@ jobs:
 
           # Use upstream ncurses/libxml2/git recipes (NDK r29 / current sources).
           # Replace only the ruby package with JekyllEx 3.3.x + app-specific patches.
-          # Keep tool-rbinstall.rb.diff from upstream (required by ruby build.sh).
-          cp termux-packages/packages/ruby/tool-rbinstall.rb.diff /tmp/tool-rbinstall.rb.diff
           rm -rf termux-packages/packages/ruby
           cp -a jekyllex/patches/ruby termux-packages/packages/ruby
-          cp /tmp/tool-rbinstall.rb.diff termux-packages/packages/ruby/
-          # Bundled-gem patches (nokogiri/eventmachine/jekyll) applied at make time.
           if [ -d jekyllex/patches/gems ]; then
             cp -a jekyllex/patches/gems termux-packages/packages/ruby/gem-patches
           fi

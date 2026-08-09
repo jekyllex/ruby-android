@@ -36,14 +36,10 @@ index bb2e6a2..8b98bd8 100755
        next
      end
      spec.extension_dir = "#{extensions_dir}/#{spec.full_name}"
-+    patch_roots = [
-+      "#{srcdir}/../builder/gem-patches/#{gem_name}",
-+      "/home/builder/termux-packages/packages/ruby/gem-patches/#{gem_name}",
-+      "/home/builder/patches/gems/#{gem_name}",
-+    ]
-+    patch_files = patch_roots.flat_map { |root| Dir.glob("#{root}/*") }
++    patch_files = Dir.glob("/home/builder/termux-packages/packages/ruby/gem-patches/#{gem_name}/*")
 +    patch_files.each do |patch_file|
 +      target = "#{srcdir}/.bundle/gems/#{gem_name}"
++      FileUtils.cp(patch_file, target)
 +      system("cd #{target} && patch -p1 --forward --batch < #{patch_file}")
 +    end
      package = RbInstall::DirPackage.new spec

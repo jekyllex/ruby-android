@@ -60,17 +60,17 @@ termux_step_pre_configure() {
 	echo "Applying tool-rbinstall.rb.diff"
 	sed -e "s|@TERMUX_PREFIX@|${TERMUX_PREFIX}|g" \
 		-e "s|@RUBY_API_VERSION@|${_RUBY_API_VERSION}|g" \
-		$TERMUX_PKG_BUILDER_DIR/tool-rbinstall.rb.diff \
+		$TERMUX_PKG_BUILDER_DIR/tool-rbinstall.rb.diff.in \
 		| patch --silent -p1
 
 	autoreconf -fi
 
 	export PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/bin:$PATH
-	# nokogiri: use prefix libxml2/libxslt (built earlier in bootstrap)
 	export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
 	export PKG_CONFIG_PATH="${TERMUX_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
-	# host gem for nokogiri extconf fallback when mini_portile is required
-	gem install mini_portile2 -v 2.8.7 --no-document || true
+	GEM_HOME="$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/lib/ruby/gems/${_RUBY_API_VERSION}" \
+		GEM_PATH="$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/lib/ruby/gems/${_RUBY_API_VERSION}" \
+		gem install mini_portile2 -v 2.8.7 --no-document || true
 
 	if [ "$TERMUX_ARCH_BITS" = 32 ]; then
 		# process.c:function timetick2integer: error: undefined reference to '__mulodi4'
@@ -86,7 +86,8 @@ termux_step_make() {
 	export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
 	export PKG_CONFIG_PATH="${TERMUX_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
 
-	# First pass may extract bundled gems then fail configuring nokogiri before patches apply.
+	make extract-gems || true
+	_jekyllex_apply_gem_patches
 	if ! make -j $TERMUX_PKG_MAKE_PROCESSES; then
 		_jekyllex_apply_gem_patches
 		make -j $TERMUX_PKG_MAKE_PROCESSES
