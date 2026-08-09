@@ -60,18 +60,7 @@ jobs:
 
           # libxml2 python bindings pull CPython (+tk/X11) as a build dep.
           # Disable them; nokogiri only needs libxml2/libxslt C libraries.
-          python3 - <<'PY'
-from pathlib import Path
-p = Path("termux-packages/packages/libxml2/build.sh")
-t = p.read_text()
-t = t.replace("TERMUX_PKG_SETUP_PYTHON=true", "TERMUX_PKG_SETUP_PYTHON=false")
-t = t.replace("-Dpython=enabled", "-Dpython=disabled")
-t = t.replace("doxygen, python, readline", "readline")
-p.write_text(t)
-assert "TERMUX_PKG_SETUP_PYTHON=false" in t
-assert "-Dpython=disabled" in t
-print("[*] libxml2 python bindings disabled")
-PY
+          python3 -c 'from pathlib import Path; p=Path("termux-packages/packages/libxml2/build.sh"); t=p.read_text().replace("TERMUX_PKG_SETUP_PYTHON=true","TERMUX_PKG_SETUP_PYTHON=false").replace("-Dpython=enabled","-Dpython=disabled").replace("doxygen, python, readline","readline"); p.write_text(t); assert "TERMUX_PKG_SETUP_PYTHON=false" in t and "-Dpython=disabled" in t'
 
           # Optional git password-from-config fix.
           if [ -f jekyllex/patches/git/credential.c.patch ]; then
