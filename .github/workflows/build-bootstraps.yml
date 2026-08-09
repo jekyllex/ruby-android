@@ -58,6 +58,16 @@ jobs:
             cp -a jekyllex/patches/gems termux-packages/packages/ruby/gem-patches
           fi
 
+          # libxml2 python bindings pull CPython (+tk/X11) as a build dep.
+          # Disable them; nokogiri only needs libxml2/libxslt C libraries.
+          if [ -f termux-packages/packages/libxml2/build.sh ]; then
+            sed -i \
+              -e 's/TERMUX_PKG_SETUP_PYTHON=true/TERMUX_PKG_SETUP_PYTHON=false/' \
+              -e 's/-Dpython=enabled/-Dpython=disabled/' \
+              -e 's/doxygen, python, readline/readline/' \
+              termux-packages/packages/libxml2/build.sh
+          fi
+
           # Optional git password-from-config fix.
           if [ -f jekyllex/patches/git/credential.c.patch ]; then
             cp -a jekyllex/patches/git/credential.c.patch termux-packages/packages/git/ || true

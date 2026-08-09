@@ -99,20 +99,21 @@ termux_step_make_install() {
 	make uninstall # remove possible remains to get fresh timestamps
 	make install
 
-	local RBCONFIG=$TERMUX_PREFIX/lib/ruby/${_RUBY_API_VERSION}/${TERMUX_HOST_PLATFORM}/rbconfig.rb
-
-	# Fix absolute paths to executables:
-	perl -p -i -e 's/^.*CONFIG\["INSTALL"\].*$/  CONFIG["INSTALL"] = "install -c"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["PKG_CONFIG"\].*$/  CONFIG["PKG_CONFIG"] = "pkg-config"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["MAKEDIRS"\].*$/  CONFIG["MAKEDIRS"] = "mkdir -p"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["MKDIR_P"\].*$/  CONFIG["MKDIR_P"] = "mkdir -p"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["EGREP"\].*$/  CONFIG["EGREP"] = "grep -E"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["GREP"\].*$/  CONFIG["GREP"] = "grep"/' $RBCONFIG
+	local RBCONFIG
+	RBCONFIG=$(find "$TERMUX_PREFIX/lib/ruby/${_RUBY_API_VERSION}" -name rbconfig.rb 2>/dev/null | head -n 1)
+	if [ -n "$RBCONFIG" ]; then
+		perl -p -i -e 's/^.*CONFIG\["INSTALL"\].*$/  CONFIG["INSTALL"] = "install -c"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["PKG_CONFIG"\].*$/  CONFIG["PKG_CONFIG"] = "pkg-config"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["MAKEDIRS"\].*$/  CONFIG["MAKEDIRS"] = "mkdir -p"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["MKDIR_P"\].*$/  CONFIG["MKDIR_P"] = "mkdir -p"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["EGREP"\].*$/  CONFIG["EGREP"] = "grep -E"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["GREP"\].*$/  CONFIG["GREP"] = "grep"/' "$RBCONFIG"
+	fi
 }
 
 termux_step_post_massage() {
-	local _RUBYGEMS_ARCH=${TERMUX_HOST_PLATFORM/i686-/x86-}
-	if [ ! -d ./lib/ruby/gems/${_RUBY_API_VERSION}/extensions/${_RUBYGEMS_ARCH} ]; then
+	local ext_root="./lib/ruby/gems/${_RUBY_API_VERSION}/extensions"
+	if [ ! -d "$ext_root" ] || [ -z "$(find "$ext_root" -name gem.build_complete | head -n 1)" ]; then
 		termux_error_exit "Extensions for bundled gems were not installed."
 	fi
 }
