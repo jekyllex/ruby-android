@@ -117,7 +117,7 @@ extract_debs() {
 		fi
 
 		case "$current_package_name" in
-			python|python-*|doxygen|tk|xorgproto|libx11|libx11-*|libxcb|libxcb-*|libxau|libxdmcp|libxext|libxrender|libxft|libxfixes|libxi|libxt|libsm|libice|util-macros|fontconfig|freetype|pixman)
+			python|python-*|doxygen|tk|tcl|libicu|icu|libsqlite|sqlite|ttf-*|git-gui|git-gitk|gitk|git-svn|xorgproto|libx11|libx11-*|libxcb|libxcb-*|libxau|libxdmcp|libxext|libxrender|libxft|libxfixes|libxi|libxt|libsm|libice|util-macros|fontconfig|freetype|pixman|harfbuzz|libcairo|glib)
 				echo "[*] Skipping build-only package '$deb'..."
 				continue
 				;;
@@ -195,6 +195,9 @@ create_bootstrap_archive() {
 		rm -rf ./share/tabset
 		rm -rf ./share/aclocal
 		rm -rf ./share/terminfo
+		rm -rf ./share/fonts ./share/git-gui ./share/gitk ./share/gitweb ./share/xcb ./share/perl5
+		rm -rf ./include/unicode ./include/X11 ./lib/tcl8 ./lib/tcl8.6 ./lib/icu
+		rm -f ./bin/gitk ./bin/git-cvsserver ./bin/git-shell ./bin/sqlite3
 
 		while read -r -d '' link; do
 			echo "$(readlink "$link")←${link}" >> SYMLINKS.txt
@@ -244,7 +247,7 @@ Options:
   [ -a | --add <packages> ]   Extra packages (comma-separated)
   [ --architectures <list> ]  Architectures (comma-separated)
 
-TERMUX_APP_PACKAGE must be xyz.jekyllex (applied via apply-jekyllex-identity.sh).
+TERMUX_APP_PACKAGE must be xyz.jekyllex.
 NDK r29+ links 16 KB-aligned ELFs by default (Termux toolchain_29).
 
 Examples:

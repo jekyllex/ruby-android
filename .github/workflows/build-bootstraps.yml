@@ -47,8 +47,12 @@ jobs:
         run: |
           set -euo pipefail
           cp jekyllex/build-bootstraps.sh termux-packages/scripts/
-          chmod +x termux-packages/scripts/build-bootstraps.sh jekyllex/apply-jekyllex-identity.sh
-          jekyllex/apply-jekyllex-identity.sh termux-packages/scripts/properties.sh
+          chmod +x termux-packages/scripts/build-bootstraps.sh
+          sed -i \
+            -e 's/^TERMUX_APP__PACKAGE_NAME="com.termux"/TERMUX_APP__PACKAGE_NAME="xyz.jekyllex"/' \
+            -e 's|^export CGCT_DIR="/data/data/com.termux/cgct"|export CGCT_DIR="/data/data/xyz.jekyllex/cgct"|' \
+            termux-packages/scripts/properties.sh
+          grep -q 'TERMUX_APP__PACKAGE_NAME="xyz.jekyllex"' termux-packages/scripts/properties.sh
 
           # Use upstream ncurses/libxml2/git recipes (NDK r29 / current sources).
           # Replace only the ruby package with JekyllEx 3.3.x + app-specific patches.
@@ -58,11 +62,13 @@ jobs:
             cp -a jekyllex/patches/gems termux-packages/packages/ruby/gem-patches
           fi
 
-          # libxml2 python bindings pull CPython (+tk/X11) as a build dep.
-          # Disable them; nokogiri only needs libxml2/libxslt C libraries.
-          python3 -c 'from pathlib import Path; p=Path("termux-packages/packages/libxml2/build.sh"); t=p.read_text().replace("TERMUX_PKG_SETUP_PYTHON=true","TERMUX_PKG_SETUP_PYTHON=false").replace("-Dpython=enabled","-Dpython=disabled").replace("doxygen, python, readline","readline"); p.write_text(t); assert "TERMUX_PKG_SETUP_PYTHON=false" in t and "-Dpython=disabled" in t'
+          # libxml2: no CPython, no ICU (libicudata ~32MB; nokogiri only needs C libs).
+          python3 -c 'from pathlib import Path; p=Path("termux-packages/packages/libxml2/build.sh"); t=p.read_text().replace("TERMUX_PKG_SETUP_PYTHON=true","TERMUX_PKG_SETUP_PYTHON=false").replace("-Dpython=enabled","-Dpython=disabled").replace("-Dicu=enabled","-Dicu=disabled").replace("libandroid-glob, libiconv, libicu, zlib","libandroid-glob, libiconv, zlib").replace("doxygen, python, readline","readline"); p.write_text(t); assert "TERMUX_PKG_SETUP_PYTHON=false" in t and "-Dpython=disabled" in t and "-Dicu=disabled" in t and "libicu" not in t.split("TERMUX_PKG_DEPENDS",1)[1].splitlines()[0]'
 
           python3 jekyllex/patches/ncurses/slim-terminfo.py termux-packages/packages/ncurses/build.sh
+
+          # Match historical jekyllex git: no Tcl/Tk GUI (avoids tcl/tk/X11/fonts).
+          python3 -c 'from pathlib import Path; p=Path("termux-packages/packages/git/build.sh"); t=p.read_text().replace("--with-tcltk=$TERMUX_PREFIX/bin/wish\n","").replace("NO_GETTEXT=1\n","NO_GETTEXT=1\nNO_TCLTK=1\n"); p.write_text(t); assert "NO_TCLTK=1" in t and "tcltk" not in t'
 
           # Optional git password-from-config fix.
           if [ -f jekyllex/patches/git/credential.c.patch ]; then
@@ -123,13 +129,14 @@ jobs:
           test "$checked" -gt 0
           exit "$failed"
 
+      - name: Flatten bootstrap zip
+        run: cp termux-packages/output/ruby-${{ matrix.target_arch }}.zip ruby-${{ matrix.target_arch }}.zip
+
       - name: Store bootstrap
         uses: actions/upload-artifact@v4
         with:
           name: ruby-${{ matrix.target_arch }}
-          path: |
-            termux-packages/output/ruby-*.zip
-            termux-packages/ruby-*.zip
+          path: ruby-${{ matrix.target_arch }}.zip
           if-no-files-found: error
 
   release:
@@ -186,7 +193,8 @@ jobs:
       - name: Build apk
         run: |
           git clone https://github.com/jekyllex/termux-app --depth 1
-          mv *.zip termux-app/bootstraps
+          find . -name 'ruby-*.zip' ! -path './termux-app/*' -exec mv {} termux-app/bootstraps/ \;
+          ls termux-app/bootstraps/ruby-*.zip
           cd termux-app
           ./gradlew assembleDebug
 

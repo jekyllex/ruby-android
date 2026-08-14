@@ -60,7 +60,7 @@ termux_step_pre_configure() {
 	echo "Applying tool-rbinstall.rb.diff"
 	sed -e "s|@TERMUX_PREFIX@|${TERMUX_PREFIX}|g" \
 		-e "s|@RUBY_API_VERSION@|${_RUBY_API_VERSION}|g" \
-		$TERMUX_PKG_BUILDER_DIR/tool-rbinstall.rb.diff.in \
+		$TERMUX_PKG_BUILDER_DIR/tool-rbinstall.rb.diff \
 		| patch --silent -p1
 
 	autoreconf -fi
