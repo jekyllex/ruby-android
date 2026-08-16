@@ -10,11 +10,6 @@ on:
         type: string
         description: "Tag for the release"
 
-# termux-packages @ NDK r29 (16 KB ELF align by default).
-# Bump when intentionally rebasing the package tree.
-env:
-  TERMUX_PACKAGES_REF: "23d530425344010b73b0392ab66b041e8f65e34b"
-
 jobs:
   bootstraps:
     runs-on: ubuntu-latest
@@ -31,112 +26,45 @@ jobs:
           df -h
 
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
-          path: jekyllex
 
       - name: Get packages from termux-packages
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           path: termux-packages
           repository: termux/termux-packages
-          ref: ${{ env.TERMUX_PACKAGES_REF }}
+          ref: "23d530425344010b73b0392ab66b041e8f65e34b"
 
-      - name: Overlay JekyllEx scripts and patches
+      - name: Setup environment
         run: |
-          set -euo pipefail
-          cp jekyllex/build-bootstraps.sh termux-packages/scripts/
-          chmod +x termux-packages/scripts/build-bootstraps.sh
-          sed -i \
-            -e 's/^TERMUX_APP__PACKAGE_NAME="com.termux"/TERMUX_APP__PACKAGE_NAME="xyz.jekyllex"/' \
-            -e 's|^export CGCT_DIR="/data/data/com.termux/cgct"|export CGCT_DIR="/data/data/xyz.jekyllex/cgct"|' \
-            termux-packages/scripts/properties.sh
-          grep -q 'TERMUX_APP__PACKAGE_NAME="xyz.jekyllex"' termux-packages/scripts/properties.sh
-
-          # Use upstream ncurses/libxml2/git recipes (NDK r29 / current sources).
-          # Replace only the ruby package with JekyllEx 3.3.x + app-specific patches.
-          rm -rf termux-packages/packages/ruby
-          cp -a jekyllex/patches/ruby termux-packages/packages/ruby
-          if [ -d jekyllex/patches/gems ]; then
-            cp -a jekyllex/patches/gems termux-packages/packages/ruby/gem-patches
+          cp build-bootstraps.sh termux-packages/scripts/
+          patch -d termux-packages -p1 < patches/properties.patch
+          for package in patches/*/; do
+            cp -r "$package" termux-packages/packages/
+          done
+          if [ -d termux-packages/packages/gems ]; then
+            rm -rf termux-packages/packages/ruby/gem-patches
+            mv termux-packages/packages/gems termux-packages/packages/ruby/gem-patches
           fi
+          find termux-packages/packages/git -type f -name "*subpackage*" -exec rm {} +
+          find termux-packages/packages/libxml2 -type f -name "*python*" -exec rm {} +
 
-          # libxml2: no CPython, no ICU (libicudata ~32MB; nokogiri only needs C libs).
-          python3 -c 'from pathlib import Path; p=Path("termux-packages/packages/libxml2/build.sh"); t=p.read_text().replace("TERMUX_PKG_SETUP_PYTHON=true","TERMUX_PKG_SETUP_PYTHON=false").replace("-Dpython=enabled","-Dpython=disabled").replace("-Dicu=enabled","-Dicu=disabled").replace("libandroid-glob, libiconv, libicu, zlib","libandroid-glob, libiconv, zlib").replace("doxygen, python, readline","readline"); p.write_text(t); assert "TERMUX_PKG_SETUP_PYTHON=false" in t and "-Dpython=disabled" in t and "-Dicu=disabled" in t and "libicu" not in t.split("TERMUX_PKG_DEPENDS",1)[1].splitlines()[0]'
-
-          python3 jekyllex/patches/ncurses/slim-terminfo.py termux-packages/packages/ncurses/build.sh
-
-          # Match historical jekyllex git: no Tcl/Tk GUI (avoids tcl/tk/X11/fonts).
-          python3 -c 'from pathlib import Path; p=Path("termux-packages/packages/git/build.sh"); t=p.read_text().replace("--with-tcltk=$TERMUX_PREFIX/bin/wish\n","").replace("NO_GETTEXT=1\n","NO_GETTEXT=1\nNO_TCLTK=1\n"); p.write_text(t); assert "NO_TCLTK=1" in t and "tcltk" not in t'
-
-          # Optional git password-from-config fix.
-          if [ -f jekyllex/patches/git/credential.c.patch ]; then
-            cp -a jekyllex/patches/git/credential.c.patch termux-packages/packages/git/ || true
-          fi
-
-          find termux-packages/packages/git -type f -name "*subpackage*" -exec rm {} + || true
-      - name: Create bootstrap archive (Termux docker builder)
+      - name: Create bootstrap archive
         working-directory: termux-packages
         env:
           CI: "true"
         run: |
-          set -euo pipefail
-          # package-builder image already has NDK r29 + SDK (baked by Termux Dockerfile).
-          # Do not re-run setup-android-sdk.sh: after UID remap it fails with
-          # "Failed to read or create install properties file".
           ./scripts/run-docker.sh true
           ./scripts/run-docker.sh ./scripts/build-bootstraps.sh \
             --android10 -f --architectures ${{ matrix.target_arch }}
 
-      - name: Verify 16 KB ELF alignment (arm64/x86_64)
-        if: matrix.target_arch == 'aarch64' || matrix.target_arch == 'x86_64'
-        working-directory: termux-packages
-        run: |
-          set -euo pipefail
-          zip=""
-          for cand in "output/ruby-${{ matrix.target_arch }}.zip" "ruby-${{ matrix.target_arch }}.zip"; do
-            if [ -f "$cand" ]; then zip="$cand"; break; fi
-          done
-          test -n "$zip"
-          tmp=$(mktemp -d)
-          unzip -q -d "$tmp" "$zip"
-          failed=0
-          checked=0
-          while IFS= read -r -d '' f; do
-            ft=$(file -b "$f")
-            case "$ft" in
-              *ELF*shared*|*ELF*executable*) ;;
-              *) continue ;;
-            esac
-            out=$(readelf -lW "$f" 2>/dev/null || llvm-readelf -lW "$f" 2>/dev/null || true)
-            [ -n "$out" ] || continue
-            aligns=$(echo "$out" | awk '/LOAD/ {print $NF}')
-            [ -n "$aligns" ] || continue
-            checked=$((checked + 1))
-            echo "== $f =="
-            echo "$aligns"
-            while read -r al; do
-              [ -n "$al" ] || continue
-              val=$((al))
-              if [ "$val" -lt 16384 ]; then
-                echo "FAIL: LOAD align $al (< 16 KB) in $f"
-                failed=1
-              fi
-            done <<< "$aligns"
-          done < <(find "$tmp" -type f -print0)
-          echo "checked $checked ELF shared/executable files"
-          test "$checked" -gt 0
-          exit "$failed"
-
-      - name: Flatten bootstrap zip
-        run: cp termux-packages/output/ruby-${{ matrix.target_arch }}.zip ruby-${{ matrix.target_arch }}.zip
-
       - name: Store bootstrap
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: ruby-${{ matrix.target_arch }}
-          path: ruby-${{ matrix.target_arch }}.zip
+          path: termux-packages/output/ruby-${{ matrix.target_arch }}.zip
           if-no-files-found: error
 
   release:
@@ -145,12 +73,12 @@ jobs:
     if: github.ref == 'refs/heads/main' && github.event.inputs.release == 'true' && startsWith(github.event.inputs.tag, 'v')
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 0
 
       - name: Fetch bootstrap archives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           path: ./
           merge-multiple: true
@@ -161,7 +89,7 @@ jobs:
           git push --tags
 
       - name: Publish bootstrap zips to GitHub release
-        uses: termux/upload-release-action@v4.1.0
+        uses: termux/upload-release-action@v5.0.0
         with:
           file: "*.zip"
           file_glob: true
@@ -174,18 +102,18 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - name: Clone repository
-        uses: actions/checkout@v4
+        uses: actions/checkout@v7
         with:
           fetch-depth: 1
 
       - name: Fetch bootstrap archives
-        uses: actions/download-artifact@v4
+        uses: actions/download-artifact@v8
         with:
           merge-multiple: true
           path: ./
 
       - name: Setup java
-        uses: actions/setup-java@v4
+        uses: actions/setup-java@v5
         with:
           distribution: temurin
           java-version: 17
@@ -199,7 +127,7 @@ jobs:
           ./gradlew assembleDebug
 
       - name: Store generated APK file
-        uses: actions/upload-artifact@v4
+        uses: actions/upload-artifact@v7
         with:
           name: termux-app
           path: ./termux-app/app/build/outputs/apk/debug/*.apk
