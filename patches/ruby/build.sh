@@ -31,7 +31,7 @@ TERMUX_PKG_EXTRA_HOSTBUILD_CONFIGURE_ARGS="
 
 _jekyllex_apply_gem_patches() {
 	local gems_root="$TERMUX_PKG_SRCDIR/.bundle/gems"
-	local patches_root="$TERMUX_PKG_BUILDER_DIR/gem-patches"
+	local patches_root="$TERMUX_SCRIPTDIR/patches/gems"
 	local gem_dir name patch_file
 	[ -d "$gems_root" ] || return 0
 	[ -d "$patches_root" ] || return 0

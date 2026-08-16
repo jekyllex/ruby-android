@@ -50,21 +50,19 @@ jobs:
           mv *.sh termux-packages/scripts/
           mv termux-packages/* .
           patch -p1 < patches/properties.patch
-          for package in patches/*/; do
+          for package in patches/*; do
+            [ -d "$package" ] || continue
             cp -r "$package" packages
           done
-          if [ -d packages/gems ]; then
-            rm -rf packages/ruby/gem-patches
-            mv packages/gems packages/ruby/gem-patches
-          fi
           find packages/git -type f -name "*subpackage*" -exec rm {} +
           find packages/libxml2 -type f -name "*python*" -exec rm {} +
           sudo mkdir -p /home/builder && mv ./* /home/builder
 
       - name: Create bootstrap archive
         working-directory: /home/builder
+        env:
+          TERMUX_JAVA_HOME: ${{ env.JAVA_HOME }}
         run: |
-          export TERMUX_JAVA_HOME="${JAVA_HOME}"
           ./clean.sh
           ./scripts/setup-android-sdk.sh
           ./scripts/build-bootstraps.sh --android10 --architectures ${{ matrix.target_arch }}
