@@ -2,18 +2,12 @@
 # shellcheck disable=SC2039,SC2059
 
 # Title:         build-bootstrap.sh
-# Description:   Build bootstrap archives for JekyllEx from local package
-#                sources (termux-packages tree). Based on termux-packages
-#                scripts/build-bootstraps.sh (NDK r29 / 16 KB default).
-# Usage:         run "build-bootstraps.sh --help"
-#
-# JekyllEx deltas vs upstream:
-# - Package set: coreutils, libxslt, libxml2, unzip, ruby, git, zip (+deps)
-# - Output name: ruby-${arch}.zip (jekyllex-android / dl.jekyllex.xyz contract)
-# - Layout: TERMUX_PACKAGES_DIRECTORY defaults to Termux docker path
-#   /home/builder/termux-packages (override with env if flattening locally)
-# - No termux second-stage bootstrap (app installs zip as libN.so itself)
-# - --android10 for APK packaging / Android 10+ exec model
+# Description:   A script to build bootstrap archives for the termux-app
+#                from local package sources instead of debs published in
+#                apt repo like done by generate-bootstrap.sh. It allows
+#                bootstrap archives to be easily built for (forked) termux
+#                apps without having to publish an apt repo first.
+# Usage:         run "build-bootstrap.sh --help"
 #
 # Adapted from: https://github.com/termux/termux-packages/blob/23d530425344010b73b0392ab66b041e8f65e34b/scripts/build-bootstraps.sh
 version=0.2.0
@@ -35,8 +29,7 @@ BOOTSTRAP_ANDROID10_COMPATIBLE=false
 TERMUX_DEFAULT_ARCHITECTURES=("aarch64" "arm" "i686" "x86_64")
 TERMUX_ARCHITECTURES=("${TERMUX_DEFAULT_ARCHITECTURES[@]}")
 
-# Match termux-packages docker mount (run-docker.sh → /home/builder/termux-packages).
-: "${TERMUX_PACKAGES_DIRECTORY:="/home/builder/termux-packages"}"
+TERMUX_PACKAGES_DIRECTORY="/home/builder"
 TERMUX_BUILT_DEBS_DIRECTORY="$TERMUX_PACKAGES_DIRECTORY/output"
 TERMUX_BUILT_PACKAGES_DIRECTORY="/data/data/.built-packages"
 
@@ -207,11 +200,7 @@ create_bootstrap_archive() {
 		zip -r9 "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" ./*
 	)
 
-	local dest_dir="$TERMUX_PACKAGES_DIRECTORY/output"
-	mkdir -p "$dest_dir"
-	cp -f "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" "$dest_dir/ruby-${1}.zip"
-	cp -f "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" "$TERMUX_PACKAGES_DIRECTORY/ruby-${1}.zip" || true
-	test -f "$dest_dir/ruby-${1}.zip"
+	mv -f "${BOOTSTRAP_TMPDIR}/ruby-${1}.zip" "$TERMUX_PACKAGES_DIRECTORY/"
 	echo "[*] Finished successfully (${1})."
 }
 
