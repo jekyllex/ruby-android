@@ -54,7 +54,6 @@ termux_step_make_install() {
 
 termux_step_post_make_install() {
 	rm -Rf $TERMUX_PREFIX/lib/*-linux*/perl
-	(cd $TERMUX_PREFIX/bin; ln -s -f ../libexec/git-core/git git)
 }
 
 termux_step_post_massage() {
