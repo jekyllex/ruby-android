@@ -56,6 +56,7 @@ jobs:
           done
           find packages/git -type f -name "*subpackage*" -exec rm {} +
           find packages/libxml2 -type f -name "*python*" -exec rm {} +
+          find packages/ruby -type f \( -name 'process.c.patch' -o -name 'yjit-src-*.patch' -o -name 'lib-rubygems-install_update_options.rb.patch' \) -exec rm {} +
           sudo mkdir -p /home/builder && mv ./* /home/builder
 
       - name: Create bootstrap archive

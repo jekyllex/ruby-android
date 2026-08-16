@@ -23,6 +23,7 @@ NO_EXPAT=1
 NO_TCLTK=1
 NO_GETTEXT=1
 NO_INSTALL_HARDLINKS=1
+NO_RUST=1
 INSTALL_SYMLINKS=1
 CSPRNG_METHOD=openssl
 DEFAULT_PAGER=pager
@@ -43,8 +44,6 @@ termux_step_pre_configure() {
 	if $TERMUX_ON_DEVICE_BUILD; then
 		termux_error_exit "Package '$TERMUX_PKG_NAME' is not safe for on-device builds."
 	fi
-	termux_setup_rust
-	export CARGO_BUILD_TARGET="$CARGO_TARGET_NAME"
 	rm -Rf $TERMUX_PREFIX/share/git-perl
 	CPPFLAGS="-I$TERMUX_PKG_SRCDIR $CPPFLAGS"
 }
