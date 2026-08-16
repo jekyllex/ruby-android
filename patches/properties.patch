@@ -1,0 +1,24 @@
+--- a/scripts/properties.sh
++++ b/scripts/properties.sh
+@@ -464,7 +464,7 @@
+ #
+ # Default value: `com.termux`
+ ##
+-TERMUX_APP__PACKAGE_NAME="com.termux"
++TERMUX_APP__PACKAGE_NAME="xyz.jekyllex"
+ TERMUX_APP_PACKAGE="$TERMUX_APP__PACKAGE_NAME" # Deprecated alternative variable for `TERMUX_APP__PACKAGE_NAME`
+ 
+ __termux_build_props__add_variables_validator_actions "TERMUX_APP__PACKAGE_NAME" "app_package_name"
+@@ -2231,10 +2231,10 @@
+ __termux_build_props__add_variables_validator_actions "TERMUX_CLEANUP_BUILT_PACKAGES_THRESHOLD" "unsigned_int"
+ 
+ # Path to CGCT tools
+-CGCT_DEFAULT_PREFIX="/data/data/com.termux/files/usr/glibc"
++CGCT_DEFAULT_PREFIX="/data/data/xyz.jekyllex/files/usr/glibc"
+ __termux_build_props__add_variables_validator_actions "CGCT_DEFAULT_PREFIX" "safe_absolute_path invalid_termux_prefix_paths"
+ 
+-export CGCT_DIR="/data/data/com.termux/cgct"
++export CGCT_DIR="/data/data/xyz.jekyllex/cgct"
+ __termux_build_props__add_variables_validator_actions "CGCT_DIR" "safe_absolute_path invalid_termux_prefix_paths"
+ 
+ # Allow to override setup.

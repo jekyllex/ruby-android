@@ -9,7 +9,7 @@ TERMUX_PKG_VERSION=3.3.4
 TERMUX_PKG_SRCURL=https://cache.ruby-lang.org/pub/ruby/$(echo $TERMUX_PKG_VERSION | cut -d . -f 1-2)/ruby-${TERMUX_PKG_VERSION}.tar.xz
 TERMUX_PKG_SHA256=1caaee9a5a6befef54bab67da68ace8d985e4fb59cd17ce23c28d9ab04f4ddad
 # libbffi is used by the fiddle extension module:
-TERMUX_PKG_DEPENDS="libandroid-execinfo, libandroid-support, libffi, libgmp, readline, openssl, libyaml, zlib"
+TERMUX_PKG_DEPENDS="libandroid-execinfo, libandroid-support, libffi, libgmp, libxml2, libxslt, readline, openssl, libyaml, zlib"
 TERMUX_PKG_RECOMMENDS="clang, make, pkg-config, resolv-conf"
 TERMUX_PKG_BREAKS="ruby-dev"
 TERMUX_PKG_REPLACES="ruby-dev"
@@ -28,6 +28,24 @@ TERMUX_PKG_EXTRA_HOSTBUILD_CONFIGURE_ARGS="
 --disable-install-rdoc
 --disable-install-capi
 "
+
+_jekyllex_apply_gem_patches() {
+	local gems_root="$TERMUX_PKG_SRCDIR/.bundle/gems"
+	local patches_root="$TERMUX_SCRIPTDIR/patches/gems"
+	local gem_dir name patch_file
+	[ -d "$gems_root" ] || return 0
+	[ -d "$patches_root" ] || return 0
+	for gem_dir in "$gems_root"/*; do
+		[ -d "$gem_dir" ] || continue
+		name=$(basename "$gem_dir")
+		[ -d "$patches_root/$name" ] || continue
+		for patch_file in "$patches_root/$name"/*; do
+			[ -f "$patch_file" ] || continue
+			echo "Applying gem patch $(basename "$patch_file") -> $name"
+			(cd "$gem_dir" && patch -p1 --forward --batch < "$patch_file") || true
+		done
+	done
+}
 
 termux_step_host_build() {
 	"$TERMUX_PKG_SRCDIR/configure" ${TERMUX_PKG_EXTRA_HOSTBUILD_CONFIGURE_ARGS}
@@ -48,6 +66,11 @@ termux_step_pre_configure() {
 	autoreconf -fi
 
 	export PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/bin:$PATH
+	export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
+	export PKG_CONFIG_PATH="${TERMUX_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+	GEM_HOME="$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/lib/ruby/gems/${_RUBY_API_VERSION}" \
+		GEM_PATH="$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/lib/ruby/gems/${_RUBY_API_VERSION}" \
+		gem install mini_portile2 -v 2.8.7 --no-document || true
 
 	if [ "$TERMUX_ARCH_BITS" = 32 ]; then
 		# process.c:function timetick2integer: error: undefined reference to '__mulodi4'
@@ -58,25 +81,39 @@ termux_step_pre_configure() {
 	CFLAGS+=" -fno-strict-aliasing"
 }
 
+termux_step_make() {
+	export PATH=$TERMUX_PKG_HOSTBUILD_DIR/ruby-host/bin:$PATH
+	export NOKOGIRI_USE_SYSTEM_LIBRARIES=1
+	export PKG_CONFIG_PATH="${TERMUX_PREFIX}/lib/pkgconfig${PKG_CONFIG_PATH:+:$PKG_CONFIG_PATH}"
+
+	make extract-gems || true
+	_jekyllex_apply_gem_patches
+	if ! make -j $TERMUX_PKG_MAKE_PROCESSES; then
+		_jekyllex_apply_gem_patches
+		make -j $TERMUX_PKG_MAKE_PROCESSES
+	fi
+}
+
 termux_step_make_install() {
 	make install
 	make uninstall # remove possible remains to get fresh timestamps
 	make install
 
-	local RBCONFIG=$TERMUX_PREFIX/lib/ruby/${_RUBY_API_VERSION}/${TERMUX_HOST_PLATFORM}/rbconfig.rb
-
-	# Fix absolute paths to executables:
-	perl -p -i -e 's/^.*CONFIG\["INSTALL"\].*$/  CONFIG["INSTALL"] = "install -c"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["PKG_CONFIG"\].*$/  CONFIG["PKG_CONFIG"] = "pkg-config"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["MAKEDIRS"\].*$/  CONFIG["MAKEDIRS"] = "mkdir -p"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["MKDIR_P"\].*$/  CONFIG["MKDIR_P"] = "mkdir -p"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["EGREP"\].*$/  CONFIG["EGREP"] = "grep -E"/' $RBCONFIG
-	perl -p -i -e 's/^.*CONFIG\["GREP"\].*$/  CONFIG["GREP"] = "grep"/' $RBCONFIG
+	local RBCONFIG
+	RBCONFIG=$(find "$TERMUX_PREFIX/lib/ruby/${_RUBY_API_VERSION}" -name rbconfig.rb 2>/dev/null | head -n 1)
+	if [ -n "$RBCONFIG" ]; then
+		perl -p -i -e 's/^.*CONFIG\["INSTALL"\].*$/  CONFIG["INSTALL"] = "install -c"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["PKG_CONFIG"\].*$/  CONFIG["PKG_CONFIG"] = "pkg-config"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["MAKEDIRS"\].*$/  CONFIG["MAKEDIRS"] = "mkdir -p"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["MKDIR_P"\].*$/  CONFIG["MKDIR_P"] = "mkdir -p"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["EGREP"\].*$/  CONFIG["EGREP"] = "grep -E"/' "$RBCONFIG"
+		perl -p -i -e 's/^.*CONFIG\["GREP"\].*$/  CONFIG["GREP"] = "grep"/' "$RBCONFIG"
+	fi
 }
 
 termux_step_post_massage() {
-	local _RUBYGEMS_ARCH=${TERMUX_HOST_PLATFORM/i686-/x86-}
-	if [ ! -d ./lib/ruby/gems/${_RUBY_API_VERSION}/extensions/${_RUBYGEMS_ARCH} ]; then
+	local ext_root="./lib/ruby/gems/${_RUBY_API_VERSION}/extensions"
+	if [ ! -d "$ext_root" ] || [ -z "$(find "$ext_root" -name gem.build_complete | head -n 1)" ]; then
 		termux_error_exit "Extensions for bundled gems were not installed."
 	fi
 }
